@@ -1,3 +1,24 @@
 <mat-card>
   <mat-card-header>CS40700 Streamline</mat-card-header>
 </mat-card>
+
+<mat-sidenav-container class="container">
+  <mat-sidenav #sidenav class="sidebar" mode="side" [(opened)]="opened">
+    <ul>
+      <li>tags</li>
+      <li>profile</li>
+      <li>etc.</li>
+    </ul>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="main_box">
+      <button mat-button (click)="sidenav.toggle()">
+          <mat-icon aria-label="Example icon-button with a heart icon">swap_horiz</mat-icon>
+      </button>
+
+    <div>
+      <p>This will contain the task view, which can change based on user preference</p>
+    </div>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

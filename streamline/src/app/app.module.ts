@@ -4,15 +4,18 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
+import { TagsComponent } from './tags/tags.component';
 
 const appRoutes: Routes = [
   { path: 'home', component: HomeComponent },
+  { path: 'tags', component: TagsComponent }
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
+    TagsComponent,
   ],
   imports: [
     BrowserModule,
