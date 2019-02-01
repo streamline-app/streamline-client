@@ -3,37 +3,35 @@
     <h1>Create new task</h1>
   </mat-card-header>
   <mat-card-content>
+    <form [formGroup]="task">
       <mat-form-field>
         <h4>Title</h4>
-        <input matInput>
+        <input matInput formControlName="title">
       </mat-form-field>
       <mat-form-field>
         <h4>Body</h4>
-        <input matInput>
+        <input matInput formControlName="body">
       </mat-form-field>
 
       <div class="row">
         <div class="col-md-6">
           <h4>Expected Duration (hrs)</h4>
-          <mat-slider min="0" max="10" step="1" value="2" thumbLabel tickInterval="1"></mat-slider>
+          <mat-slider min="0" max="10" step="1" value="2" thumbLabel tickInterval="1" formControlName="estimatedMin"></mat-slider>
         </div>
         <div class="col-md-6">
           <h4>Expected Duration (min)</h4>
-          <mat-slider min="0" max="59" step="1" value="3" thumbLabel tickInterval="1"></mat-slider>
+          <mat-slider min="0" max="59" step="1" value="3" thumbLabel tickInterval="1" formControlName="estimatedHour"></mat-slider>
         </div>
       </div>
 
-      
       <div class="row" id="form-buttons">
-          <div class="col-sm-6">
-            <button mat-button id="submit">Submit</button>
-          </div>
-          <div class="col-sm-6">
-            <button mat-button id="cancel">Cancel</button>
-          </div>
+        <div class="col-sm-6">
+          <button mat-button id="submit" (click)="onSubmit()">Submit</button>
         </div>
-      
-
-      
+        <div class="col-sm-6">
+          <button mat-button id="cancel" (click)="onCancel()">Cancel</button>
+        </div>
+      </div>
+    </form>
   </mat-card-content>
 </mat-card>
