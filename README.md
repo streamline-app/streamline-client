@@ -13,4 +13,4 @@
 
 ## Serve the application
 * Run `ng serve` in the application root
-* Visit localhost:8000/home
+* Visit localhost:4200/home
