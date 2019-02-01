@@ -10,6 +10,7 @@ import { TagsComponent } from './tags/tags.component';
 import { ProfileComponent } from './profile/profile.component';
 import { CreateTaskComponent } from './create-task/create-task.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 const appRoutes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -31,6 +32,7 @@ const appRoutes: Routes = [
     BrowserAnimationsModule,
     MaterialModule,
     ReactiveFormsModule,
+    HttpClientModule,
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true } 
