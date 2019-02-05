@@ -19,6 +19,7 @@ export class BackendService {
 
   public root : string = 'localhost:8000';
   public createTaskURL : string = 'http://' + this.root + '/api/tasks';
+  public loginURL : string = 'http://' + this.root + '/api/auth/login';
   
 
   constructor(private http: HttpClient) { }
@@ -28,6 +29,13 @@ export class BackendService {
     .pipe(
       catchError(this.handleError)
     );
+  }
+
+  login(login: LoginRequest) {
+    return this.http.post<LoginRequest>(this.loginURL, login, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    )
   }
 
   private handleError(error: HttpErrorResponse) {
@@ -52,4 +60,9 @@ interface Task {
   body: string,
   estimatedMin: number,
   estimatedHour: number 
+}
+
+interface LoginRequest{
+  email: string,
+  password: string
 }

@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
+import { BackendService } from '../backend.service';
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -22,7 +23,21 @@ export class LoginComponent {
     Validators.email,
   ]);
 
-  passwordFormContol = new FormControl('');
+  passwordFormContol = new FormControl('', [
+    Validators.required
+  ]);
 
   matcher = new MyErrorStateMatcher();
+
+  constructor(private backend: BackendService) { }
+
+
+  onSubmit() {
+    let loginRequest: any = {
+      email : this.emailFormControl.value,
+      password : this.passwordFormContol.value
+    }
+
+    this.backend.login(loginRequest).subscribe(res => window.alert(res));
+  }
 }
