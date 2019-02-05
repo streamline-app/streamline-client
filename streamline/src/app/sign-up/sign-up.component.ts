@@ -12,12 +12,12 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  selector: 'app-sign-up',
+  templateUrl: './sign-up.component.html',
+  styleUrls: ['./sign-up.component.css']
 })
-export class LoginComponent {
-  
+export class SignUpComponent {
+
   emailFormControl = new FormControl('', [
     Validators.required,
     Validators.email,
@@ -27,10 +27,8 @@ export class LoginComponent {
     Validators.required
   ]);
 
-  matcher = new MyErrorStateMatcher();
 
-  constructor(private backend: BackendService) { }
-
+  constructor() { }
 
   onSubmit() {
     let loginRequest: any = {
@@ -38,6 +36,7 @@ export class LoginComponent {
       password : this.passwordFormContol.value
     }
 
-    this.backend.login(loginRequest).subscribe(res => window.alert(res.user));
+    // backend interaction
   }
+
 }

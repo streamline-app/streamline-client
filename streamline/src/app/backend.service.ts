@@ -32,7 +32,7 @@ export class BackendService {
   }
 
   login(login: LoginRequest) {
-    return this.http.post<LoginRequest>(this.loginURL, login, httpOptions)
+    return this.http.post<LoginResponse>(this.loginURL, login, httpOptions)
     .pipe(
       catchError(this.handleError)
     )
@@ -62,7 +62,14 @@ interface Task {
   estimatedHour: number 
 }
 
-interface LoginRequest{
+interface LoginRequest {
   email: string,
   password: string
+}
+
+interface LoginResponse {
+  access_token: string,
+  expires_in: number,
+  token_type: string,
+  user: string
 }
