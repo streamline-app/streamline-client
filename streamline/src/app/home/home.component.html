@@ -1,0 +1,25 @@
+<mat-sidenav-container class="container">
+  <mat-sidenav #sidenav class="sidebar" mode="side" [(opened)]="opened">
+    <div class="btn_group">
+    <button mat-stroked-button routerLink="/tags">
+      <mat-icon style="float:left; margin:0; margin-top: 4px;" >bookmarks</mat-icon>
+      <h4 style="float:right; margin:0;">Tags</h4>
+    </button>
+    <button mat-stroked-button routerLink="/profile">
+      <mat-icon style="float:left; margin:0; margin-top: 4px;" >account_circle</mat-icon>
+      <h4 style="float:right; margin:0;">Profile</h4>
+    </button>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="main_box">
+    <button mat-button (click)="sidenav.toggle()">
+      <mat-icon>swap_horiz</mat-icon>
+    </button>
+
+    <div>
+      <p>This will contain the task view, which can change based on user preference</p>
+    </div>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>
