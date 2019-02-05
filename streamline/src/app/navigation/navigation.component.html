@@ -1,0 +1,15 @@
+<mat-card id="navigation">
+  <div class="row">
+    <div class="col-md-6">
+      <h2>Streamline</h2>
+    </div>
+    <div class="col-md-6">
+        <button mat-button [matMenuTriggerFor]="menu" id="menu">Menu</button>
+    </div>
+  </div>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="onLogin()"> Login</button>
+    <button mat-menu-item>Register</button>
+  </mat-menu>
+</mat-card>
+
