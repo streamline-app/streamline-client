@@ -11,12 +11,19 @@ import { ProfileComponent } from './profile/profile.component';
 import { CreateTaskComponent } from './create-task/create-task.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { LoginComponent } from './login/login.component';
+import { NavigationComponent } from './navigation/navigation.component';
+import { FormsModule } from '@angular/forms';
+import { SignUpComponent } from './sign-up/sign-up.component';
+
 
 const appRoutes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'tags', component: TagsComponent },
   { path: 'profile', component: ProfileComponent },
-  { path: 'create/task', component: CreateTaskComponent }
+  { path: 'create/task', component: CreateTaskComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'signup', component: SignUpComponent }, 
 ];
 
 @NgModule({
@@ -26,6 +33,9 @@ const appRoutes: Routes = [
     TagsComponent,
     ProfileComponent,
     CreateTaskComponent,
+    LoginComponent,
+    NavigationComponent,
+    SignUpComponent,
   ],
   imports: [
     BrowserModule,
@@ -33,10 +43,11 @@ const appRoutes: Routes = [
     MaterialModule,
     ReactiveFormsModule,
     HttpClientModule,
+    FormsModule,
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true } 
-    )
+    ),
   ],
   providers: [ 
     {provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig},

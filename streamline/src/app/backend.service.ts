@@ -3,6 +3,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { HttpHeaders } from '@angular/common/http';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material';
 
 
 const httpOptions = {
@@ -19,9 +20,11 @@ export class BackendService {
 
   public root : string = 'localhost:8000';
   public createTaskURL : string = 'http://' + this.root + '/api/tasks';
+  public loginURL : string = 'http://' + this.root + '/api/auth/login';
+  public signupURL : string = 'http://' + this.root + '/api/auth/signup';
   
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private snackbar: MatSnackBar) { }
 
   createTask(task: Task): Observable<Task> {
     return this.http.post<Task>(this.createTaskURL, task, httpOptions)
@@ -30,7 +33,22 @@ export class BackendService {
     );
   }
 
+  login(login: LoginRequest) {
+    return this.http.post<LoginResponse>(this.loginURL, login, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    )
+  }
+
+  signup(signup: SignUpRequest) {
+    return this.http.post<LoginResponse>(this.signupURL, signup, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    )
+  }
+
   private handleError(error: HttpErrorResponse) {
+    
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
       console.error('An error occurred:', error.error.message);
@@ -52,4 +70,22 @@ interface Task {
   body: string,
   estimatedMin: number,
   estimatedHour: number 
+}
+
+interface LoginRequest {
+  email: string,
+  password: string
+}
+
+interface SignUpRequest {
+  name: string,
+  email: string,
+  password: string
+}
+
+interface LoginResponse {
+  access_token: string,
+  expires_in: number,
+  token_type: string,
+  user: string
 }
