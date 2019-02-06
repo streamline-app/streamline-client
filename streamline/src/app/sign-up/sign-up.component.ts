@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
 import { BackendService } from '../backend.service';
+import { MatSnackBar } from '@angular/material';
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -18,22 +19,38 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 })
 export class SignUpComponent {
 
+  nameFormControl = new FormControl('', [
+    Validators.required,
+  ]);
+
   emailFormControl = new FormControl('', [
     Validators.required,
     Validators.email,
   ]);
 
-  passwordFormContol = new FormControl('', [
+  passwordFormControl = new FormControl('', [
+    Validators.required
+  ]);
+
+  confirmPasswordFormControl = new FormControl('', [
     Validators.required
   ]);
 
 
-  constructor() { }
+  constructor(private snackbar: MatSnackBar) { }
 
   onSubmit() {
+    
+    if (this.confirmPasswordFormControl.value != this.passwordFormControl.value) {
+      this.snackbar.open('Passwords do not match.', 'Okay', {
+        duration: 2000
+      });
+    }
     let loginRequest: any = {
+      name : this.nameFormControl.value,
       email : this.emailFormControl.value,
-      password : this.passwordFormContol.value
+      password : this.passwordFormControl.value,
+
     }
 
     // backend interaction

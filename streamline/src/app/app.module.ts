@@ -22,7 +22,8 @@ const appRoutes: Routes = [
   { path: 'tags', component: TagsComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'create/task', component: CreateTaskComponent },
-  { path: 'login', component: LoginComponent }
+  { path: 'login', component: LoginComponent },
+  { path: 'signup', component: SignUpComponent }, 
 ];
 
 @NgModule({
