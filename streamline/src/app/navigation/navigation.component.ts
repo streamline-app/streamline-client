@@ -14,5 +14,9 @@ export class NavigationComponent{
     this.router.navigateByUrl('login');
   }
 
+  public onRegister() {
+    this.router.navigateByUrl('signup');
+  }
+
 
 }

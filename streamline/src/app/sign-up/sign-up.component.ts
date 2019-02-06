@@ -37,7 +37,7 @@ export class SignUpComponent {
   ]);
 
 
-  constructor(private snackbar: MatSnackBar) { }
+  constructor(private snackbar: MatSnackBar, private backend: BackendService) { }
 
   onSubmit() {
     
@@ -46,14 +46,21 @@ export class SignUpComponent {
         duration: 2000
       });
     }
-    let loginRequest: any = {
+    let signUpRequest: any = {
       name : this.nameFormControl.value,
       email : this.emailFormControl.value,
       password : this.passwordFormControl.value,
-
     }
 
     // backend interaction
+    this.backend.signup(signUpRequest).subscribe(res => window.alert('Registration Successful. You can now log in with your provided credentials.'), error => window.alert('Sign up not successful'));
+
+  }
+
+  invalidSignUp() {
+    this.snackbar.open('Invalid registration information', 'Okay', {
+      duration: 2000
+    });
   }
 
 }
