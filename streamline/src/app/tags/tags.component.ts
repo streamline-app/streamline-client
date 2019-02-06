@@ -4,9 +4,9 @@ import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material';
 
 /* Stub filler for Tags */
 const TAGS: Tag[] = [
-  { id: 11, name: 'CS homework', description: 'something something', tasks_comp: 3, average_time: 12.12, average_acc: 50.4, task_overunder: 1.2, color: '#c4c4c4' },
-  { id: 12, name: 'Laundry', description: 'another desc', tasks_comp: 5, average_time: 34.43, average_acc: 93.4, task_overunder: 2.0, color: '#c4c4c4'},
-  { id: 13, name: 'Gym', description: 'filler text', tasks_comp: 10, average_time: 10.3, average_acc: 20.4, task_overunder: 0.4, color: '#c4c4c4' },
+  { id: 11, name: 'CS homework', description: 'something something', tasks_comp: 3, average_time: 12.12, average_acc: 50.4, task_overunder: 1.2, color: '#c4c4c4', userID: 1 },
+  { id: 12, name: 'Laundry', description: 'another desc', tasks_comp: 5, average_time: 34.43, average_acc: 93.4, task_overunder: 2.0, color: '#c4c4c4', userID: 1},
+  { id: 13, name: 'Gym', description: 'filler text', tasks_comp: 10, average_time: 10.3, average_acc: 20.4, task_overunder: 0.4, color: '#c4c4c4', userID: 1 },
 ];
 
 interface Tag {
@@ -17,7 +17,8 @@ interface Tag {
   average_time: number,
   average_acc: number,
   task_overunder: number,
-  color: string
+  color: string,
+  userID: number //NOTE: this value is hardcoded until userID can be pulled from auth
 };
 
 export interface CreateTagDialogData {
@@ -50,7 +51,8 @@ export class TagsComponent implements OnInit {
     average_time : 0, 
     average_acc : 0,
     task_overunder : 1.2,
-    color : '#c4c4c4'
+    color : '#c4c4c4',
+    userID: 1
     }
   }
 

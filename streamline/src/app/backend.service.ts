@@ -65,7 +65,7 @@ export class BackendService {
       // The response body may contain clues as to what went wrong,
       console.error(
         `Backend returned code ${error.status}, ` +
-        `body was: ${error.error}`);
+        `body was: ${error.error.message}`);
     }
     // return an observable with a user-facing error message
     return throwError(
@@ -88,7 +88,8 @@ interface Tag {
   average_time: number,
   average_acc: number,
   task_overunder: number,
-  color: string
+  color: string,
+  userID: number
 };
 interface LoginRequest {
   email: string,
