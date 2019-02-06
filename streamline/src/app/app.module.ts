@@ -11,15 +11,11 @@ import { ProfileComponent } from './profile/profile.component';
 import { CreateTaskComponent } from './create-task/create-task.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-<<<<<<< HEAD
-import { FormsModule } from '@angular/forms';
-=======
 import { LoginComponent } from './login/login.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { FormsModule } from '@angular/forms';
 import { SignUpComponent } from './sign-up/sign-up.component';
 
->>>>>>> func/tags
 
 const appRoutes: Routes = [
   { path: 'home', component: HomeComponent },
