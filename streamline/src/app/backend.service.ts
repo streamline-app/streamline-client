@@ -19,12 +19,19 @@ export class BackendService {
 
   public root : string = 'localhost:8000';
   public createTaskURL : string = 'http://' + this.root + '/api/tasks';
-  
+  public createTagURL  : string = 'http://' + this.root + '/api/tags';
 
   constructor(private http: HttpClient) { }
 
   createTask(task: Task): Observable<Task> {
     return this.http.post<Task>(this.createTaskURL, task, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  createTag(tag: Tag): Observable<Tag> {
+    return this.http.post<Tag>(this.createTagURL, tag, httpOptions)
     .pipe(
       catchError(this.handleError)
     );
@@ -53,3 +60,14 @@ interface Task {
   estimatedMin: number,
   estimatedHour: number 
 }
+
+interface Tag {
+  id: number,
+  name: string,
+  description: string,
+  tasks_comp: number,
+  average_time: number,
+  average_acc: number,
+  task_overunder: number,
+  color: string
+};
