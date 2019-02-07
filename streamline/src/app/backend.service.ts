@@ -49,8 +49,8 @@ export class BackendService {
       );
   }
 
-  getUserTags(userID: string): Observable<JSON> {
-    return this.http.get<JSON>(this.getUserTagsURL,
+  getUserTags(userID: string): Observable<Tag[]> {
+    return this.http.get<Tag[]>(this.getUserTagsURL,
       {
         params: { userID: userID }, //string is required, must parse it back into int in backend
         headers: {
