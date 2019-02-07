@@ -5,7 +5,7 @@ import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material';
 /* Stub filler for Tags */
 const TAGS: Tag[] = [
   { id: 11, name: 'CS homework', description: 'something something', tasks_comp: 3, average_time: 12.12, average_acc: 50.4, task_overunder: 1.2, color: '#c4c4c4', userID: 1 },
-  { id: 12, name: 'Laundry', description: 'another desc', tasks_comp: 5, average_time: 34.43, average_acc: 93.4, task_overunder: 2.0, color: '#c4c4c4', userID: 1},
+  { id: 12, name: 'Laundry', description: 'another desc', tasks_comp: 5, average_time: 34.43, average_acc: 93.4, task_overunder: 2.0, color: '#c4c4c4', userID: 1 },
   { id: 13, name: 'Gym', description: 'filler text', tasks_comp: 10, average_time: 10.3, average_acc: 20.4, task_overunder: 0.4, color: '#c4c4c4', userID: 1 },
 ];
 
@@ -43,17 +43,19 @@ export class TagsComponent implements OnInit {
     this.opened = false;
 
     this.newTag = {
-    //set init values for new tag
-    id : 1,
-    name : "",
-    description: "",
-    tasks_comp : 0,
-    average_time : 0, 
-    average_acc : 0,
-    task_overunder : 1.2,
-    color : '#c4c4c4',
-    userID: 1
+      //set init values for new tag
+      id: 1,
+      name: "",
+      description: "",
+      tasks_comp: 0,
+      average_time: 0,
+      average_acc: 0,
+      task_overunder: 1.2,
+      color: '#c4c4c4',
+      userID: 1
     }
+
+    this.getUserTags();
   }
 
   ngOnInit() {
@@ -62,7 +64,7 @@ export class TagsComponent implements OnInit {
   createTag() {
     const dialogRef = this.create_dialog.open(CreateTagDialog, {
       width: '250px',
-      data: { name: '', desc: ''}
+      data: { name: '', desc: '' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -95,6 +97,13 @@ export class TagsComponent implements OnInit {
 
     //open tab again
     this.opened = true;
+  }
+
+  getUserTags(){
+    this.backend.getUserTags("1").subscribe(result => {
+      console.log(result);
+      window.alert('Got Tags');
+    });
   }
 }
 
