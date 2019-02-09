@@ -39,8 +39,8 @@
       <p>{{selectedTag.task_over_to_under}}</p>
     </div>
     <h4 class="detail_H4">Color</h4>
-    <div class="details">
-      <p>{{selectedTag.color}}</p> <!--TODO change this to display actual color -->
+    <div class="color">
+      <div class="square" [ngStyle]="{'background-color': selectedTag.color}"></div>
     </div>
   </mat-sidenav>
 </mat-sidenav-container>

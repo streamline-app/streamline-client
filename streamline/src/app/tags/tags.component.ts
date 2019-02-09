@@ -31,6 +31,7 @@ export class TagsComponent implements OnInit {
   selectedTag: Tag;
   newTag: Tag;
 
+
   constructor(private backend: BackendService,
     public create_dialog: MatDialog) {
     this.opened = false;
@@ -90,7 +91,6 @@ export class TagsComponent implements OnInit {
 
     //load data for that tag ------
     this.selectedTag = tag;
-
     //open tab again
     this.opened = true;
   }
