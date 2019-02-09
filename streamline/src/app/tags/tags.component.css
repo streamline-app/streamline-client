@@ -77,10 +77,28 @@
 h4.detail_H4 {
     padding-left: 10px;
 }
-  div.desc {
-    padding-left: 10px;
-    border: solid;
-    border-width: 2px;
-    border-color: lightgrey;
-    height: 15%;
-  }
+
+div.details {
+  margin-left: 10px;
+  padding-left: 10px;
+  padding-top: 10px;
+  border: solid;
+  border-width: 2px;
+  border-color: lightgrey;
+}
+
+div.color{
+  margin-left: 10px;
+  padding-left: 10px;
+  padding-top: 10px;
+  height: 50px;
+  border: solid;
+  border-width: 2px;
+  border-color: lightgrey;
+}
+
+
+div.square {
+  height: 25px;
+  width: 20%;
+}

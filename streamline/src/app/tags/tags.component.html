@@ -16,11 +16,31 @@
     <button mat-stroked-button (click)="sidenav.toggle()">
       <mat-icon>arrow_right_alt</mat-icon>
     </button>
-    <h2>{{selectedTag.name}} Details</h2>
+    <h2>{{selectedTag.name}}</h2>
     <mat-divider></mat-divider>
     <h4 class="detail_H4">Description</h4>
-    <div class="desc">
+    <div class="details" style="height:15%;">
       <p>{{selectedTag.description}}</p>
+    </div>
+    <h4 class="detail_H4">Number of Tasks Completed</h4>
+    <div class="details">
+      <p>{{selectedTag.tasks_completed}}</p>
+    </div>
+    <h4 class="detail_H4">Average Time per Task</h4>
+    <div class="details">
+      <p>{{selectedTag.average_time}}</p>
+    </div>
+    <h4 class="detail_H4">Estimation Accuracy</h4>
+    <div class="details">
+      <p>{{selectedTag.average_accuracy}}</p>
+    </div>
+    <h4 class="detail_H4">Task Over/Under</h4>
+    <div class="details">
+      <p>{{selectedTag.task_over_to_under}}</p>
+    </div>
+    <h4 class="detail_H4">Color</h4>
+    <div class="color">
+      <div class="square" [ngStyle]="{'background-color': selectedTag.color}"></div>
     </div>
   </mat-sidenav>
 </mat-sidenav-container>
