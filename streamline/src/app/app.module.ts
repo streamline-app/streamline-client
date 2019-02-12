@@ -15,13 +15,14 @@ import { LoginComponent } from './login/login.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { FormsModule } from '@angular/forms';
 import { SignUpComponent } from './sign-up/sign-up.component';
+import { AuthService } from './auth.service';
 
 
 const appRoutes: Routes = [
-  { path: 'home', component: HomeComponent },
-  { path: 'tags', component: TagsComponent },
-  { path: 'profile', component: ProfileComponent },
-  { path: 'create/task', component: CreateTaskComponent },
+  { path: 'home', component: HomeComponent, canActivate: [AuthService] },
+  { path: 'tags', component: TagsComponent, canActivate: [AuthService] },
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthService] },
+  { path: 'create/task', component: CreateTaskComponent, canActivate: [AuthService] },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignUpComponent }, 
 ];
