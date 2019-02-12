@@ -105,6 +105,16 @@ export class TagsComponent implements OnInit {
    
     });
   }
+
+  deleteTag(id: number){
+    this.backend.deleteTag(id).subscribe(result =>{
+      console.log(result);
+      window.alert("Tag Deleted!");
+
+      //update display
+      this.getUserTags();
+    });
+  }
 }
 
 

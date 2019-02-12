@@ -42,5 +42,6 @@
     <div class="color">
       <div class="square" [ngStyle]="{'background-color': selectedTag.color}"></div>
     </div>
+    <button mat-stroked-button (click)="deleteTag(selectedTag.id)">Delete Tag</button>
   </mat-sidenav>
 </mat-sidenav-container>

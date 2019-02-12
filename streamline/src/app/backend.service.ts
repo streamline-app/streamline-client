@@ -26,6 +26,7 @@ export class BackendService {
   /*  Tag URLs */
   public createTagURL: string = 'http://' + this.root + '/api/tags';
   public getUserTagsURL: string = 'http://' + this.root + '/api/tags';
+  public deleteTagURL: string = 'http://' + this.root + '/api/tags';
 
   /*  Auth URLs */
   public loginURL: string = 'http://' + this.root + '/api/auth/login';
@@ -60,6 +61,12 @@ export class BackendService {
       .pipe(
         catchError(this.handleError)
       );
+  }
+
+  deleteTag(id: number): Observable<any> {
+    alert(this.deleteTagURL + '/' + id + '');
+    return this.http.delete(this.deleteTagURL + '/' + id + '', httpOptions)
+      .pipe(catchError(this.handleError));
   }
   /* ============================== */
 
