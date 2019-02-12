@@ -123,6 +123,9 @@ export class TagsComponent implements OnInit {
     
           //update display
           this.getUserTags();
+
+          //close sidebar showing deleted tags details
+          this.opened = false;
         });
       }
       else{ /*do nothing */ }
