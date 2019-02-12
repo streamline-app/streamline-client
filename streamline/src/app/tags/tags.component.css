@@ -80,6 +80,7 @@ h4.detail_H4 {
 
 div.details {
   margin-left: 10px;
+  margin-bottom: 10px;
   padding-left: 10px;
   padding-top: 10px;
   border: solid;
@@ -89,6 +90,7 @@ div.details {
 
 div.color{
   margin-left: 10px;
+  margin-bottom: 20px;
   padding-left: 10px;
   padding-top: 10px;
   height: 50px;
@@ -97,8 +99,14 @@ div.color{
   border-color: lightgrey;
 }
 
-
 div.square {
   height: 25px;
   width: 20%;
+}
+
+button.del_button {
+  margin-left: 10px;
+  margin-top: 20px;
+  background-color: #c90000;
+  color: white;
 }

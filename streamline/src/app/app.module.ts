@@ -6,7 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
-import { TagsComponent, CreateTagDialog } from './tags/tags.component';
+import { TagsComponent, CreateTagDialog, DeleteConfirmDialog } from './tags/tags.component';
 import { ProfileComponent } from './profile/profile.component';
 import { CreateTaskComponent } from './create-task/create-task.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -32,6 +32,7 @@ const appRoutes: Routes = [
     HomeComponent,
     TagsComponent,
     CreateTagDialog,
+    DeleteConfirmDialog,
     ProfileComponent,
     CreateTaskComponent,
     LoginComponent,
@@ -54,6 +55,6 @@ const appRoutes: Routes = [
     {provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig},
   ],
   bootstrap: [AppComponent],
-  entryComponents: [CreateTagDialog]
+  entryComponents: [CreateTagDialog, DeleteConfirmDialog]
 })
 export class AppModule { }
