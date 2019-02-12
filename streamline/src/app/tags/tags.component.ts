@@ -20,6 +20,10 @@ export interface CreateTagDialogData {
   desc: string
 };
 
+export interface DeleteTagDialogData {
+  confirm: boolean
+};
+
 @Component({
   selector: 'app-tags',
   templateUrl: './tags.component.html',
@@ -107,20 +111,29 @@ export class TagsComponent implements OnInit {
   }
 
   deleteTag(id: number){
-    this.backend.deleteTag(id).subscribe(result =>{
-      console.log(result);
-      window.alert("Tag Deleted!");
+    const dialogRef = this.create_dialog.open(DeleteConfirmDialog, {
+      width: '325px',
+    });
 
-      //update display
-      this.getUserTags();
+    dialogRef.afterClosed().subscribe(result => {
+      if(result){ //if confirmed, delete
+        this.backend.deleteTag(id).subscribe(result =>{
+          console.log(result);
+          window.alert("Tag Deleted!");
+    
+          //update display
+          this.getUserTags();
+        });
+      }
+      else{ /*do nothing */ }
     });
   }
 }
 
 
 @Component({
-  selector: 'create-tag-dialog',
-  templateUrl: 'create-tag-dialog.html',
+  selector: 'create-tag/create-tag-dialog',
+  templateUrl: 'create-tag/create-tag-dialog.html',
 })
 export class CreateTagDialog {
 
@@ -137,5 +150,23 @@ export class CreateTagDialog {
   closeDiag() {
     //return to parent component, result will be undefined
     this.dialogRef.close();
+  }
+}
+
+@Component({
+  selector: 'delete-tag/delete-confirm-dialog',
+  templateUrl: 'delete-tag/delete-confirm-dialog.html',
+})
+export class DeleteConfirmDialog {
+
+  constructor(public dialogRef: MatDialogRef<CreateTagDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: DeleteConfirmDialog) { }
+
+  yes(){
+    this.dialogRef.close(true); //return true to parent component
+  }
+
+  no(){
+    this.dialogRef.close(false); //return false to parent component
   }
 }

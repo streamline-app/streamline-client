@@ -64,7 +64,6 @@ export class BackendService {
   }
 
   deleteTag(id: number): Observable<any> {
-    alert(this.deleteTagURL + '/' + id + '');
     return this.http.delete(this.deleteTagURL + '/' + id + '', httpOptions)
       .pipe(catchError(this.handleError));
   }
