@@ -1,4 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
+import { Router, ActivatedRouteSnapshot, RouterStateSnapshot, CanActivate } from '@angular/router';
+import { Observable } from 'rxjs';
+
 
 import { AuthService } from './auth.service';
 
