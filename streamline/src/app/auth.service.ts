@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { Router, ActivatedRouteSnapshot, RouterStateSnapshot, CanActivate } from '@angular/router';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService implements CanActivate {
 
   // Variables to remember current user
   private id: number = 0;
@@ -29,14 +29,28 @@ export class AuthService {
     this.id = _id;
   }
 
+  getUserId() {
+    return this.id;
+  }
+
   setUserName(_name) {
     this.name = _name;
+  }
+
+  getUserName() {
+    return this.name;
   }
 
   setLoggedIn(_name, _id) {
     this.setUserId(_id);
     this.setUserName(_name);
     this.loggedIn = true;
+  }
+
+  setLoggedOut() {
+    this.loggedIn = false;
+    this.name = '';
+    this.id = 0;
   }
 
   isLoggedIn() {
