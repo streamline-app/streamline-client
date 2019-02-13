@@ -15,13 +15,21 @@ interface Tag {
   userID: number //NOTE: this value is hardcoded until userID can be pulled from auth
 };
 
+interface TagEdit {
+  name:string,
+  desc: string,
+  color: string
+};
+
 export interface CreateTagDialogData {
   name: string,
   desc: string
 };
 
-export interface DeleteTagDialogData {
-  confirm: boolean
+export interface EditTagDialogData {
+  name: string,
+  desc: string,
+  color: string
 };
 
 @Component({
@@ -34,6 +42,7 @@ export class TagsComponent implements OnInit {
   tags: Tag[];
   selectedTag: Tag;
   newTag: Tag;
+  editedtTag: TagEdit;
 
 
   constructor(private backend: BackendService,
@@ -51,6 +60,12 @@ export class TagsComponent implements OnInit {
       task_overunder: 1.2,
       color: '#c4c4c4',
       userID: 1
+    }
+
+    this.editedtTag = {
+      name: "",
+      desc: "",
+      color: ""
     }
 
     this.getUserTags();
@@ -80,9 +95,7 @@ export class TagsComponent implements OnInit {
         //update display with new tag
         this.getUserTags();
       }
-      else {
-        return;
-      }
+      else { /* Do Nothing */}
     });
 
 
@@ -100,7 +113,7 @@ export class TagsComponent implements OnInit {
   }
 
   getUserTags(){
-    this.backend.getUserTags("1").subscribe(result => {
+    this.backend.getUserTags("1").subscribe(result => { //TODO change userID
       console.log(result);
       //window.alert('Got Tags');
 
@@ -129,6 +142,38 @@ export class TagsComponent implements OnInit {
         });
       }
       else{ /*do nothing */ }
+    });
+  }
+
+  editTag(id: number){
+    const dialogRef = this.create_dialog.open(EditTagDialog, {
+      width: '325px',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result != null){
+        //construct TagEdit object with result values from dialog
+        this.editedtTag = { 
+          name: result.name,
+          desc: result.desc,
+          color: result.color
+        }
+
+        //send to backend
+        this.backend.editTag(id, this.editedtTag).subscribe(res => {
+          console.log('tag ' + id + ' udpated');
+
+          window.alert('Tag Updated!');
+
+          //update display
+          this.getUserTags();
+
+          //close sidebar showing old tags details
+          this.opened = false;
+        })
+
+      }
+      else { /* Do Nothing */ }
     });
   }
 }
@@ -162,8 +207,7 @@ export class CreateTagDialog {
 })
 export class DeleteConfirmDialog {
 
-  constructor(public dialogRef: MatDialogRef<CreateTagDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: DeleteConfirmDialog) { }
+  constructor(public dialogRef: MatDialogRef<DeleteConfirmDialog>) { }
 
   yes(){
     this.dialogRef.close(true); //return true to parent component
@@ -172,4 +216,28 @@ export class DeleteConfirmDialog {
   no(){
     this.dialogRef.close(false); //return false to parent component
   }
+}
+
+
+@Component({
+  selector: 'edit-tag/edit-dialog',
+  templateUrl: 'edit-tag/edit-dialog.html',
+})
+export class EditTagDialog {
+  constructor(public dialogRef: MatDialogRef<EditTagDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: EditTagDialogData) {
+      this.data = {
+        name: "",
+        desc: "",
+        color: "#000000"
+      }
+     }
+
+    editTag(){
+      this.dialogRef.close(this.data); //return data fields to parent
+    }
+
+    closeDialog(){
+      this.dialogRef.close();
+    }
 }

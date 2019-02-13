@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>Edit Tag</h1>
+<div mat-dialog-content class="diag_box">
+    <mat-form-field>
+        <mat-label>Edit Name</mat-label>
+        <input matInput type="text" matInput [(ngModel)]="data.name">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Change Description</mat-label>
+        <textarea matInput type="text" [(ngModel)]="data.desc"></textarea>
+    </mat-form-field>
+        <mat-label>Change Color</mat-label>
+        <input type="color" [(ngModel)]="data.color" value="selectedTag.color">
+</div>
+<div mat-dialog-actions class="button_box">
+    <button mat-button (click)="editTag()">Update</button>
+    <button mat-button (click)="closeDialog()">Cancel</button>
+</div>
