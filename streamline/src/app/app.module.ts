@@ -15,6 +15,7 @@ import { LoginComponent } from './login/login.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { FormsModule } from '@angular/forms';
 import { SignUpComponent } from './sign-up/sign-up.component';
+import { SettingsComponent } from './settings/settings.component';
 
 
 const appRoutes: Routes = [
@@ -37,6 +38,7 @@ const appRoutes: Routes = [
     LoginComponent,
     NavigationComponent,
     SignUpComponent,
+    SettingsComponent,
   ],
   imports: [
     BrowserModule,
