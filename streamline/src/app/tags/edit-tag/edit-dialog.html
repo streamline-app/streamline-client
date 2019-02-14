@@ -8,8 +8,10 @@
         <mat-label>Change Description</mat-label>
         <textarea matInput type="text" [(ngModel)]="data.desc"></textarea>
     </mat-form-field>
+    <mat-form-field>
         <mat-label>Change Color</mat-label>
-        <input type="color" [(ngModel)]="data.color" value="selectedTag.color">
+        <input matInput type="color" [(ngModel)]="data.color" value="selectedTag.color">
+    </mat-form-field>
 </div>
 <div mat-dialog-actions class="button_box">
     <button mat-button (click)="editTag()">Update</button>
