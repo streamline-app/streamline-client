@@ -1,3 +1,24 @@
-<p>
-  settings works!
-</p>
+<mat-sidenav-container class="container">
+  <mat-sidenav-content class="main_box">
+    <button mat-stroked-button (click)="setDefault()">Default Settings</button>
+    <button mat-stroked-button (click)="deleteUser()">Delete User</button>
+    <div class="settings_box">
+      <ul class="theme">
+        Theme
+        <div class="btn-group theme">
+          <button mat-stroked-button (click)="setDark()">Dark</button>
+          <button mat-stroked-button (click)="setLight()">Light</button>
+          <button mat-stroked-button (click)="setWhy()">Why</button>
+        </div>
+      </ul>
+      <ul class="font">
+        Font  
+        <div class="btn-group font">
+          <button mat-stroked-button (click)="setArial()">Arial</button>
+          <button mat-stroked-button (click)="setTimesNewRoman()">Times New Roman</button>
+          <button mat-stroked-button (click)="setComicSans()">Comic Sans</button>
+        </div>
+      </ul>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

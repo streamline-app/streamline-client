@@ -15,7 +15,7 @@ import { LoginComponent } from './login/login.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { FormsModule } from '@angular/forms';
 import { SignUpComponent } from './sign-up/sign-up.component';
-import { SettingsComponent } from './settings/settings.component';
+import { SettingsComponent, EditSettingDialog} from './settings/settings.component';
 
 
 const appRoutes: Routes = [
@@ -25,6 +25,7 @@ const appRoutes: Routes = [
   { path: 'create/task', component: CreateTaskComponent },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignUpComponent }, 
+  { path: 'settings', component: SettingsComponent}
 ];
 
 @NgModule({
@@ -39,6 +40,7 @@ const appRoutes: Routes = [
     NavigationComponent,
     SignUpComponent,
     SettingsComponent,
+    EditSettingDialog,
   ],
   imports: [
     BrowserModule,
@@ -56,6 +58,6 @@ const appRoutes: Routes = [
     {provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig},
   ],
   bootstrap: [AppComponent],
-  entryComponents: [CreateTagDialog]
+  entryComponents: [CreateTagDialog, EditSettingDialog]
 })
 export class AppModule { }

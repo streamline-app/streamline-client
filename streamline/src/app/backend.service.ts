@@ -27,10 +27,13 @@ export class BackendService {
   public createTagURL: string = 'http://' + this.root + '/api/tags';
   public getUserTagsURL: string = 'http://' + this.root + '/api/tags';
 
+  /*  Setting URLs */
+  public getUserSettingsURL: string = 'http://' + this.root + '/api/settings';
+  public updateSettingsURL: string = 'http://' + this.root + '/api/settings';
   /*  Auth URLs */
   public loginURL: string = 'http://' + this.root + '/api/auth/login';
   public signupURL: string = 'http://' + this.root + '/api/auth/signup';
-
+  public deleteURL: string = 'http://' + this.root + '/api/auth/delete';
 
   constructor(private http: HttpClient, private snackbar: MatSnackBar) { }
 
@@ -62,6 +65,29 @@ export class BackendService {
       );
   }
   /* ============================== */
+ 
+  /*       Settings Functions       */
+  getUserSettings(userID: string): Observable<string> {
+    return this.http.get<string>(this.getUserSettingsURL,
+      {
+        params: { userID: userID }, //string is required, must parse it back into int in backend
+        headers: {
+          Authorization: 'my-auth-token'
+        }
+      }) 
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  updateSetting(setting: string): Observable<string> {
+    return this.http.put<string>(this.updateSettingsURL, setting, httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+
 
   login(login: LoginRequest) {
     return this.http.post<LoginResponse>(this.loginURL, login, httpOptions)
@@ -72,6 +98,14 @@ export class BackendService {
 
   signup(signup: SignUpRequest) {
     return this.http.post<LoginResponse>(this.signupURL, signup, httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      )
+  }
+
+  deleteUser(delRequest: DeleteRequest) {
+    // TODO logout user first.
+    return this.http.delete<DeleteRequest>(this.deleteURL, httpOptions)
       .pipe(
         catchError(this.handleError)
       )
@@ -101,7 +135,10 @@ interface Task {
   estimatedMin: number,
   estimatedHour: number
 }
+interface DeleteRequest {
 
+  id: number
+}
 interface Tag {
   id: number,
   name: string,
@@ -113,6 +150,10 @@ interface Tag {
   color: string,
   userID: number
 };
+interface UserSetting {
+  setting: string
+}
+
 interface LoginRequest {
   email: string,
   password: string
