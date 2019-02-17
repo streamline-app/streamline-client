@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { BackendService } from '../backend.service';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material';
+import { AuthService } from '../auth.service';
 
 
 interface Tag {
@@ -12,7 +13,7 @@ interface Tag {
   average_acc: number,
   task_overunder: number,
   color: string,
-  userID: number //NOTE: this value is hardcoded until userID can be pulled from auth
+  userID: number 
 };
 
 export interface CreateTagDialogData {
@@ -39,7 +40,8 @@ export class TagsComponent implements OnInit {
 
   constructor(private backend: BackendService,
     public create_dialog: MatDialog,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private auth: AuthService
   ){
     //make sure sidenav is closed
     this.opened = false;
@@ -69,7 +71,7 @@ export class TagsComponent implements OnInit {
           average_acc: 0,
           task_overunder: 0,
           color: result.color,
-          userID: 1
+          userID: this.auth.getUserId()
         }
 
         console.log(newTag);
@@ -106,7 +108,7 @@ export class TagsComponent implements OnInit {
   }
 
   getUserTags() {
-    this.backend.getUserTags("1").subscribe(result => { //TODO change userID
+    this.backend.getUserTags(this.auth.getUserId()).subscribe(result => { //TODO change userID
       console.log(result);
       //window.alert('Got Tags');
 

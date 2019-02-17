@@ -52,10 +52,10 @@ export class BackendService {
       );
   }
 
-  getUserTags(userID: string): Observable<Tag[]> {
+  getUserTags(userID: number): Observable<Tag[]> {
     return this.http.get<Tag[]>(this.getUserTagsURL,
       {
-        params: { userID: userID }, //string is required, must parse it back into int in backend
+        params: { userID: userID.toString() }, //string is required for params
         headers: {
           Authorization: 'my-auth-token'
         }
