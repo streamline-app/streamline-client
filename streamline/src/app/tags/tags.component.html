@@ -1,3 +1,49 @@
-<p>
-  tags works!
-</p>
+<mat-sidenav-container class="container">
+  <mat-sidenav-content class="main_box">
+    <button mat-stroked-button (click)="createTag()">Create Tag</button>
+
+    <div class="tag_box">
+      <ul class="tags">
+        <li *ngFor="let tag of tags" [class.selected]="tag === selectedTag" (click)="onSelect(tag)">
+          <span class="badge">{{tag.id}}</span> {{tag.name}}
+        </li>
+      </ul>
+    </div>
+
+  </mat-sidenav-content>
+
+  <mat-sidenav *ngIf="selectedTag!=null" #sidenav [(opened)]="opened" class="sidebar" mode="side" position="end">
+    <button mat-stroked-button (click)="sidenav.toggle()">
+      <mat-icon>arrow_right_alt</mat-icon>
+    </button>
+    <h2>{{selectedTag.name}}</h2>
+    <mat-divider></mat-divider>
+    <h4 class="detail_H4">Description</h4>
+    <div class="details" style="height:15%;">
+      <p>{{selectedTag.description}}</p>
+    </div>
+    <h4 class="detail_H4">Number of Tasks Completed</h4>
+    <div class="details">
+      <p>{{selectedTag.tasks_completed}}</p>
+    </div>
+    <h4 class="detail_H4">Average Time per Task</h4>
+    <div class="details">
+      <p>{{selectedTag.average_time}}</p>
+    </div>
+    <h4 class="detail_H4">Estimation Accuracy</h4>
+    <div class="details">
+      <p>{{selectedTag.average_accuracy}}</p>
+    </div>
+    <h4 class="detail_H4">Task Over/Under</h4>
+    <div class="details">
+      <p>{{selectedTag.task_over_to_under}}</p>
+    </div>
+    <h4 class="detail_H4">Color</h4>
+    <div class="color">
+      <div class="square" [ngStyle]="{'background-color': selectedTag.color}"></div>
+    </div>
+    <mat-divider></mat-divider>
+    <button mat-stroked-button class="edit_button" (click)="editTag(selectedTag.id)">Edit Tag</button>
+    <button mat-stroked-button class="del_button" (click)="deleteTag(selectedTag.id)">Delete Tag</button>
+  </mat-sidenav>
+</mat-sidenav-container>
