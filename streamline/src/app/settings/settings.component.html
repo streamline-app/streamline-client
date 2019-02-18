@@ -6,19 +6,24 @@
       <ul class="theme">
         Theme
         <div class="btn-group theme">
-          <button mat-stroked-button (click)="setDark()">Dark</button>
-          <button mat-stroked-button (click)="setLight()">Light</button>
-          <button mat-stroked-button (click)="setWhy()">Why</button>
+          <button mat-stroked-button (click)="editBackground('Dark')">Dark</button>
+          <input type="button" value="set background" ng-click="myStyle={'background-color':'blue'}">
+          <input type="button" value="Blue" (click)="myStyle={background:'blue'}">
+          <button mat-stroked-button (click)="editBackground('Light')">Light</button>
+          <button mat-stroked-button (click)="editBackground('Why')">Why</button>
         </div>
       </ul>
       <ul class="font">
         Font  
         <div class="btn-group font">
-          <button mat-stroked-button (click)="setArial()">Arial</button>
-          <button mat-stroked-button (click)="setTimesNewRoman()">Times New Roman</button>
-          <button mat-stroked-button (click)="setComicSans()">Comic Sans</button>
+          <button mat-stroked-button (click)="setFont('Arial')">Arial</button>
+          <button mat-stroked-button (click)="setFont('Times New Roman')">Times New Roman</button>
+          <button mat-stroked-button (click)="setFont('Comic Sans')">Comic Sans</button>
         </div>
+        
       </ul>
     </div>
+    
   </mat-sidenav-content>
+  background-color: blue;
 </mat-sidenav-container>

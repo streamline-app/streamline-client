@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ElementRef } from '@angular/core';
 import { BackendService } from '../backend.service';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material';
 
@@ -24,16 +24,16 @@ export class SettingsComponent implements OnInit {
   selectedSetting: string;
   newSetting: string;
   indexOfColon: number;
+  bodyTag: HTMLBodyElement = document.getElementsByTagName('body')[0];
+  htmlTag: HTMLElement = document.getElementsByTagName('html')[0];
   constructor(private backend: BackendService,
     public create_dialog: MatDialog,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private elementRef: ElementRef,
     ) {
       this.opened = false;
       this.getUserSettings();
     }
-
-  ngOnInit() {
-  }
 
   getUserSettings() {
     this.backend.getUserSettings("1").subscribe(result => { //TODO change userID
@@ -49,55 +49,43 @@ export class SettingsComponent implements OnInit {
       let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
     });
   }
-
-  editBackground() {
-    const dialogRef = this.create_dialog.open(EditSettingDialog, {
-      width: '250px',
-      data: {value: ''}
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('closed edit background setting');
-
-      console.log('received:' + result.setting);
-      if(result != null){
-        // TODO Parse into first element of string
-        this.indexOfColon = this.settings.indexOf(":");
-        this.newSetting = this.settings.substr(this.indexOfColon);
-        console.log(this.newSetting);
-
-        this.backend.updateSetting(this.newSetting).subscribe(setting => window.alert('Setting Changed'));
-
-        this.getUserSettings();
-      }
-      else {
-        return;
-      }
-    });
+  ngOnInit() {
   }
-  editFont() {
-    const dialogRef = this.create_dialog.open(EditSettingDialog, {
-      width: '250px',
-      data: {value: ''}
-    });
+  editBackground(newColor: string) {
+    let snackbarRef = this.snackbar.open(newColor, 'Ok', { duration: 3000 });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('closed edit font setting');
+    if(newColor == 'Dark') {
+      let snackbarRef = this.snackbar.open('REBEL YELL', 'Ok', { duration: 3000 });
+      this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = 'black';
+      this.elementRef.nativeElement.style.backgroundColor = 'black';
+      this.elementRef.nativeElement.ownerDocument.style.newFont = 'Arial';
+    }
+    if(newColor == 'Light') {
+      let snackbarRef = this.snackbar.open('SCREAM', 'Ok', { duration: 3000 });
+      this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = 'white';
+      this.elementRef.nativeElement.style.color = 'white';
+    }
+    
+  }
+  editFont(newFont: string) {
+    console.log("Hello MOto");
+    
 
-      console.log('received:' + result.setting);
-      if(result != null){
-        // TODO Parse into second element of string
+  }
 
-        console.log(this.newSetting);
+  updateSetting(newElement: string, category: string){
+    this.indexOfColon = this.settings.indexOf(':');
+    if(category == "Color"){
+      this.newSetting = newElement + this.settings.substring(this.indexOfColon);
+      this.settings = this.newSetting;
 
-        this.backend.updateSetting(this.newSetting).subscribe(setting => window.alert('Setting Changed'));
+    }
+    if(category == "Font"){
+      this.newSetting = this.settings.substring(0,this.indexOfColon+1) + newElement;
+      this.settings = this.newSetting;
 
-        this.getUserSettings();
-      }
-      else {
-        return;
-      }
-    });
+    }
+          // TODOl send the setting back to the database
   }
 }
 

@@ -56,6 +56,7 @@ export class TagsComponent implements OnInit {
   }
 
   createTag() {
+    console.log('Hello Moto Tags');
     const dialogRef = this.create_dialog.open(CreateTagDialog, {
       width: '250px',
       data: { name: '', desc: '' }
