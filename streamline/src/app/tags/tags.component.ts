@@ -63,7 +63,7 @@ export class TagsComponent implements OnInit {
       if (result != null) {
         //construct Tag object with input values
         let newTag: Tag = {
-          id: 1,
+          id: 1,    //this value is arbitrary and will not be saved in the DB
           name: result.name,
           description: result.desc,
           tasks_comp: 0,
