@@ -37,6 +37,10 @@ export class CreateTaskComponent {
     });
 
   }
+
+  public onCancel(){
+    this.router.navigateByUrl('/home');
+  }
 }
 
 // Object that represents data to be sent to server
