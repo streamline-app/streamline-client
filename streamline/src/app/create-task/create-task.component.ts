@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { BackendService } from '../backend.service';
 import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -18,7 +19,7 @@ export class CreateTaskComponent {
     estimatedHour: new FormControl(0)
   });
 
-  constructor(private backend: BackendService, private auth: AuthService) { }
+  constructor(private backend: BackendService, private auth: AuthService, private router: Router) { }
 
   public onSubmit() {    
     let task : any = {
@@ -29,7 +30,11 @@ export class CreateTaskComponent {
       userID: this.auth.getUserId()
     }
 
-    this.backend.createTask(task).subscribe(task => window.alert('Task Created'));
+    this.backend.createTask(task).subscribe(task => { 
+      window.alert('Task Created');
+
+      this.router.navigateByUrl('/home');
+    });
 
   }
 }
