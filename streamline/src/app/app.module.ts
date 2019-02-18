@@ -20,7 +20,7 @@ import { TasksComponent } from './tasks/tasks.component';
 
 
 const appRoutes: Routes = [
-  { path: 'home', component: HomeComponent, canActivate: [AuthService] },
+  { path: 'home', component: HomeComponent, canActivate: [] },
   { path: 'tags', component: TagsComponent, canActivate: [AuthService] },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthService] },
   { path: 'create/task', component: CreateTaskComponent, canActivate: [AuthService] },

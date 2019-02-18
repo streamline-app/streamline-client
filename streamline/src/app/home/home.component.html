@@ -21,11 +21,11 @@
       <mat-icon>swap_horiz</mat-icon>
     </button>
 
-    <div>
+    <mat-card id="view_box">
       <app-tags *ngIf='tags'></app-tags>
       <app-profile *ngIf='profile'></app-profile>
       <app-tasks *ngIf='tasks'></app-tasks>
-    </div>
+    </mat-card>
   </mat-sidenav-content>
 
 </mat-sidenav-container>
