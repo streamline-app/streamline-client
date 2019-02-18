@@ -25,4 +25,8 @@
     width: 75%; /* Set a width if needed */
     display: block; /* Make the buttons appear below each other */
   }
+
+  #view_box {
+      padding-bottom: 40px;
+  }
   

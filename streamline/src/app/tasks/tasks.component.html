@@ -1,3 +1,53 @@
-<p>
-  tasks works!
-</p>
+
+  <h1 class="header">Tasks</h1>
+  <hr class="seperator"/>
+  <div *ngFor="let task of tasks">
+      <div>
+      <mat-card class="mat-elevation-z10"  id="task-card">
+          <div class="row">
+            <div class="col-md-6" id="left">
+              <div id="large">
+                  <div class="row">
+                      <div class="col-md-1">
+                        <div id="status"></div>
+                      </div>
+                      <div class="col-md-11">
+                          <h4 class="task-header">{{task.title}}</h4>
+                          <p class="task-body">{{task.body}}</p>
+                      </div>
+                    </div>
+              </div>
+              <div id="small">
+                  <h4 class="task-header">{{task.title}}</h4>
+                  <p class="task-body">{{task.body}}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="row">
+                  <h4 class="task-header">89%</h4>
+                  <mat-progress-bar
+                     class="example-margin"
+                     [color]="lightblue"
+                     [mode]="determinate"
+                      [value]="50"
+                     [bufferValue]="75">
+                   </mat-progress-bar>
+              </div>
+              <div class="row">
+                  
+              </div>
+            </div>
+          </div>
+          <button mat-button class="collapsible" (click)="collapse(task.id)">Subtasks</button>
+          <div id="content_{{task.id}}" style="padding: 0 18px;
+            display: none;
+            overflow: hidden;
+            height: 200px;
+            background-color: #f1f1f1;">
+              <p>Lorem ipsum...</p>
+          </div>
+        </mat-card>
+        
+  </div>
+  
+</div>

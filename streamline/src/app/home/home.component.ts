@@ -7,9 +7,9 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
   opened: boolean = true;
-  tags: boolean = true;
+  tags: boolean = false;
   profile: boolean = false;
-  tasks: boolean = false;
+  tasks: boolean = true;
 
   constructor() { }
 
