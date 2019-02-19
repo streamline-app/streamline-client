@@ -1,6 +1,8 @@
 import { Component, OnInit, Inject, ElementRef } from '@angular/core';
 import { BackendService } from '../backend.service';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material';
+import { style } from '@angular/animations';
+import { NgStyle } from '@angular/common';
 
 interface UserSetting {
   setting: string
@@ -16,7 +18,9 @@ export interface EditSettingDialogData {
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.css']
+  styleUrls: ['./settings.component.css'],
+  template: `<a (click)="editBackground()"
+  [class.selected]="wasClicked">Link</a>`
 })
 export class SettingsComponent implements OnInit {
   opened: boolean;
@@ -50,15 +54,19 @@ export class SettingsComponent implements OnInit {
     });
   }
   ngOnInit() {
+    this.bodyTag.classList.add('blooo');
+    this.htmlTag.classList.add('blooo');
   }
   editBackground(newColor: string) {
     let snackbarRef = this.snackbar.open(newColor, 'Ok', { duration: 3000 });
-
+    //var backgroundControl = Element
     if(newColor == 'Dark') {
       let snackbarRef = this.snackbar.open('REBEL YELL', 'Ok', { duration: 3000 });
-      this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = 'black';
-      this.elementRef.nativeElement.style.backgroundColor = 'black';
-      this.elementRef.nativeElement.ownerDocument.style.newFont = 'Arial';
+      this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = 'black'; // the one that does thigns
+      this.elementRef.nativeElement.ownerDocument.style.backgroundColor = 'black';
+      this.elementRef.nativeElement.body.style.backgroundColor = 'black';
+      this.elementRef.nativeElement.style.background = 'black';
+
     }
     if(newColor == 'Light') {
       let snackbarRef = this.snackbar.open('SCREAM', 'Ok', { duration: 3000 });
@@ -69,10 +77,27 @@ export class SettingsComponent implements OnInit {
   }
   editFont(newFont: string) {
     console.log("Hello MOto");
-    
+    let snackbarRef = this.snackbar.open(newFont, 'Ok', { duration: 3000 });
+
+    if(newFont == 'Arial') {
+      let snackbarRef = this.snackbar.open('REBEL YELL', 'Ok', { duration: 3000 });
+      this.elementRef.nativeElement.ownerDocument.style.newFont = 'Arial';
+      this.setDark();
+    }
+    if(newFont == 'Times New Roman') {
+      let snackbarRef = this.snackbar.open('SCREAM', 'Ok', { duration: 3000 });
+      this.elementRef.nativeElement.ownerDocument.style.newFont = 'Arial';
+
+    }
 
   }
-
+  setDark() {
+    let styles = {
+      'background-color': 'red',
+      'font-weight': 'bold'
+    };
+    return styles;
+  }
   updateSetting(newElement: string, category: string){
     this.indexOfColon = this.settings.indexOf(':');
     if(category == "Color"){
@@ -85,7 +110,7 @@ export class SettingsComponent implements OnInit {
       this.settings = this.newSetting;
 
     }
-          // TODOl send the setting back to the database
+    this.backend.updateSetting(this.settings);
   }
 }
 
