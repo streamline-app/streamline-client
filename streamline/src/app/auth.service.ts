@@ -11,9 +11,11 @@ export class AuthService implements CanActivate {
   private id: number = 0;
   private name: string = '';
   private loggedIn: boolean = false;
+  private root: string = 'http://localhost:8000';
+  private auth: string = '/api/auth';
   private iss = {
-    login : 'http://localhost:8000/api/auth/login',
-    signup: 'http://localhost:8000/api/auth/signup'
+    login : this.root + this.auth + '/login',
+    signup: this.root + this.auth + '/signup'
   }
 
   constructor(private router: Router) { }
@@ -59,8 +61,6 @@ export class AuthService implements CanActivate {
   }
 
   isLoggedIn() {
-    let test1 =  this.loggedIn;
-    console.log(this.isValidToken());
     return this.isValidToken();
   }
 
