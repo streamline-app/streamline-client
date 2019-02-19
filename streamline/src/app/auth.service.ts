@@ -11,6 +11,10 @@ export class AuthService implements CanActivate {
   private id: number = 0;
   private name: string = '';
   private loggedIn: boolean = false;
+  private iss = {
+    login : 'http://localhost:8000/api/auth/login',
+    signup: 'http://localhost:8000/api/auth/signup'
+  }
 
   constructor(private router: Router) { }
 
@@ -51,10 +55,51 @@ export class AuthService implements CanActivate {
     this.loggedIn = false;
     this.name = '';
     this.id = 0;
+    this.removeToken();
   }
 
   isLoggedIn() {
-    return this.loggedIn;
+    let test1 =  this.loggedIn;
+    console.log(this.isValidToken());
+    return this.isValidToken();
+  }
+
+  handleToken(token) {
+    this.setToken(token);
+    console.log(this.isValidToken());
+  }
+
+  setToken(token) {
+    localStorage.setItem('token', token);
+  }
+
+  getToken() {
+    return localStorage.getItem('token');
+  }
+
+  removeToken() {
+    return localStorage.removeItem('token');
+  }
+
+  isValidToken() {
+    const token = this.getToken();
+    if (this.getToken()) {
+      const payload = this.payload(token);
+      if (payload) {
+        return Object.values(this.iss).indexOf(payload.iss) > -1 ? true : false;
+      }
+    }
+
+    return false;
+  }
+
+  payload(token) {
+    const payload = token.split('.')[1];
+    return this.decode(payload);
+  }
+
+  decode(payload) {
+    return JSON.parse(atob(payload));
   }
 
   

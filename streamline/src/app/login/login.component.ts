@@ -46,6 +46,7 @@ export class LoginComponent {
 
   postLogin(result) {
     this.auth.setLoggedIn(result.name, result.id);
+    this.auth.handleToken(result.access_token);
     this.router.navigateByUrl('/home');
   }
 
