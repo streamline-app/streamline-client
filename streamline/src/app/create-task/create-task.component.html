@@ -31,21 +31,17 @@
           <h4>Tags</h4>
           <div class="tag_box">
             <ul class="tags">
-              <li *ngFor="let tag of tags; index as i" [class.selected]="tag === selectedTag" (click)="onTagSelect(tag.name)" [ngStyle]="{'background-color': tag.color}">
+              <li *ngFor="let tag of tags; index as i" (click)="onTagSelect(tag)" [ngStyle]="{'background-color': tag.color}">
+                <!--          <mat-checkbox (click)="onTagSelect(tag)"></mat-checkbox> -->
                 {{tag.name}}
               </li>
             </ul>
           </div>
           <div>
             <mat-form-field>
-            <input matInput formControlName="tags">
+              <input matInput formControlName="tags">
             </mat-form-field>
           </div>
-          <!--
-          <button mat-stroked-button [matMenuTriggerFor]="menu">Existing Tags</button>
-          <mat-menu #menu="matMenu">
-            <button mat-menu-item *ngFor="let tag of tags">{{tag.name}}</button>
-          </mat-menu>-->
 
         </div>
       </div>

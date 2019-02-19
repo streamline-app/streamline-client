@@ -13,6 +13,7 @@ import { MatSnackBar } from '@angular/material';
 })
 export class CreateTaskComponent {
   tags: Tag[];
+  selectedTags: Tag[];
 
   faketag1: Tag;
   faketag2: Tag;
@@ -22,15 +23,14 @@ export class CreateTaskComponent {
     body: new FormControl(''),
     estimatedMin: new FormControl(0),
     estimatedHour: new FormControl(0),
-    tags: new FormControl('')
+    tags: new FormControl({ value: '', disabled: 'true'})
   });
 
-  constructor(private backend: BackendService, 
-    private auth: AuthService, 
-    private router: Router, 
-    private snackbar: MatSnackBar)
-    {
-      this.faketag1 = 
+  constructor(private backend: BackendService,
+    private auth: AuthService,
+    private router: Router,
+    private snackbar: MatSnackBar) {
+    this.faketag1 =
       {
         id: 1,
         name: 'fake1',
@@ -42,7 +42,7 @@ export class CreateTaskComponent {
         color: '#c4c4c4',
         userID: 1
       }
-      this.faketag2 = 
+    this.faketag2 =
       {
         id: 2,
         name: 'fake2',
@@ -54,9 +54,10 @@ export class CreateTaskComponent {
         color: '#e00000',
         userID: 1
       }
-      this.tags = [this.faketag1, this.faketag2];
-      this.getTags();
-    }
+    this.tags = [this.faketag1, this.faketag2];
+    this.selectedTags = [];
+    //this.getTags();
+  }
 
   public onSubmit() {
     let task: any = {
@@ -81,7 +82,7 @@ export class CreateTaskComponent {
 
   }
 
-  public getTags(){
+  public getTags() {
     this.backend.getUserTags(this.auth.getUserId()).subscribe(result => {
       this.tags = result;
     });
@@ -91,12 +92,28 @@ export class CreateTaskComponent {
     this.router.navigateByUrl('/home');
   }
 
-  public onTagSelect(name: string){
-    if(this.task.controls['tags'].value != '')
-      this.task.controls['tags'].setValue(this.task.controls['tags'].value + ',' + name);
-    else
-      this.task.controls['tags'].setValue(name);
+  public onTagSelect(tag: Tag) {
+    var index = this.selectedTags.indexOf(tag); //get index of tag in list (if it exists)
+    if (index === -1) {
+      this.selectedTags.push(tag);
+    }
+    else { //if it is already in the list, we will remove it
+      this.selectedTags.splice(index, 1);
+    }
 
+    //update form control value
+    this.task.controls['tags'].setValue(''); //empty field first
+    this.selectedTags.forEach(tag => {
+      this.task.controls['tags'].setValue(this.task.controls['tags'].value + ' ' + tag.name);
+    });
+
+    //    this.task.controls['tags'].setValue(this.selectedTags); //update form control
+    /*
+        if (this.task.controls['tags'].value != '')
+          this.task.controls['tags'].setValue(this.task.controls['tags'].value + ',' + tag.name);
+        else
+          this.task.controls['tags'].setValue(tag.name);
+    */
   }
 }
 
