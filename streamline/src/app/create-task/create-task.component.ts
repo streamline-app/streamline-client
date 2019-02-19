@@ -56,7 +56,7 @@ export class CreateTaskComponent {
       }
     this.tags = [this.faketag1, this.faketag2];
     this.selectedTags = [];
-    //this.getTags();
+    this.getTags();
   }
 
   public onSubmit() {
@@ -65,11 +65,11 @@ export class CreateTaskComponent {
       body: this.task.controls['body'].value,
       estimatedMin: this.task.controls['estimatedMin'].value,
       estimatedHour: this.task.controls['estimatedHour'].value,
-      tags: this.task.controls['tags'].value,
+      tags: this.parseTagArray(this.selectedTags),//list of tagIDs
       userID: this.auth.getUserId()
     }
 
-    this.backend.createTask(task).subscribe(task => {
+    this.backend.createTask(task).subscribe(res => {
       //three second snackbar pop up notification
       let snackbarRef = this.snackbar.open('Task Created!', 'Ok', { duration: 3000 });
 
@@ -104,7 +104,7 @@ export class CreateTaskComponent {
     //update form control value
     this.task.controls['tags'].setValue(''); //empty field first
     this.selectedTags.forEach(tag => {
-      this.task.controls['tags'].setValue(this.task.controls['tags'].value + ' ' + tag.name);
+      this.task.controls['tags'].setValue(this.task.controls['tags'].value + '/ ' + tag.name);
     });
 
     //    this.task.controls['tags'].setValue(this.selectedTags); //update form control
@@ -114,6 +114,17 @@ export class CreateTaskComponent {
         else
           this.task.controls['tags'].setValue(tag.name);
     */
+  }
+
+  //helper mehtod to get TagIDs from list of tags
+  parseTagArray(tags : Tag[]) : number[]{
+    let arr : number[] = [];
+
+    tags.forEach(tag => {
+      arr.push(tag.id);
+    });
+
+    return arr;
   }
 }
 

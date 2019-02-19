@@ -127,7 +127,8 @@ interface Task {
   title: string,
   body: string,
   estimatedMin: number,
-  estimatedHour: number
+  estimatedHour: number,
+  tags: Tag[]
 }
 
 interface Tag {
