@@ -1,6 +1,7 @@
 
   <h1 class="header">Tasks</h1>
   <hr class="seperator"/>
+  <button mat-stroked-button (click)="onCreatePressed()">Create Task</button>
   <div *ngFor="let task of tasks">
       <div>
       <mat-card class="mat-elevation-z10"  id="task-card">

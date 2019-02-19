@@ -22,6 +22,7 @@ export class BackendService {
 
   /* Task URLs */
   public createTaskURL: string = 'http://' + this.root + '/api/tasks';
+  public getUserTasksURL: string = 'http://' + this.root + '/api/tasks';
 
   /*  Tag URLs */
   public createTagURL: string = 'http://' + this.root + '/api/tags';
@@ -37,12 +38,25 @@ export class BackendService {
 
   constructor(private http: HttpClient, private snackbar: MatSnackBar) { }
 
+  /* ============ Task Functions ========== */
   createTask(task: Task): Observable<Task> {
     return this.http.post<Task>(this.createTaskURL, task, httpOptions)
       .pipe(
         catchError(this.handleError)
       );
   }
+
+  getUserTasks(userID: number): Observable<(Task[])>{
+    return this.http.get<Task[]>(this.getUserTasksURL,{
+      params: { userID: userID.toString() }, //string is required for params
+      headers: {
+        Authorization: 'my-auth-token'
+      }
+    })
+    .pipe(catchError(this.handleError));
+  }
+
+  /* ==================================== */
 
   /* =======  Tag Functions ======== */
   createTag(tag: Tag): Observable<Tag> {
@@ -109,6 +123,7 @@ export class BackendService {
 }
 
 interface Task {
+ // id: number,
   title: string,
   body: string,
   estimatedMin: number,
