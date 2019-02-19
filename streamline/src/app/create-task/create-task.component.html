@@ -16,11 +16,37 @@
       <div class="row">
         <div class="col-md-6">
           <h4>Expected Duration (hrs)</h4>
-          <mat-slider min="0" max="10" step="1" value="2" thumbLabel tickInterval="1" formControlName="estimatedMin"></mat-slider>
+          <mat-slider min="0" max="10" step="1" value="2" thumbLabel tickInterval="1" formControlName="estimatedMin">
+          </mat-slider>
         </div>
         <div class="col-md-6">
           <h4>Expected Duration (min)</h4>
-          <mat-slider min="0" max="59" step="1" value="3" thumbLabel tickInterval="1" formControlName="estimatedHour"></mat-slider>
+          <mat-slider min="0" max="59" step="1" value="3" thumbLabel tickInterval="1" formControlName="estimatedHour">
+          </mat-slider>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <h4>Tags</h4>
+          <div class="tag_box">
+            <ul class="tags">
+              <li *ngFor="let tag of tags; index as i" [class.selected]="tag === selectedTag" (click)="onTagSelect(tag.name)" [ngStyle]="{'background-color': tag.color}">
+                {{tag.name}}
+              </li>
+            </ul>
+          </div>
+          <div>
+            <mat-form-field>
+            <input matInput formControlName="tags">
+            </mat-form-field>
+          </div>
+          <!--
+          <button mat-stroked-button [matMenuTriggerFor]="menu">Existing Tags</button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item *ngFor="let tag of tags">{{tag.name}}</button>
+          </mat-menu>-->
+
         </div>
       </div>
 

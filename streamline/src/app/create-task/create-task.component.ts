@@ -12,15 +12,51 @@ import { MatSnackBar } from '@angular/material';
   styleUrls: ['./create-task.component.css']
 })
 export class CreateTaskComponent {
+  tags: Tag[];
+
+  faketag1: Tag;
+  faketag2: Tag;
 
   public task: FormGroup = new FormGroup({
     title: new FormControl(''),
     body: new FormControl(''),
     estimatedMin: new FormControl(0),
-    estimatedHour: new FormControl(0)
+    estimatedHour: new FormControl(0),
+    tags: new FormControl('')
   });
 
-  constructor(private backend: BackendService, private auth: AuthService, private router: Router, private snackbar: MatSnackBar) { }
+  constructor(private backend: BackendService, 
+    private auth: AuthService, 
+    private router: Router, 
+    private snackbar: MatSnackBar)
+    {
+      this.faketag1 = 
+      {
+        id: 1,
+        name: 'fake1',
+        description: 'fake desc',
+        tasks_comp: 0,
+        average_time: 0,
+        average_acc: 0,
+        task_overunder: 0,
+        color: '#c4c4c4',
+        userID: 1
+      }
+      this.faketag2 = 
+      {
+        id: 2,
+        name: 'fake2',
+        description: 'another fake desc',
+        tasks_comp: 0,
+        average_time: 0,
+        average_acc: 0,
+        task_overunder: 0,
+        color: '#e00000',
+        userID: 1
+      }
+      this.tags = [this.faketag1, this.faketag2];
+      this.getTags();
+    }
 
   public onSubmit() {
     let task: any = {
@@ -28,6 +64,7 @@ export class CreateTaskComponent {
       body: this.task.controls['body'].value,
       estimatedMin: this.task.controls['estimatedMin'].value,
       estimatedHour: this.task.controls['estimatedHour'].value,
+      tags: this.task.controls['tags'].value,
       userID: this.auth.getUserId()
     }
 
@@ -44,9 +81,34 @@ export class CreateTaskComponent {
 
   }
 
+  public getTags(){
+    this.backend.getUserTags(this.auth.getUserId()).subscribe(result => {
+      this.tags = result;
+    });
+  }
+
   public onCancel() {
     this.router.navigateByUrl('/home');
   }
+
+  public onTagSelect(name: string){
+    if(this.task.controls['tags'].value != '')
+      this.task.controls['tags'].setValue(this.task.controls['tags'].value + ',' + name);
+    else
+      this.task.controls['tags'].setValue(name);
+
+  }
 }
 
-// Object that represents data to be sent to server
+interface Tag {
+  id: number,
+  name: string,
+  description: string,
+  tasks_comp: number,
+  average_time: number,
+  average_acc: number,
+  task_overunder: number,
+  color: string,
+  userID: number
+};
+
