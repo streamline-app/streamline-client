@@ -26,26 +26,23 @@
         </div>
       </div>
 
+
       <div class="row">
         <div class="col-md-6">
           <h4>Tags</h4>
-          <div class="tag_box">
-            <ul class="tags">
-              <li *ngFor="let tag of tags; index as i" (click)="onTagSelect(tag)" [ngStyle]="{'background-color': tag.color}">
-                {{tag.name}}
-              </li>
-              <li (click)="createNewTag()">
-                 + Create New
-              </li>
-            </ul>
-            <div>
-                <mat-form-field>
-                  <input matInput formControlName="tags">
-                </mat-form-field>
-              </div>
-          </div>
-          
-
+          <mat-form-field>
+            <input matInput [matAutocomplete]="auto" [formControl]="rawTagsForm">
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option *ngFor="let tag of filteredTags | async"
+                (click)="onTagSelect(tag)">
+                <div class="square" [ngStyle]="{'background-color': tag.color}"></div> |
+                <span>{{tag.name}}</span>
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          <mat-form-field>
+              <input matInput formControlName="tags">
+          </mat-form-field>
         </div>
       </div>
 

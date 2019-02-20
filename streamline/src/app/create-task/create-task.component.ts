@@ -4,7 +4,8 @@ import { BackendService } from '../backend.service';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { MatSnackBar, MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
-import { TagsComponent } from '../tags/tags.component';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 
 @Component({
@@ -18,6 +19,9 @@ export class CreateTaskComponent {
 
   faketag1: Tag;
   faketag2: Tag;
+
+  public rawTagsForm: FormControl = new FormControl();
+  public filteredTags: Observable<Tag[]>;
 
   public task: FormGroup = new FormGroup({
     title: new FormControl(''),
@@ -60,8 +64,9 @@ export class CreateTaskComponent {
     //this.tags = [this.faketag1, this.faketag2];
     this.tags = [];
     this.selectedTags = [];
-    this.getTags();
+    this.getTags();  
   }
+
 
   public onSubmit() {
     let task: any = {
@@ -86,9 +91,17 @@ export class CreateTaskComponent {
 
   }
 
-  public getTags() {
+  public getTags(){
     this.backend.getUserTags(this.auth.getUserId()).subscribe(result => {
       this.tags = result;
+
+      //set up autofill for tags
+      this.filteredTags = this.rawTagsForm.valueChanges
+      .pipe(
+        startWith(''),
+        map(tag => tag ? this._filterTags(tag) : this.tags.slice())
+      );
+      
     });
   }
 
@@ -133,7 +146,12 @@ export class CreateTaskComponent {
         this.getTags();
       }
     });
+  }
     
+  private _filterTags(value: string): Tag[] {
+    const filterValue = value.toLowerCase();
+
+    return this.tags.filter(tag => tag.name.toLowerCase().indexOf(filterValue) === 0);
   }
 
   public onCancel() {
