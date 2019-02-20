@@ -37,6 +37,10 @@ export class BackendService {
   public loginURL: string = 'http://' + this.root + '/api/auth/login';
   public signupURL: string = 'http://' + this.root + '/api/auth/signup';
 
+  /* Auth Token URLs */
+  public setTokenURL: string = 'http://' + this.root + '/api/tokens/create';
+  public removeTokenURL : string = 'http://' + this.root + '/api/tokens/delete';
+
 
   constructor(private http: HttpClient, private snackbar: MatSnackBar) { }
 
@@ -126,8 +130,23 @@ export class BackendService {
       )
   }
 
-  private handleError(error: HttpErrorResponse) {
+  setAuthToken(token: TokenRequest) {
+    return this.http.post<Token>(this.setTokenURL, token, httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      )
+  }
 
+  removeAuthToken(token: string) {
+    return this.http.delete(this.removeTokenURL + '/' + token)
+      .pipe(
+        catchError(this.handleError)
+      )
+  }
+
+
+
+  private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
       console.error('An error occurred:', error.error.message);
@@ -188,4 +207,14 @@ interface LoginResponse {
   expires_in: number,
   token_type: string,
   user: string
+}
+
+interface TokenRequest {
+  userId: number,
+  token: string
+}
+
+interface Token {
+  user: number,
+  token: string
 }

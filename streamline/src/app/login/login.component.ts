@@ -47,6 +47,12 @@ export class LoginComponent {
   postLogin(result) {
     this.auth.setLoggedIn(result.name, result.id);
     this.auth.handleToken(result.access_token);
+
+    var tokenRequest = {
+      userId: result.id,
+      token: result.access_token
+    }
+    this.backend.setAuthToken(tokenRequest).subscribe();
     this.router.navigateByUrl('/home');
   }
 
