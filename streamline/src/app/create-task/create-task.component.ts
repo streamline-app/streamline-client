@@ -28,7 +28,7 @@ export class CreateTaskComponent {
     body: new FormControl(''),
     estimatedMin: new FormControl(0),
     estimatedHour: new FormControl(0),
-    tags: new FormControl({ value: '', disabled: 'true'})
+    tags: new FormControl({ value: '', disabled: 'true' })
   });
 
   constructor(private backend: BackendService,
@@ -36,7 +36,7 @@ export class CreateTaskComponent {
     private router: Router,
     private snackbar: MatSnackBar,
     public create_dialog: MatDialog,
-    ) {
+  ) {
     this.faketag1 =
       {
         id: 1,
@@ -64,7 +64,7 @@ export class CreateTaskComponent {
     //this.tags = [this.faketag1, this.faketag2];
     this.tags = [];
     this.selectedTags = [];
-    this.getTags();  
+    this.getTags();
   }
 
 
@@ -91,22 +91,22 @@ export class CreateTaskComponent {
 
   }
 
-  public getTags(){
+  public getTags() {
     this.backend.getUserTags(this.auth.getUserId()).subscribe(result => {
       this.tags = result;
 
       //set up autofill for tags
       this.filteredTags = this.rawTagsForm.valueChanges
-      .pipe(
-        startWith(''),
-        map(tag => tag ? this._filterTags(tag) : this.tags.slice())
-      );
-      
+        .pipe(
+          startWith(''),
+          map(tag => tag ? this._filterTags(tag) : this.tags.slice())
+        );
+
     });
   }
 
-  public createNewTag(){
-    
+  public createNewTag() {
+
     const dialogRef = this.create_dialog.open(TaskCreateTagDialog, {
       width: '250px',
       data: { name: '', desc: '', color: "#c4c4c4" }
@@ -132,22 +132,20 @@ export class CreateTaskComponent {
         this.backend.createTag(newTag).subscribe(result => {
 
           //three second snackbar pop up notification
-          let snackbarRef = this.snackbar.open('Tag Created!', 'Ok', { duration: 3000 });
+          let snackbarRef = this.snackbar.open('Tag Created! You can now add it to the list of tags.', 'Ok', { duration: 3000 });
 
           //update tags
           this.getTags();
+
         }, error => {
           console.log(error.message);
           //three second snackbar pop up notification
           let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
         });
-
-        //update tags list in display
-        this.getTags();
       }
     });
   }
-    
+
   private _filterTags(value: string): Tag[] {
     const filterValue = value.toLowerCase();
 
@@ -159,7 +157,10 @@ export class CreateTaskComponent {
   }
 
   public onTagSelect(tag: Tag) {
+    console.log('before: ');
+    console.log(this.selectedTags);
     var index = this.selectedTags.indexOf(tag); //get index of tag in list (if it exists)
+    console.log('index: ' + index);
     if (index === -1) {
       this.selectedTags.push(tag);
     }
@@ -172,11 +173,13 @@ export class CreateTaskComponent {
     this.selectedTags.forEach(tag => {
       this.task.controls['tags'].setValue(this.task.controls['tags'].value + '/ ' + tag.name);
     });
+    console.log('after: ');
+    console.log(this.selectedTags);
   }
 
   //helper mehtod to get TagIDs from list of tags
-  parseTagArray(tags : Tag[]) : number[]{
-    let arr : number[] = [];
+  parseTagArray(tags: Tag[]): number[] {
+    let arr: number[] = [];
 
     tags.forEach(tag => {
       arr.push(tag.id);
