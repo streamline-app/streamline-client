@@ -87,7 +87,6 @@ example-margin {
 
   /* for tag display within tasks */
   div.tag_box {
-    width: 50%;
     overflow-x: auto;
     white-space: nowrap;
 }

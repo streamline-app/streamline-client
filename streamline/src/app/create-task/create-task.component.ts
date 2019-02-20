@@ -7,6 +7,8 @@ import { MatSnackBar, MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
+const MINUTES_TO_SECONDS: number = 60;
+const HOURS_TO_SECONDS: number = 3600;
 
 @Component({
   selector: 'app-create-task',
@@ -74,6 +76,7 @@ export class CreateTaskComponent {
       body: this.task.controls['body'].value,
       estimatedMin: this.task.controls['estimatedMin'].value,
       estimatedHour: this.task.controls['estimatedHour'].value,
+      expDuration: (this.task.controls['estimatedMin'].value * MINUTES_TO_SECONDS) + (this.task.controls['estimatedHour'].value * HOURS_TO_SECONDS), //convert sum of estimations to seconds
       tags: this.parseTagArray(this.selectedTags),//list of tagIDs
       userID: this.auth.getUserId()
     }

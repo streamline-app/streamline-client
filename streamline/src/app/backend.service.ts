@@ -21,16 +21,16 @@ export class BackendService {
   public root: string = 'localhost:8000';
 
   /* Task URLs */
-  public createTaskURL: string = 'http://' + this.root + '/api/tasks';
-  public getUserTasksURL: string = 'http://' + this.root + '/api/tasks/all';
+  public createTaskURL: string = 'http://' + this.root + '/api/tasks/create';
+  public getUserTasksURL: string = 'http://' + this.root + '/api/tasks/';
   public getTaskTagsURL: string = 'http://' + this.root + '/api/tasks/tags';
   public removeTagURL: string = 'http://' + this.root + '/api/tasks/removeTag';
 
   /*  Tag URLs */
-  public createTagURL: string = 'http://' + this.root + '/api/tags';
+  public createTagURL: string = 'http://' + this.root + '/api/tags/create';
   public getUserTagsURL: string = 'http://' + this.root + '/api/tags';
-  public deleteTagURL: string = 'http://' + this.root + '/api/tags';
-  public editTagURL: string = 'http://' + this.root + '/api/tags';
+  public deleteTagURL: string = 'http://' + this.root + '/api/tags/delete';
+  public editTagURL: string = 'http://' + this.root + '/api/tags/edit';
 
 
   /*  Auth URLs */
@@ -49,7 +49,8 @@ export class BackendService {
   }
 
   getUserTasks(userID: number): Observable<(Task[])>{
-    return this.http.get<Task[]>(this.getUserTasksURL + '/' + userID,{
+    return this.http.get<Task[]>(this.getUserTasksURL,{
+      params: { userID: userID.toString() },
       headers: {
         Authorization: 'my-auth-token'
       }
@@ -149,6 +150,7 @@ interface Task {
   body: string,
   estimatedMin: number,
   estimatedHour: number,
+  expDuration: number,
   tags: Tag[]
 }
 
