@@ -1,0 +1,12 @@
+#menu {
+    float: right;
+    margin-right: 8px;
+    margin-top: 8px;
+    height: 50px;
+    background-color: brown;
+}
+
+#navigation {
+    width: 100%;
+    background-color: brown;
+}

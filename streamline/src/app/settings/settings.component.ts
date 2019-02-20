@@ -66,10 +66,10 @@ export class SettingsComponent implements OnInit {
     //var backgroundControl = Element
     if(newColor == 'Dark') {
       let snackbarRef = this.snackbar.open('REBEL YELL', 'Ok', { duration: 3000 });
-      this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = 'black'; // the one that does thigns
-      this.elementRef.nativeElement.ownerDocument.style.backgroundColor = 'black';
-      this.elementRef.nativeElement.body.style.backgroundColor = 'black';
-      this.elementRef.nativeElement.style.background = 'black';
+      this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = 'black'; // the one that does thigngs
+      //this.elementRef.nativeElement.ownerDocument.style.backgroundColor = 'black';
+      //this.elementRef.nativeElement.body.style.backgroundColor = 'black';
+      //this.elementRef.nativeElement.style.background = 'black';
 
     }
     if(newColor == 'Light') {
