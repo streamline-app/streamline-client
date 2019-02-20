@@ -59,18 +59,12 @@ export class CreateTaskComponent {
         color: '#e00000',
         userID: 1
       }
-  //  this.tags = [this.faketag1, this.faketag2];
+    //this.tags = [this.faketag1, this.faketag2];
+    this.tags = [];
     this.selectedTags = [];
-    this.getTags();
-
-      
+    this.getTags();  
   }
 
-  private _filterTags(value: string): Tag[] {
-    const filterValue = value.toLowerCase();
-
-    return this.tags.filter(tag => tag.name.toLowerCase().indexOf(filterValue) === 0);
-  }
 
   public onSubmit() {
     let task: any = {
@@ -107,6 +101,12 @@ export class CreateTaskComponent {
       );
       
     });
+  }
+
+  private _filterTags(value: string): Tag[] {
+    const filterValue = value.toLowerCase();
+
+    return this.tags.filter(tag => tag.name.toLowerCase().indexOf(filterValue) === 0);
   }
 
   public onCancel() {
