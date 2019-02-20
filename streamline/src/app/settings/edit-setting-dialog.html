@@ -1,0 +1,14 @@
+<mat-sidenav-container class="container">
+    <mat-sidenav-content class="main_box">
+      <button mat-stroked-button (click)="createTag()">Edit Setting</button>
+  
+      <div class="tag_box">
+        <ul class="tags">
+          <li *ngFor="let tag of tags" [class.selected]="tag === selectedTag" (click)="onSelect(tag)">
+            <span class="badge">{{tag.id}}</span> {{tag.name}}
+          </li>
+        </ul>
+      </div>
+  
+    </mat-sidenav-content>
+  </mat-sidenav-container>
