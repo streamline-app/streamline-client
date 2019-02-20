@@ -12,7 +12,6 @@ import { Router } from '@angular/router';
 export class TasksComponent implements OnInit {
   
   tasks: Task[] = [];
-  tags: Tag[][] = [];
 
   constructor(private backend: BackendService,
     private auth: AuthService,
@@ -43,7 +42,12 @@ export class TasksComponent implements OnInit {
         this.backend.getTaskTags(task.id).subscribe(res => {
           console.log('tags retrieved for task ' + task.id + ':');
           console.log(res);
-          this.tags[count++] = res;
+          
+        //  this.tasks[count].tags = [];
+          this.tasks[count].tags = res;
+          console.log(this.tasks[count].tags);
+
+          count++;
         });
       });
 
@@ -79,7 +83,8 @@ interface Task {
   title: string,
   body: string,
   estimatedMin: number,
-  estimatedHour: number
+  estimatedHour: number,
+  tags: Tag[]
 };
 
 interface Tag {
