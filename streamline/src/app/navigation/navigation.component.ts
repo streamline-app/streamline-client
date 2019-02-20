@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
+import { BackendService } from '../backend.service';
 
 @Component({
   selector: 'app-navigation',
@@ -9,7 +10,7 @@ import { AuthService } from '../auth.service';
 })
 export class NavigationComponent{
 
-  constructor(private router: Router, private auth: AuthService) { }
+  constructor(private router: Router, private auth: AuthService, private backend: BackendService) { }
 
   public onLogin() {
     this.router.navigateByUrl('login');
@@ -24,8 +25,10 @@ export class NavigationComponent{
   }
 
   public onLogout() {
-    this.auth.setLoggedOut();
-    this.router.navigateByUrl('login');
+    this.backend.removeAuthToken(this.auth.getToken()).subscribe(res => {
+      this.auth.setLoggedOut();
+      this.router.navigateByUrl('login');
+    });
   }
 
 
