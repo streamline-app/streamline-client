@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { BackendService } from '../backend.service';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
+import { TagsComponent } from '../tags/tags.component';
 
 
 @Component({
@@ -29,7 +30,9 @@ export class CreateTaskComponent {
   constructor(private backend: BackendService,
     private auth: AuthService,
     private router: Router,
-    private snackbar: MatSnackBar) {
+    private snackbar: MatSnackBar,
+    public create_dialog: MatDialog,
+    ) {
     this.faketag1 =
       {
         id: 1,
@@ -54,7 +57,8 @@ export class CreateTaskComponent {
         color: '#e00000',
         userID: 1
       }
-    this.tags = [this.faketag1, this.faketag2];
+    //this.tags = [this.faketag1, this.faketag2];
+    this.tags = [];
     this.selectedTags = [];
     this.getTags();
   }
@@ -88,6 +92,50 @@ export class CreateTaskComponent {
     });
   }
 
+  public createNewTag(){
+    
+    const dialogRef = this.create_dialog.open(TaskCreateTagDialog, {
+      width: '250px',
+      data: { name: '', desc: '', color: "#c4c4c4" }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result != null) {
+        //construct Tag object with input values
+        let newTag: Tag = {
+          id: 1,    //this value is arbitrary and will not be saved in the DB
+          name: result.name,
+          description: result.desc,
+          tasks_comp: 0,
+          average_time: 0,
+          average_acc: 0,
+          task_overunder: 0,
+          color: result.color,
+          userID: this.auth.getUserId()
+        }
+
+        console.log(newTag);
+        //send data to backend
+        this.backend.createTag(newTag).subscribe(result => {
+
+          //three second snackbar pop up notification
+          let snackbarRef = this.snackbar.open('Tag Created!', 'Ok', { duration: 3000 });
+
+          //update tags
+          this.getTags();
+        }, error => {
+          console.log(error.message);
+          //three second snackbar pop up notification
+          let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
+        });
+
+        //update tags list in display
+        this.getTags();
+      }
+    });
+    
+  }
+
   public onCancel() {
     this.router.navigateByUrl('/home');
   }
@@ -106,14 +154,6 @@ export class CreateTaskComponent {
     this.selectedTags.forEach(tag => {
       this.task.controls['tags'].setValue(this.task.controls['tags'].value + '/ ' + tag.name);
     });
-
-    //    this.task.controls['tags'].setValue(this.selectedTags); //update form control
-    /*
-        if (this.task.controls['tags'].value != '')
-          this.task.controls['tags'].setValue(this.task.controls['tags'].value + ',' + tag.name);
-        else
-          this.task.controls['tags'].setValue(tag.name);
-    */
   }
 
   //helper mehtod to get TagIDs from list of tags
@@ -125,6 +165,31 @@ export class CreateTaskComponent {
     });
 
     return arr;
+  }
+}
+
+
+
+
+@Component({
+  selector: 'task-create-tag/task-create-tag-dialog',
+  templateUrl: 'task-create-tag/task-create-tag-dialog.html',
+})
+export class TaskCreateTagDialog {
+
+  constructor(public dialogRef: MatDialogRef<TaskCreateTagDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: CreateTagDialogData) {
+
+  }
+
+  createTag() {
+    //close the dialog, data will be returned to parent component
+    this.dialogRef.close(this.data);
+  }
+
+  closeDiag() {
+    //return to parent component, result will be undefined
+    this.dialogRef.close();
   }
 }
 
@@ -140,3 +205,8 @@ interface Tag {
   userID: number
 };
 
+export interface CreateTagDialogData {
+  name: string,
+  desc: string,
+  color: string
+};

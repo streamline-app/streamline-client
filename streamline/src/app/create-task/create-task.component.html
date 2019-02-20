@@ -34,13 +34,17 @@
               <li *ngFor="let tag of tags; index as i" (click)="onTagSelect(tag)" [ngStyle]="{'background-color': tag.color}">
                 {{tag.name}}
               </li>
+              <li (click)="createNewTag()">
+                 + Create New
+              </li>
             </ul>
+            <div>
+                <mat-form-field>
+                  <input matInput formControlName="tags">
+                </mat-form-field>
+              </div>
           </div>
-          <div>
-            <mat-form-field>
-              <input matInput formControlName="tags">
-            </mat-form-field>
-          </div>
+          
 
         </div>
       </div>
