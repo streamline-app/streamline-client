@@ -24,6 +24,7 @@ export class BackendService {
   public createTaskURL: string = 'http://' + this.root + '/api/tasks';
   public getUserTasksURL: string = 'http://' + this.root + '/api/tasks/all';
   public getTaskTagsURL: string = 'http://' + this.root + '/api/tasks/tags';
+  public removeTagURL: string = 'http://' + this.root + '/api/tasks/removeTag';
 
   /*  Tag URLs */
   public createTagURL: string = 'http://' + this.root + '/api/tags';
@@ -54,6 +55,13 @@ export class BackendService {
       }
     })
     .pipe(catchError(this.handleError));
+  }
+
+  removeTag(taskID: number, tagID: number){
+    return this.http.post(this.removeTagURL + '/' + taskID + '/' + tagID, httpOptions) //append taskID then tagID
+    .pipe(
+      catchError(this.handleError)
+    );
   }
 
   /* ==================================== */

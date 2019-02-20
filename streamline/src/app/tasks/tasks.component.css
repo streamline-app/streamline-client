@@ -115,11 +115,10 @@ example-margin {
     color: white;
   }
 
-/* don't change hover unless we decide to link it to something
   .tags li:hover {
     left: .1em;
   }
-*/
+
   .tags .text {
     position: relative;
   }

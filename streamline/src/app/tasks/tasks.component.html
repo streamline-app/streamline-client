@@ -36,7 +36,8 @@
             <h4>Tags</h4>
             <div class="tag_box">
               <ul class="tags">
-                <li *ngFor="let tag of task.tags" [ngStyle]="{'background-color': tag.color}">
+                <li *ngFor="let tag of task.tags" [ngStyle]="{'background-color': tag.color}"
+                  (click)="removeTag(task.id, tag.id)">
                   {{tag.name}}
                 </li>
               </ul>

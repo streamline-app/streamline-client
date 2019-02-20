@@ -37,19 +37,7 @@ export class TasksComponent implements OnInit {
       this.tasks = result;
 
       //get tags for each task
-      var count = 0;
-      this.tasks.forEach(task => {
-        this.backend.getTaskTags(task.id).subscribe(res => {
-          console.log('tags retrieved for task ' + task.id + ':');
-          console.log(res);
-          
-        //  this.tasks[count].tags = [];
-          this.tasks[count].tags = res;
-          console.log(this.tasks[count].tags);
-
-          count++;
-        });
-      });
+      this.getTaskTags();
 
     }, error => {
       console.log(error.message);
@@ -58,8 +46,33 @@ export class TasksComponent implements OnInit {
     });
   }
   
-  getTaskTags(tagID: number){
+  getTaskTags(){
+    var count = 0;
+    this.tasks.forEach(task => {
+      this.backend.getTaskTags(task.id).subscribe(res => {
+        console.log('tags retrieved for task ' + task.id + ':');
+        console.log(res);
+        
+        this.tasks[count].tags = res;
+        console.log(this.tasks[count].tags);
 
+        count++;
+      });
+    });
+  }
+
+  removeTag(taskID: number, tagID: number){
+    this.backend.removeTag(taskID, tagID).subscribe(res => {
+      console.log('TagID ' + tagID +  ' removed From TaskID' + taskID);
+
+      //reload tags
+      this.getTaskTags();
+    },
+    error => {
+      console.log(error.message);
+      //three second snackbar pop up notification
+      let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
+    });
   }
 
   collapse(id) {
