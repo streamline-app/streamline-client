@@ -32,7 +32,6 @@
           <div class="tag_box">
             <ul class="tags">
               <li *ngFor="let tag of tags; index as i" (click)="onTagSelect(tag)" [ngStyle]="{'background-color': tag.color}">
-                <!--          <mat-checkbox (click)="onTagSelect(tag)"></mat-checkbox> -->
                 {{tag.name}}
               </li>
             </ul>

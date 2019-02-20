@@ -22,7 +22,8 @@ export class BackendService {
 
   /* Task URLs */
   public createTaskURL: string = 'http://' + this.root + '/api/tasks';
-  public getUserTasksURL: string = 'http://' + this.root + '/api/tasks';
+  public getUserTasksURL: string = 'http://' + this.root + '/api/tasks/all';
+  public getTaskTagsURL: string = 'http://' + this.root + '/api/tasks/tags';
 
   /*  Tag URLs */
   public createTagURL: string = 'http://' + this.root + '/api/tags';
@@ -47,8 +48,7 @@ export class BackendService {
   }
 
   getUserTasks(userID: number): Observable<(Task[])>{
-    return this.http.get<Task[]>(this.getUserTasksURL,{
-      params: { userID: userID.toString() }, //string is required for params
+    return this.http.get<Task[]>(this.getUserTasksURL + '/' + userID,{
       headers: {
         Authorization: 'my-auth-token'
       }
@@ -74,6 +74,19 @@ export class BackendService {
           Authorization: 'my-auth-token'
         }
       }) 
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  getTaskTags(taskID: number): Observable<Tag[]> {
+    return this.http.get<Tag[]>(this.getTaskTagsURL + '/' + taskID,
+      {
+        params: { taskID: taskID.toString() },
+        headers:{
+          Authorization: 'my-auth-token'
+        }
+      })
       .pipe(
         catchError(this.handleError)
       );
@@ -123,7 +136,7 @@ export class BackendService {
 }
 
 interface Task {
- // id: number,
+  id: number,
   title: string,
   body: string,
   estimatedMin: number,

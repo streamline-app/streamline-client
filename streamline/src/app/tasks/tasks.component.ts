@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 export class TasksComponent implements OnInit {
   
   tasks: Task[] = [];
+  tags: Tag[][] = [];
 
   constructor(private backend: BackendService,
     private auth: AuthService,
@@ -28,18 +29,33 @@ export class TasksComponent implements OnInit {
   }
 
   getUserTasks() {
-    this.backend.getUserTasks(this.auth.getUserId()).subscribe(result => { //TODO change userID
+    this.backend.getUserTasks(this.auth.getUserId()).subscribe(result => {
+      console.log('retrieved tasks:');
       console.log(result);
       //window.alert('Got Tags');
 
       //set display to show result
       this.tasks = result;
 
+      //get tags for each task
+      var count = 0;
+      this.tasks.forEach(task => {
+        this.backend.getTaskTags(task.id).subscribe(res => {
+          console.log('tags retrieved for task ' + task.id + ':');
+          console.log(res);
+          this.tags[count++] = res;
+        });
+      });
+
     }, error => {
       console.log(error.message);
       //three second snackbar pop up notification
       let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
     });
+  }
+  
+  getTaskTags(tagID: number){
+
   }
 
   collapse(id) {
@@ -59,8 +75,21 @@ export class TasksComponent implements OnInit {
 }
 
 interface Task {
+  id: number;
   title: string,
   body: string,
   estimatedMin: number,
   estimatedHour: number
-}
+};
+
+interface Tag {
+  id: number,
+  name: string,
+  description: string,
+  tasks_comp: number,
+  average_time: number,
+  average_acc: number,
+  task_overunder: number,
+  color: string,
+  userID: number
+};
