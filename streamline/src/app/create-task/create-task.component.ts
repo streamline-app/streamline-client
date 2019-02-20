@@ -59,16 +59,10 @@ export class CreateTaskComponent {
         color: '#e00000',
         userID: 1
       }
-    this.tags = [this.faketag1, this.faketag2];
+  //  this.tags = [this.faketag1, this.faketag2];
     this.selectedTags = [];
     this.getTags();
 
-      //set up autofill for tags
-      this.filteredTags = this.rawTagsForm.valueChanges
-      .pipe(
-        startWith(''),
-        map(tag => tag ? this._filterTags(tag) : this.tags.slice())
-      );
       
   }
 
@@ -101,9 +95,17 @@ export class CreateTaskComponent {
 
   }
 
-  public getTags() {
+  public getTags(){
     this.backend.getUserTags(this.auth.getUserId()).subscribe(result => {
       this.tags = result;
+
+      //set up autofill for tags
+      this.filteredTags = this.rawTagsForm.valueChanges
+      .pipe(
+        startWith(''),
+        map(tag => tag ? this._filterTags(tag) : this.tags.slice())
+      );
+      
     });
   }
 
