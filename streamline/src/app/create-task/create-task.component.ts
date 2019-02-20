@@ -114,6 +114,21 @@ export class CreateTaskComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result != null) {
+        //check if tag already exists under given name
+        let exists : boolean = false;
+        this.tags.forEach(element => {
+          if(element.name === result.name){
+            //notify user
+            let snackbarRef = this.snackbar.open('You already have a tag with that name!', 'Ok', { duration: 3000 });
+
+            //mark flag
+            exists = true;
+          }
+        });
+
+        if(exists) //if tag already exists, don't create a new one
+          return;
+
         //construct Tag object with input values
         let newTag: Tag = {
           id: 1,    //this value is arbitrary and will not be saved in the DB
