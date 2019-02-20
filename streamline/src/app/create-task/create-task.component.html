@@ -26,6 +26,21 @@
         </div>
       </div>
 
+
+      <div>
+          <mat-form-field>
+            <input matInput placeholder="Tag" aria-label="Tag" [matAutocomplete]="auto"
+            [formControl]="rawTagsForm">
+            <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let tag of filteredTags | async" [value]="tag.name">
+                  <span>{{tag.name}}</span> |
+                </mat-option>
+              </mat-autocomplete>
+            <!--<input matInput formControlName="tags">-->
+          </mat-form-field>
+        </div>
+
+      <!-- OLD TAG FORMAT
       <div class="row">
         <div class="col-md-6">
           <h4>Tags</h4>
@@ -41,10 +56,9 @@
               <input matInput formControlName="tags">
             </mat-form-field>
           </div>
-
         </div>
       </div>
-
+    -->
       <div class="row" id="form-buttons">
         <div class="col-sm-6">
           <button mat-button id="submit" (click)="onSubmit()">Submit</button>

@@ -4,6 +4,8 @@ import { BackendService } from '../backend.service';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 
 @Component({
@@ -17,6 +19,9 @@ export class CreateTaskComponent {
 
   faketag1: Tag;
   faketag2: Tag;
+
+  public rawTagsForm: FormControl = new FormControl();
+  public filteredTags: Observable<Tag[]>;
 
   public task: FormGroup = new FormGroup({
     title: new FormControl(''),
@@ -57,6 +62,20 @@ export class CreateTaskComponent {
     this.tags = [this.faketag1, this.faketag2];
     this.selectedTags = [];
     this.getTags();
+
+      //set up autofill for tags
+      this.filteredTags = this.rawTagsForm.valueChanges
+      .pipe(
+        startWith(''),
+        map(tag => tag ? this._filterTags(tag) : this.tags.slice())
+      );
+      
+  }
+
+  private _filterTags(value: string): Tag[] {
+    const filterValue = value.toLowerCase();
+
+    return this.tags.filter(tag => tag.name.toLowerCase().indexOf(filterValue) === 0);
   }
 
   public onSubmit() {
