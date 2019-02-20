@@ -1,5 +1,6 @@
-import { Component, OnInit, Inject, ElementRef } from '@angular/core';
+import { Component, OnInit, Inject, ElementRef, isDevMode } from '@angular/core';
 import { BackendService } from '../backend.service';
+import { DomSanitizer, DOCUMENT} from '@angular/platform-browser';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material';
 import { style } from '@angular/animations';
 import { NgStyle } from '@angular/common';
@@ -19,8 +20,6 @@ export interface EditSettingDialogData {
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.css'],
-  template: `<a (click)="editBackground()"
-  [class.selected]="wasClicked">Link</a>`
 })
 export class SettingsComponent implements OnInit {
   opened: boolean;
@@ -28,12 +27,17 @@ export class SettingsComponent implements OnInit {
   selectedSetting: string;
   newSetting: string;
   indexOfColon: number;
-  bodyTag: HTMLBodyElement = document.getElementsByTagName('body')[0];
-  htmlTag: HTMLElement = document.getElementsByTagName('html')[0];
-  constructor(private backend: BackendService,
+  //bodyTag: HTMLBodyElement = document.getElementsByTagName('body')[0];
+  //htmlTag: HTMLElement = document.getElementsByTagName('html')[0];
+  cssUrl: string;
+  
+  constructor(@Inject(DOCUMENT) private document,
+    private backend: BackendService,
     public create_dialog: MatDialog,
     private snackbar: MatSnackBar,
     private elementRef: ElementRef,
+    public sanitizer: DomSanitizer,
+
     ) {
       this.opened = false;
       this.getUserSettings();
@@ -54,8 +58,8 @@ export class SettingsComponent implements OnInit {
     });
   }
   ngOnInit() {
-    this.bodyTag.classList.add('blooo');
-    this.htmlTag.classList.add('blooo');
+    //this.bodyTag.classList.add('blooo');
+    //this.htmlTag.classList.add('blooo');
   }
   editBackground(newColor: string) {
     let snackbarRef = this.snackbar.open(newColor, 'Ok', { duration: 3000 });
@@ -72,6 +76,8 @@ export class SettingsComponent implements OnInit {
       let snackbarRef = this.snackbar.open('SCREAM', 'Ok', { duration: 3000 });
       this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = 'white';
       this.elementRef.nativeElement.style.color = 'white';
+      this.cssUrl = '/settings.component2.css';
+      this.document.getElementById('theme').setAttribute('href', 'settings.component2.css');
     }
     
   }
