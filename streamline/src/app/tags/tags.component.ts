@@ -172,6 +172,20 @@ export class TagsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result != null) {
+          //check if tag already exists under given name
+          let exists : boolean = false;
+          this.tags.forEach(element => {
+            if(element.name === result.name){
+              //notify user
+              let snackbarRef = this.snackbar.open('You already have a tag with that name!', 'Ok', { duration: 3000 });
+  
+              //mark flag
+              exists = true;
+            }
+          });
+  
+          if(exists) //if it already exists, don't make a new one
+            return;
         //close sidebar showing old tags details
         this.opened = false;
 
