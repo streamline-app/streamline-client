@@ -43,7 +43,7 @@
       <div class="square" [ngStyle]="{'background-color': selectedTag.color}"></div>
     </div>
     <mat-divider></mat-divider>
-    <button mat-stroked-button class="edit_button" (click)="editTag(selectedTag.id)">Edit Tag</button>
+    <button mat-stroked-button class="edit_button" (click)="editTag(selectedTag)">Edit Tag</button>
     <button mat-stroked-button class="del_button" (click)="deleteTag(selectedTag.id)">Delete Tag</button>
   </mat-sidenav>
 </mat-sidenav-container>
