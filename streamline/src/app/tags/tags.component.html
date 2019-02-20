@@ -5,7 +5,7 @@
     <div class="tag_box">
       <ol class="tags">
         <li *ngFor="let tag of tags; index as i" [class.selected]="tag === selectedTag" (click)="onSelect(tag)">
-          <span class="badge">{{i+1}}</span> {{tag.name}}
+          <span class="badge" [ngStyle]="{'background-color': tag.color}">{{i+1}}</span> {{tag.name}}
         </li>
       </ol>
     </div>

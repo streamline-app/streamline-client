@@ -28,14 +28,47 @@ export class TasksComponent implements OnInit {
   }
 
   getUserTasks() {
-    this.backend.getUserTasks(this.auth.getUserId()).subscribe(result => { //TODO change userID
+    this.backend.getUserTasks(this.auth.getUserId()).subscribe(result => {
+      console.log('retrieved tasks:');
       console.log(result);
       //window.alert('Got Tags');
 
       //set display to show result
       this.tasks = result;
 
+      //get tags for each task
+      this.getTaskTags();
+
     }, error => {
+      console.log(error.message);
+      //three second snackbar pop up notification
+      let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
+    });
+  }
+  
+  getTaskTags(){
+    var count = 0;
+    this.tasks.forEach(task => {
+      this.backend.getTaskTags(task.id).subscribe(res => {
+        console.log('tags retrieved for task ' + task.id + ':');
+        console.log(res);
+        
+        this.tasks[count].tags = res;
+        console.log(this.tasks[count].tags);
+
+        count++;
+      });
+    });
+  }
+
+  removeTag(taskID: number, tagID: number){
+    this.backend.removeTag(taskID, tagID).subscribe(res => {
+      console.log('TagID ' + tagID +  ' removed From TaskID' + taskID);
+
+      //reload tags
+      this.getTaskTags();
+    },
+    error => {
       console.log(error.message);
       //three second snackbar pop up notification
       let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
@@ -59,8 +92,22 @@ export class TasksComponent implements OnInit {
 }
 
 interface Task {
+  id: number;
   title: string,
   body: string,
   estimatedMin: number,
-  estimatedHour: number
-}
+  estimatedHour: number,
+  tags: Tag[]
+};
+
+interface Tag {
+  id: number,
+  name: string,
+  description: string,
+  tasks_comp: number,
+  average_time: number,
+  average_acc: number,
+  task_overunder: number,
+  color: string,
+  userID: number
+};
