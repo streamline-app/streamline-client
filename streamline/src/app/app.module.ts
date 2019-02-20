@@ -17,6 +17,8 @@ import { FormsModule } from '@angular/forms';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { AuthService } from './auth.service';
 import { TasksComponent } from './tasks/tasks.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { JwtInterceptor } from './jwt.interceptor';
 
 
 const appRoutes: Routes = [
@@ -58,6 +60,7 @@ const appRoutes: Routes = [
   ],
   providers: [ 
     {provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig},
+    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
   ],
   bootstrap: [AppComponent],
   entryComponents: [CreateTagDialog, DeleteConfirmDialog, EditTagDialog, TaskCreateTagDialog]

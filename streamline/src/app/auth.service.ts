@@ -62,7 +62,14 @@ export class AuthService implements CanActivate {
   }
 
   isLoggedIn() {
-    return this.isValidToken();
+    if (this.isValidToken()) {
+      const token = this.getToken();
+      var payload = this.payload(token);
+      this.setUserId(payload.sub);
+      return true;
+    }
+
+    return false;
   }
 
   handleToken(token) {
