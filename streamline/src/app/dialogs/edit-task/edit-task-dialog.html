@@ -22,7 +22,7 @@
     </div>
 </div>
 
-<div mat-dialog-actions class="button_box">
-    <button mat-button (click)="editTask()">Update</button>
-    <button mat-button (click)="closeDialog()">Cancel</button>
-</div>
+<mat-dialog-actions align="end" style="width: inherit;" class="button_box">
+    <button mat-stroked-button (click)="editTask()">Update</button>
+    <button mat-stroked-button style="margin-left: 5px;" (click)="closeDialog()">Cancel</button>
+</mat-dialog-actions>

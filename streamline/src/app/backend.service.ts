@@ -59,6 +59,13 @@ export class BackendService {
       );
   }
 
+  getTask(taskID: number): Observable<Task> {
+    return this.http.get<Task>(this.getUserTasksURL + taskID, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
   getUserTasks(userID: number): Observable<(Task[])> {
     return this.http.get<Task[]>(this.getUserTasksURL, {
       params: { userID: userID.toString() },
@@ -196,7 +203,7 @@ export class BackendService {
       // The response body may contain clues as to what went wrong,
       console.error(
         `Backend returned code ${error.status}, ` +
-        `body was: ${error.error}`);
+        `body was: ${error.error.message}`);
     }
     // return an observable with a user-facing error message
     return throwError(
@@ -211,6 +218,7 @@ interface Task {
   workedDuration: number,
   estimatedMin: number,
   estimatedHour: number,
+  lastWorkedAt: number,
   expDuration: number,
   isFinished: number,
   tags: Tag[]

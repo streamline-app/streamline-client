@@ -48,17 +48,17 @@
       <div class="row">
         <div class="col-md-6">
           <button mat-stroked-button id="play_{{i}}" class="ctrl_btn" (click)="startTask(task.id, i)"
-            [disabled]="false">
+            [disabled]="task.lastWorkedAt != null">
             <mat-icon>play_arrow</mat-icon>
             <span class="tooltiptext">Start</span>
           </button>
           <button mat-stroked-button id="stop_{{i}}" class="ctrl_btn" (click)="stopTask(task.id, i)"
-            [disabled]="false">
+            [disabled]="task.lastWorkedAt == null">
             <mat-icon>pause</mat-icon>
             <span class="tooltiptext">Stop</span>
           </button>
           <button mat-stroked-button id="finish_{{i}}" class="ctrl_btn" (click)="finishTask(task.id, i)"
-            [disabled]="false">
+            [disabled]="task.lastWorkedAt != null">
             <mat-icon>check</mat-icon>
             <span class="tooltiptext">Finished</span>
           </button>

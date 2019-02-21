@@ -27,6 +27,9 @@ export class TasksComponent implements OnInit {
   ngOnInit() { }
 
   getUserTasks() {
+    //clear list first
+    this.tasks = [];
+
     this.backend.getUserTasks(this.auth.getUserId()).subscribe(result => {
       console.log('retrieved tasks:');
       console.log(result);
@@ -36,11 +39,13 @@ export class TasksComponent implements OnInit {
       result.forEach(e => {
         if (!e.isFinished) { //only add if not finished
           this.tasks.push(e);
+
+          //get tags for each task
+          this.getTaskTags(e.id);
+
         }
       });
 
-      //get tags for each task
-      this.getTaskTags();
 
     }, error => {
       console.log(error.message);
@@ -49,7 +54,7 @@ export class TasksComponent implements OnInit {
     });
   }
 
-  getTaskTags() {
+  getTaskTags(taskID: number) {
     var count = 0;
     this.tasks.forEach(task => {
       this.backend.getTaskTags(task.id).subscribe(res => {
@@ -72,7 +77,7 @@ export class TasksComponent implements OnInit {
       let snackbarRef = this.snackbar.open('Tag removed from that task!', 'Ok', { duration: 3000 });
 
       //reload tags
-      this.getTaskTags();
+      this.getTaskTags(taskID);
     },
       error => {
         console.log(error.message);
@@ -109,7 +114,7 @@ export class TasksComponent implements OnInit {
 
   editTask(task: Task) {
     let dialogRef = this.create_dialog.open(EditTaskDialog, {
-      width: '325px',
+      width: '400px',
       data: { title: task.title, body: task.body, workedDuration: task.workedDuration, estimatedHour: task.estimatedHour, estimatedMin: task.estimatedMin, expDuration: task.expDuration }
     });
 
@@ -133,10 +138,6 @@ export class TasksComponent implements OnInit {
           return;
         }
 
-        if (task.workedDuration == null) { //need to fill this value with 0 if null else SQL error
-          task.workedDuration = 0;
-        }
-
         this.backend.editTask(task.id, result).subscribe(res => {
           console.log('tag ' + task.id + ' udpated');
 
@@ -158,7 +159,15 @@ export class TasksComponent implements OnInit {
 
   startTask(taskID: number, index: number) {
     this.backend.startTask(taskID).subscribe(res => {
-      
+
+      //update that task only
+      this.backend.getTask(taskID).subscribe(r => {
+        this.tasks[index] = r;
+      },
+        error => {
+
+        });
+
       //three second snackbar pop up notification
       let snackbarRef = this.snackbar.open('Task Started!', 'Ok', { duration: 3000 });
 
@@ -171,20 +180,13 @@ export class TasksComponent implements OnInit {
 
   stopTask(taskID: number, index: number) {
     this.backend.stopTask(taskID).subscribe(res => {
-      var play = document.getElementById('play_' + index);
-      //play[0].disabled = true;
-      console.log(play[0]);
-     // document.getElementById('play_' + index)[0].disabled= false;
-     // document.getElementById('stop_' + index)[0].disabled= true;
+      //update that task only
+      this.backend.getTask(taskID).subscribe(r => {
+        this.tasks[index] = r;
+      },
+        error => {
 
-    //  console.log(this.tasks[index].workedDuration);
-
-      //update task locally for display
-//      this.tasks[index].workedDuration = 1; //set to undefined
-
-  //    console.log(this.tasks[index].workedDuration);
-
-
+        });
       //three second snackbar pop up notification
       let snackbarRef = this.snackbar.open('Task Stopped!', 'Ok', { duration: 3000 });
 
@@ -197,6 +199,7 @@ export class TasksComponent implements OnInit {
 
   finishTask(taskID: number, index: number) {
     this.backend.finishTask(taskID).subscribe(res => {
+
       //remove task from list
       this.tasks.splice(index, 1);
 
@@ -233,6 +236,7 @@ interface Task {
   workedDuration: number,
   estimatedMin: number,
   estimatedHour: number,
+  lastWorkedAt: number,
   expDuration: number,
   isFinished: number,
   tags: Tag[]
