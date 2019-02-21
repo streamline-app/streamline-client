@@ -36,10 +36,13 @@ export class BackendService {
   /*  Auth URLs */
   public loginURL: string = 'http://' + this.root + '/api/auth/login';
   public signupURL: string = 'http://' + this.root + '/api/auth/signup';
+  public passwordResetURL: string = 'http://' + this.root + '/api/auth/reset/password';
+  public changePasswordURL: string = 'http://' + this.root + '/api/auth/change/password';
 
   /* Auth Token URLs */
   public setTokenURL: string = 'http://' + this.root + '/api/tokens/create';
   public removeTokenURL : string = 'http://' + this.root + '/api/tokens/delete';
+
 
 
   constructor(private http: HttpClient, private snackbar: MatSnackBar) { }
@@ -144,6 +147,21 @@ export class BackendService {
       )
   }
 
+  sendPasswordResetLink(request: PasswordResetRequest) {
+    console.log(request);
+    return this.http.post<PasswordResetResponse>(this.passwordResetURL, request, httpOptions) 
+      .pipe(
+        catchError(this.handleError)
+      )
+  }
+
+  changePassword(request: ChangePasswordRequest) {
+    return this.http.post<PasswordResetResponse>(this.changePasswordURL, request, httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      )
+  }
+
 
 
   private handleError(error: HttpErrorResponse) {
@@ -216,5 +234,19 @@ interface TokenRequest {
 
 interface Token {
   user: number,
+  token: string
+}
+
+interface PasswordResetRequest {
+  email: string
+}
+
+interface PasswordResetResponse {
+  response: string
+}
+
+interface ChangePasswordRequest {
+  email: string,
+  password: string,
   token: string
 }
