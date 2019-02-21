@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { MatSnackBar, MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { CreateTagDialog, CreateTagDialogData } from '../dialogs/dialogs.module'
 
 const MINUTES_TO_SECONDS: number = 60;
 const HOURS_TO_SECONDS: number = 3600;
@@ -82,7 +83,7 @@ export class CreateTaskComponent {
 
   public createNewTag() {
 
-    const dialogRef = this.create_dialog.open(TaskCreateTagDialog, {
+    const dialogRef = this.create_dialog.open(CreateTagDialog, {
       width: '250px',
       data: { name: '', desc: '', color: "#c4c4c4" }
     });
@@ -175,31 +176,6 @@ export class CreateTaskComponent {
   }
 }
 
-
-
-
-@Component({
-  selector: 'task-create-tag/task-create-tag-dialog',
-  templateUrl: 'task-create-tag/task-create-tag-dialog.html',
-})
-export class TaskCreateTagDialog {
-
-  constructor(public dialogRef: MatDialogRef<TaskCreateTagDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: CreateTagDialogData) {
-
-  }
-
-  createTag() {
-    //close the dialog, data will be returned to parent component
-    this.dialogRef.close(this.data);
-  }
-
-  closeDiag() {
-    //return to parent component, result will be undefined
-    this.dialogRef.close();
-  }
-}
-
 interface Tag {
   id: number,
   name: string,
@@ -210,10 +186,4 @@ interface Tag {
   task_overunder: number,
   color: string,
   userID: number
-};
-
-export interface CreateTagDialogData {
-  name: string,
-  desc: string,
-  color: string
 };

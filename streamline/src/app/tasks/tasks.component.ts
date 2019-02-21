@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { BackendService } from '../backend.service';
 import { AuthService } from '../auth.service';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
+import { DeleteConfirmDialog } from '../dialogs/dialogs.module';
 
 @Component({
   selector: 'app-tasks',
@@ -16,7 +17,8 @@ export class TasksComponent implements OnInit {
   constructor(private backend: BackendService,
     private auth: AuthService,
     private snackbar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private create_dialog: MatDialog
   ) {
     //update tasks display
     this.getUserTasks();
@@ -76,23 +78,33 @@ export class TasksComponent implements OnInit {
   }
 
   deleteTask(task: Task) {
-    this.backend.deleteTask(task.id).subscribe(res => {
-      console.log(res);
+    const dialogRef = this.create_dialog.open(DeleteConfirmDialog, {
+      width: '325px',
+    });
 
-       //three second snackbar pop up notification
-       let snackbarRef = this.snackbar.open('Task deleted!', 'Ok', { duration: 3000 });
-
-      //reload tasks
-      this.getUserTasks();
-    },
-      error => {
-        console.log(error.message);
-        //three second snackbar pop up notification
-        let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
-      })
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) { //if confirmed, delete
+        this.backend.deleteTask(task.id).subscribe(res => {
+          console.log(res);
+    
+           //three second snackbar pop up notification
+           let snackbarRef = this.snackbar.open('Task deleted!', 'Ok', { duration: 3000 });
+    
+          //reload tasks
+          this.getUserTasks();
+        },
+          error => {
+            console.log(error.message);
+            //three second snackbar pop up notification
+            let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
+          });
+      }
+      else { /*do nothing */ }
+    });
   }
 
   editTask(task: Task) {
+
   }
 
   collapse(id) {
