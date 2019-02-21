@@ -213,6 +213,22 @@ export class TasksComponent implements OnInit {
     });
   }
 
+  getMinutes(seconds: number): number{
+    var hrs = 0;
+    if(seconds > 3600)
+      hrs = Math.floor(seconds / 3600);
+    
+    var min = (seconds - (hrs * 3600)) / 60;
+    return Math.floor(min);
+  }
+
+  getHours(seconds: number) : number{
+    if(seconds > 3600)
+      return Math.floor(seconds / 3600);
+    else 
+      return 0;
+  }
+
   collapse(id) {
     var content = document.getElementById('content_' + id).style;
     if (content.display == "block") {
