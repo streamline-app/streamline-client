@@ -26,6 +26,8 @@ export class BackendService {
   public getTaskTagsURL: string = 'http://' + this.root + '/api/tasks/tags';
   public removeTagURL: string = 'http://' + this.root + '/api/tasks/removeTag';
   public deleteTaskURL: string = 'http://' + this.root + '/api/tasks/delete';
+  public editTaskURL: string = 'http://' + this.root + '/api/tasks/update';
+
 
   /*  Tag URLs */
   public createTagURL: string = 'http://' + this.root + '/api/tags/create';
@@ -85,13 +87,21 @@ export class BackendService {
 
   deleteTask(taskID: number): Observable<any> {
     return this.http.delete(this.deleteTaskURL + '/' + taskID, httpOptions)
-    .pipe(
-      catchError(this.handleError)
-    );
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
-  editTask(taskID: number): Observable<any> {
-    return null;
+  editTask(taskID: number, edit: TaskEdit): Observable<any> {
+    if(edit.workedDuration == null){
+      edit.workedDuration = 0;
+      console.log('after');
+      console.log(edit);
+    }
+    return this.http.put(this.editTaskURL + '/' + taskID, edit, httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
   }
   /* ==================================== */
 
@@ -175,14 +185,15 @@ export class BackendService {
 }
 
 interface Task {
-  id: number,
+  id: number;
   title: string,
   body: string,
+  workedDuration: number,
   estimatedMin: number,
   estimatedHour: number,
   expDuration: number,
   tags: Tag[]
-}
+};
 
 interface Tag {
   id: number,
@@ -201,6 +212,15 @@ interface TagEdit {
   desc: string,
   color: string
 };
+
+interface TaskEdit {
+  title: string,
+  body: string,
+  workedDuration: number,
+  estimatedMin: number,
+  estimatedHour: number,
+  expDuration: number,
+}
 
 interface LoginRequest {
   email: string,

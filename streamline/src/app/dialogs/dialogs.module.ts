@@ -51,14 +51,33 @@ export class DeleteConfirmDialog {
 
 
 @Component({
-  selector: 'edit-tag/edit-dialog',
-  templateUrl: 'edit-tag/edit-dialog.html',
+  selector: 'edit-tag/edit-tag-dialog',
+  templateUrl: 'edit-tag/edit-tag-dialog.html',
 })
 export class EditTagDialog {
   constructor(public dialogRef: MatDialogRef<EditTagDialog>,
     @Inject(MAT_DIALOG_DATA) public data: EditTagDialogData) { }
 
   editTag() {
+    this.dialogRef.close(this.data); //return data fields to parent
+  }
+
+  closeDialog() {
+    this.dialogRef.close();
+  }
+}
+
+@Component({
+  selector: 'edit-task/edit-task-dialog',
+  templateUrl: 'edit-task/edit-task-dialog.html',
+})
+export class EditTaskDialog {
+  constructor(public dialogRef: MatDialogRef<EditTaskDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: EditTaskDialogData) { }
+
+  editTask() {
+    //update expDuration
+    this.data.expDuration = (this.data.estimatedHour * 60) + (this.data.estimatedMin * 3600);
     this.dialogRef.close(this.data); //return data fields to parent
   }
 
@@ -78,3 +97,12 @@ export interface EditTagDialogData {
   desc: string,
   color: string
 };
+
+export interface EditTaskDialogData {
+  title: string,
+  body: string,
+  workedDuration: number, //not actually edited
+  estimatedMin: number,
+  estimatedHour: number,
+  expDuration: number
+}

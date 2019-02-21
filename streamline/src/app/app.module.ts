@@ -19,7 +19,7 @@ import { AuthService } from './auth.service';
 import { TasksComponent } from './tasks/tasks.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from './jwt.interceptor';
-import { DialogsModule, DeleteConfirmDialog, EditTagDialog, CreateTagDialog } from './dialogs/dialogs.module';
+import { DialogsModule, DeleteConfirmDialog, EditTagDialog, CreateTagDialog, EditTaskDialog } from './dialogs/dialogs.module';
 
 
 const appRoutes: Routes = [
@@ -44,7 +44,8 @@ const appRoutes: Routes = [
     TasksComponent,
     DeleteConfirmDialog,
     CreateTagDialog,
-    EditTagDialog
+    EditTagDialog,
+    EditTaskDialog
   ],
   imports: [
     BrowserModule,
@@ -64,6 +65,6 @@ const appRoutes: Routes = [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
   ],
   bootstrap: [AppComponent],
-  entryComponents: [DeleteConfirmDialog, EditTagDialog, CreateTagDialog]
+  entryComponents: [DeleteConfirmDialog, EditTagDialog, CreateTagDialog, EditTaskDialog]
 })
 export class AppModule { }
