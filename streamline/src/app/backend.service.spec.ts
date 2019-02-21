@@ -83,18 +83,24 @@ describe('BackendService', () => {
 
   it ('Create Task should create a task and return an Obeservable<Task>', () => {
     let request : any = {
+      id: 0,
       title: 'title',
       body: 'body',
       estimatedMin: 20,
-      estimatedHour: 20
+      estimatedHour: 20,
+      expDuration: 0,
+      tags: []
     }
 
     service.createTask(request).subscribe(response => {
       expect(response).toEqual( {
+        id: 0,
         title: 'title',
         body: 'body',
         estimatedMin: 20,
-        estimatedHour: 20
+        estimatedHour: 20,
+        expDuration: 0,
+        tags: [],
       }
       );
     })
