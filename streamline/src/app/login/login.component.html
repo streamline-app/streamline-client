@@ -1,5 +1,7 @@
 <mat-card class="mat-elevation-z0">
-    <form class="form" id="form">
+    <form class="form">
+      <h3>Login</h3>
+      <hr />
         <mat-form-field class="example-full-width">
           <h4>Email</h4>
           <input matInput [formControl]="emailFormControl"
@@ -25,6 +27,9 @@
               <div class="col-sm-6">
                 <button mat-button id="cancel" (click)="onCancel()">Cancel</button>
               </div>
-            </div>
+          </div>
+        <div id="reset">
+          <a routerLink="/reset/password" routerLinkActive="active">Forgot Password</a>
+        </div>
       </form>
 </mat-card>
