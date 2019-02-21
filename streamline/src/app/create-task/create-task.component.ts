@@ -16,11 +16,8 @@ const HOURS_TO_SECONDS: number = 3600;
   styleUrls: ['./create-task.component.css']
 })
 export class CreateTaskComponent {
-  tags: Tag[];
-  selectedTags: Tag[];
-
-  faketag1: Tag;
-  faketag2: Tag;
+  tags: Tag[] = [];
+  selectedTags: Tag[] = [];
 
   public rawTagsForm: FormControl = new FormControl();
   public filteredTags: Observable<Tag[]>;
@@ -39,33 +36,8 @@ export class CreateTaskComponent {
     private snackbar: MatSnackBar,
     public create_dialog: MatDialog,
   ) {
-    this.faketag1 =
-      {
-        id: 1,
-        name: 'fake1',
-        description: 'fake desc',
-        tasks_comp: 0,
-        average_time: 0,
-        average_acc: 0,
-        task_overunder: 0,
-        color: '#c4c4c4',
-        userID: 1
-      }
-    this.faketag2 =
-      {
-        id: 2,
-        name: 'fake2',
-        description: 'another fake desc',
-        tasks_comp: 0,
-        average_time: 0,
-        average_acc: 0,
-        task_overunder: 0,
-        color: '#e00000',
-        userID: 1
-      }
-    //this.tags = [this.faketag1, this.faketag2];
-    this.tags = [];
-    this.selectedTags = [];
+    
+    //retrieve tags for display
     this.getTags();
   }
 
@@ -175,8 +147,6 @@ export class CreateTaskComponent {
   }
 
   public onTagSelect(tag: Tag) {
-    console.log('before: ');
-    console.log(this.selectedTags);
     var index = this.selectedTags.indexOf(tag); //get index of tag in list (if it exists)
     console.log('index: ' + index);
     if (index === -1) {
@@ -191,8 +161,6 @@ export class CreateTaskComponent {
     this.selectedTags.forEach(tag => {
       this.task.controls['tags'].setValue(this.task.controls['tags'].value + '/ ' + tag.name);
     });
-    console.log('after: ');
-    console.log(this.selectedTags);
   }
 
   //helper mehtod to get TagIDs from list of tags
