@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./tasks.component.css']
 })
 export class TasksComponent implements OnInit {
-  
+
   tasks: Task[] = [];
 
   constructor(private backend: BackendService,
@@ -18,14 +18,11 @@ export class TasksComponent implements OnInit {
     private snackbar: MatSnackBar,
     private router: Router
   ) {
-
     //update tasks display
     this.getUserTasks();
-
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
 
   getUserTasks() {
     this.backend.getUserTasks(this.auth.getUserId()).subscribe(result => {
@@ -45,14 +42,14 @@ export class TasksComponent implements OnInit {
       let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
     });
   }
-  
-  getTaskTags(){
+
+  getTaskTags() {
     var count = 0;
     this.tasks.forEach(task => {
       this.backend.getTaskTags(task.id).subscribe(res => {
         console.log('tags retrieved for task ' + task.id + ':');
         console.log(res);
-        
+
         this.tasks[count].tags = res;
         console.log(this.tasks[count].tags);
 
@@ -61,18 +58,41 @@ export class TasksComponent implements OnInit {
     });
   }
 
-  removeTag(taskID: number, tagID: number){
+  removeTag(taskID: number, tagID: number) {
     this.backend.removeTag(taskID, tagID).subscribe(res => {
-      console.log('TagID ' + tagID +  ' removed From TaskID' + taskID);
+      console.log('TagID ' + tagID + ' removed From TaskID' + taskID);
+
+      //three second snackbar pop up notification
+      let snackbarRef = this.snackbar.open('Tag removed from that task!', 'Ok', { duration: 3000 });
 
       //reload tags
       this.getTaskTags();
     },
-    error => {
-      console.log(error.message);
-      //three second snackbar pop up notification
-      let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
-    });
+      error => {
+        console.log(error.message);
+        //three second snackbar pop up notification
+        let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
+      });
+  }
+
+  deleteTask(task: Task) {
+    this.backend.deleteTask(task.id).subscribe(res => {
+      console.log(res);
+
+       //three second snackbar pop up notification
+       let snackbarRef = this.snackbar.open('Task deleted!', 'Ok', { duration: 3000 });
+
+      //reload tasks
+      this.getUserTasks();
+    },
+      error => {
+        console.log(error.message);
+        //three second snackbar pop up notification
+        let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
+      })
+  }
+
+  editTask(task: Task) {
   }
 
   collapse(id) {

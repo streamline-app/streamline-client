@@ -25,6 +25,7 @@ export class BackendService {
   public getUserTasksURL: string = 'http://' + this.root + '/api/tasks/';
   public getTaskTagsURL: string = 'http://' + this.root + '/api/tasks/tags';
   public removeTagURL: string = 'http://' + this.root + '/api/tasks/removeTag';
+  public deleteTaskURL: string = 'http://' + this.root + '/api/tasks/delete';
 
   /*  Tag URLs */
   public createTagURL: string = 'http://' + this.root + '/api/tags/create';
@@ -39,7 +40,7 @@ export class BackendService {
 
   /* Auth Token URLs */
   public setTokenURL: string = 'http://' + this.root + '/api/tokens/create';
-  public removeTokenURL : string = 'http://' + this.root + '/api/tokens/delete';
+  public removeTokenURL: string = 'http://' + this.root + '/api/tokens/delete';
 
 
   constructor(private http: HttpClient, private snackbar: MatSnackBar) { }
@@ -52,23 +53,46 @@ export class BackendService {
       );
   }
 
-  getUserTasks(userID: number): Observable<(Task[])>{
-    return this.http.get<Task[]>(this.getUserTasksURL,{
+  getUserTasks(userID: number): Observable<(Task[])> {
+    return this.http.get<Task[]>(this.getUserTasksURL, {
       params: { userID: userID.toString() },
       headers: {
         Authorization: 'my-auth-token'
       }
     })
-    .pipe(catchError(this.handleError));
+      .pipe(catchError(this.handleError));
   }
 
-  removeTag(taskID: number, tagID: number){
+  removeTag(taskID: number, tagID: number) {
     return this.http.post(this.removeTagURL + '/' + taskID + '/' + tagID, httpOptions) //append taskID then tagID
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  getTaskTags(taskID: number): Observable<Tag[]> {
+    return this.http.get<Tag[]>(this.getTaskTagsURL + '/' + taskID,
+      {
+        params: { taskID: taskID.toString() },
+        headers: {
+          Authorization: 'my-auth-token'
+        }
+      })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  deleteTask(taskID: number): Observable<any> {
+    return this.http.delete(this.deleteTaskURL + '/' + taskID, httpOptions)
     .pipe(
       catchError(this.handleError)
     );
   }
 
+  editTask(taskID: number): Observable<any> {
+    return null;
+  }
   /* ==================================== */
 
   /* =======  Tag Functions ======== */
@@ -86,19 +110,6 @@ export class BackendService {
         headers: {
           Authorization: 'my-auth-token'
         }
-      }) 
-      .pipe(
-        catchError(this.handleError)
-      );
-  }
-
-  getTaskTags(taskID: number): Observable<Tag[]> {
-    return this.http.get<Tag[]>(this.getTaskTagsURL + '/' + taskID,
-      {
-        params: { taskID: taskID.toString() },
-        headers:{
-          Authorization: 'my-auth-token'
-        }
       })
       .pipe(
         catchError(this.handleError)
@@ -112,7 +123,7 @@ export class BackendService {
 
   editTag(id: number, edit: TagEdit): Observable<any> {
     return this.http.post(this.editTagURL + '/' + id, edit, httpOptions)
-    .pipe(catchError(this.handleError));
+      .pipe(catchError(this.handleError));
   }
   /* ============================== */
 
@@ -186,7 +197,7 @@ interface Tag {
 };
 
 interface TagEdit {
-  name:string,
+  name: string,
   desc: string,
   color: string
 };

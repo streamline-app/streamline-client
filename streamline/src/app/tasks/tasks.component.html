@@ -32,19 +32,25 @@
         </div>
       </div>
       <div class="row">
-          <div class="col-md-6">
-            <h4>Tags</h4>
-            <div class="tag_box">
-              <ul class="tags">
-                <li *ngFor="let tag of task.tags" [ngStyle]="{'background-color': tag.color}"
-                  (click)="removeTag(task.id, tag.id)">
-                  {{tag.name}}
-                </li>
-              </ul>
-            </div>
+        <div class="col-md-6">
+          <h4>Tags</h4>
+          <div class="tag_box">
+            <ul class="tags">
+              <li *ngFor="let tag of task.tags" [ngStyle]="{'background-color': tag.color}"
+                (click)="removeTag(task.id, tag.id)">
+                {{tag.name}}
+              </li>
+            </ul>
           </div>
         </div>
-<!-- Removed until implementation of subtasks feature
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <button mat-stroked-button class="control_btn" style="background-color: #c90000; color: white" (click)="deleteTask(task)">Delete</button>
+          <button mat-stroked-button class="control_btn" (click)="editTask(task)">Edit</button>
+        </div>
+      </div>
+      <!-- Removed until implementation of subtasks feature
       <button mat-button class="collapsible" (click)="collapse(task.id)">Subtasks</button>
       <div id="content_{{task.id}}" style="padding: 0 18px;
             display: none;

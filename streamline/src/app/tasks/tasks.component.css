@@ -121,4 +121,10 @@ example-margin {
   .tags .text {
     position: relative;
   }
+
+  button.control_btn { 
+    margin: 0px 2.5px 0px 2.5px;
+    float: right;
+  }
+
  
