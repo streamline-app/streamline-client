@@ -23,7 +23,6 @@ mat-card {
     height: 60px;
     margin-top: 5px;
     width: 10px;
-    background-color: lightgreen;
 }
 
 @media all and (min-width: 1149px) {
@@ -89,6 +88,7 @@ example-margin {
   div.tag_box {
     overflow-x: auto;
     white-space: nowrap;
+    margin-top: 10px;
 }
 
 .tags {
@@ -122,9 +122,32 @@ example-margin {
     position: relative;
   }
 
-  button.control_btn { 
+  button.edit_btn { 
     margin: 0px 2.5px 0px 2.5px;
     float: right;
+  }
+
+  button.ctrl_btn {
+    margin: 0px 2.5px 0px 2.5px;
+    float: left;
+    width: auto;
+  }
+
+  button.ctrl_btn .tooltiptext {
+    visibility: hidden;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 2.5px 10px;
+  
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+  }
+  
+  button.ctrl_btn:hover .tooltiptext {
+    visibility: visible;
   }
 
  

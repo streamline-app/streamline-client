@@ -33,7 +33,11 @@ export class TasksComponent implements OnInit {
       //window.alert('Got Tags');
 
       //set display to show result
-      this.tasks = result;
+      result.forEach(e => {
+        if (!e.isFinished) { //only add if not finished
+          this.tasks.push(e);
+        }
+      });
 
       //get tags for each task
       this.getTaskTags();
@@ -129,7 +133,9 @@ export class TasksComponent implements OnInit {
           return;
         }
 
-        console.log(result);
+        if (task.workedDuration == null) { //need to fill this value with 0 if null else SQL error
+          task.workedDuration = 0;
+        }
 
         this.backend.editTask(task.id, result).subscribe(res => {
           console.log('tag ' + task.id + ' udpated');
@@ -140,14 +146,68 @@ export class TasksComponent implements OnInit {
           //update display
           this.getUserTasks();
         },
-        error => {
-          console.log(error.message);
+          error => {
+            console.log(error.message);
             //three second snackbar pop up notification
             let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
-        });
+          });
       }
       else { /* do nothing */ }
     })
+  }
+
+  startTask(taskID: number, index: number) {
+    this.backend.startTask(taskID).subscribe(res => {
+      
+      //three second snackbar pop up notification
+      let snackbarRef = this.snackbar.open('Task Started!', 'Ok', { duration: 3000 });
+
+    }, error => {
+      console.log(error.message);
+      //three second snackbar pop up notification
+      let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
+    });
+  }
+
+  stopTask(taskID: number, index: number) {
+    this.backend.stopTask(taskID).subscribe(res => {
+      var play = document.getElementById('play_' + index);
+      //play[0].disabled = true;
+      console.log(play[0]);
+     // document.getElementById('play_' + index)[0].disabled= false;
+     // document.getElementById('stop_' + index)[0].disabled= true;
+
+    //  console.log(this.tasks[index].workedDuration);
+
+      //update task locally for display
+//      this.tasks[index].workedDuration = 1; //set to undefined
+
+  //    console.log(this.tasks[index].workedDuration);
+
+
+      //three second snackbar pop up notification
+      let snackbarRef = this.snackbar.open('Task Stopped!', 'Ok', { duration: 3000 });
+
+    }, error => {
+      console.log(error.message);
+      //three second snackbar pop up notification
+      let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
+    });
+  }
+
+  finishTask(taskID: number, index: number) {
+    this.backend.finishTask(taskID).subscribe(res => {
+      //remove task from list
+      this.tasks.splice(index, 1);
+
+      //three second snackbar pop up notification
+      let snackbarRef = this.snackbar.open('Task Finished!', 'Ok', { duration: 3000 });
+
+    }, error => {
+      console.log(error.message);
+      //three second snackbar pop up notification
+      let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
+    });
   }
 
   collapse(id) {
@@ -174,6 +234,7 @@ interface Task {
   estimatedMin: number,
   estimatedHour: number,
   expDuration: number,
+  isFinished: number,
   tags: Tag[]
 };
 

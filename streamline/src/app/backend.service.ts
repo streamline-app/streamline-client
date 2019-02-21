@@ -28,6 +28,10 @@ export class BackendService {
   public deleteTaskURL: string = 'http://' + this.root + '/api/tasks/delete';
   public editTaskURL: string = 'http://' + this.root + '/api/tasks/update';
 
+  /* Task Control URLs */
+  public startTaskURL: string = 'http://' + this.root + '/api/tasks/';
+  public stopTaskURL: string = 'http:://' + this.root + '/api/tasks/';
+  public finishTaskURL: string = 'http:://' + this.root + '/api/tasks/';
 
   /*  Tag URLs */
   public createTagURL: string = 'http://' + this.root + '/api/tags/create';
@@ -93,15 +97,31 @@ export class BackendService {
   }
 
   editTask(taskID: number, edit: TaskEdit): Observable<any> {
-    if(edit.workedDuration == null){
-      edit.workedDuration = 0;
-      console.log('after');
-      console.log(edit);
-    }
     return this.http.put(this.editTaskURL + '/' + taskID, edit, httpOptions)
       .pipe(
         catchError(this.handleError)
       );
+  }
+
+  startTask(taskID: number): Observable<any> {
+    return this.http.post(this.startTaskURL + taskID + '/start', '', httpOptions) //empty post
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  stopTask(taskID: number): Observable<any> {
+    return this.http.post(this.startTaskURL + taskID + '/stop', '', httpOptions) //empty post
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  finishTask(taskID: number): Observable<any> {
+    return this.http.post(this.startTaskURL + taskID + '/finish', '', httpOptions) //empty post
+    .pipe(
+      catchError(this.handleError)
+    );
   }
   /* ==================================== */
 
@@ -176,7 +196,7 @@ export class BackendService {
       // The response body may contain clues as to what went wrong,
       console.error(
         `Backend returned code ${error.status}, ` +
-        `body was: ${error.error.message}`);
+        `body was: ${error.error}`);
     }
     // return an observable with a user-facing error message
     return throwError(
@@ -192,6 +212,7 @@ interface Task {
   estimatedMin: number,
   estimatedHour: number,
   expDuration: number,
+  isFinished: number,
   tags: Tag[]
 };
 
