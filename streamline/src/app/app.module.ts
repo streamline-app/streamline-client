@@ -23,7 +23,6 @@ import { DialogsModule, DeleteConfirmDialog, EditTagDialog, CreateTagDialog, Edi
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { PasswordResetFormComponent } from './password-reset-form/password-reset-form.component';
 
-
 const appRoutes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthService] },
   { path: 'tags', component: TagsComponent, canActivate: [AuthService] },
@@ -49,8 +48,7 @@ const appRoutes: Routes = [
     DeleteConfirmDialog,
     CreateTagDialog,
     EditTagDialog,
-    EditTaskDialog
-    TaskCreateTagDialog,
+    EditTaskDialog,
     PasswordResetComponent,
     PasswordResetFormComponent
   ],
