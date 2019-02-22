@@ -64,12 +64,7 @@ export class PasswordResetFormComponent {
     this.backend.changePassword(request).subscribe(res => {
       if (res) {
         window.alert('Password reset successful!');
-        if (this.auth.isLoggedIn()) {
-          this.router.navigateByUrl('home');
-        } else {
           this.router.navigateByUrl('login');
-
-        }
       } else {
         window.alert('Invalid information given');
       }
@@ -77,11 +72,7 @@ export class PasswordResetFormComponent {
   }
 
   onCancel() {
-    if (this.auth.isLoggedIn()) {
-      this.router.navigateByUrl('home');
-    } else {
       this.router.navigateByUrl('login');
-    }
   }
 
 }
