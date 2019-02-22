@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { MatSnackBar, MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { CreateTagDialog, CreateTagDialogData } from '../dialogs/dialogs.module'
 
 const MINUTES_TO_SECONDS: number = 60;
 const HOURS_TO_SECONDS: number = 3600;
@@ -16,11 +17,8 @@ const HOURS_TO_SECONDS: number = 3600;
   styleUrls: ['./create-task.component.css']
 })
 export class CreateTaskComponent {
-  tags: Tag[];
-  selectedTags: Tag[];
-
-  faketag1: Tag;
-  faketag2: Tag;
+  tags: Tag[] = [];
+  selectedTags: Tag[] = [];
 
   public rawTagsForm: FormControl = new FormControl();
   public filteredTags: Observable<Tag[]>;
@@ -39,33 +37,8 @@ export class CreateTaskComponent {
     private snackbar: MatSnackBar,
     public create_dialog: MatDialog,
   ) {
-    this.faketag1 =
-      {
-        id: 1,
-        name: 'fake1',
-        description: 'fake desc',
-        tasks_comp: 0,
-        average_time: 0,
-        average_acc: 0,
-        task_overunder: 0,
-        color: '#c4c4c4',
-        userID: 1
-      }
-    this.faketag2 =
-      {
-        id: 2,
-        name: 'fake2',
-        description: 'another fake desc',
-        tasks_comp: 0,
-        average_time: 0,
-        average_acc: 0,
-        task_overunder: 0,
-        color: '#e00000',
-        userID: 1
-      }
-    //this.tags = [this.faketag1, this.faketag2];
-    this.tags = [];
-    this.selectedTags = [];
+    
+    //retrieve tags for display
     this.getTags();
   }
 
@@ -110,7 +83,7 @@ export class CreateTaskComponent {
 
   public createNewTag() {
 
-    const dialogRef = this.create_dialog.open(TaskCreateTagDialog, {
+    const dialogRef = this.create_dialog.open(CreateTagDialog, {
       width: '250px',
       data: { name: '', desc: '', color: "#c4c4c4" }
     });
@@ -175,8 +148,6 @@ export class CreateTaskComponent {
   }
 
   public onTagSelect(tag: Tag) {
-    console.log('before: ');
-    console.log(this.selectedTags);
     var index = this.selectedTags.indexOf(tag); //get index of tag in list (if it exists)
     console.log('index: ' + index);
     if (index === -1) {
@@ -191,8 +162,6 @@ export class CreateTaskComponent {
     this.selectedTags.forEach(tag => {
       this.task.controls['tags'].setValue(this.task.controls['tags'].value + '/ ' + tag.name);
     });
-    console.log('after: ');
-    console.log(this.selectedTags);
   }
 
   //helper mehtod to get TagIDs from list of tags
@@ -207,31 +176,6 @@ export class CreateTaskComponent {
   }
 }
 
-
-
-
-@Component({
-  selector: 'task-create-tag/task-create-tag-dialog',
-  templateUrl: 'task-create-tag/task-create-tag-dialog.html',
-})
-export class TaskCreateTagDialog {
-
-  constructor(public dialogRef: MatDialogRef<TaskCreateTagDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: CreateTagDialogData) {
-
-  }
-
-  createTag() {
-    //close the dialog, data will be returned to parent component
-    this.dialogRef.close(this.data);
-  }
-
-  closeDiag() {
-    //return to parent component, result will be undefined
-    this.dialogRef.close();
-  }
-}
-
 interface Tag {
   id: number,
   name: string,
@@ -242,10 +186,4 @@ interface Tag {
   task_overunder: number,
   color: string,
   userID: number
-};
-
-export interface CreateTagDialogData {
-  name: string,
-  desc: string,
-  color: string
 };

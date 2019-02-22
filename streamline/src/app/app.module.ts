@@ -6,9 +6,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
-import { TagsComponent, CreateTagDialog, DeleteConfirmDialog, EditTagDialog } from './tags/tags.component';
+import { TagsComponent } from './tags/tags.component';
 import { ProfileComponent } from './profile/profile.component';
-import { CreateTaskComponent, TaskCreateTagDialog } from './create-task/create-task.component';
+import { CreateTaskComponent } from './create-task/create-task.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
@@ -19,6 +19,7 @@ import { AuthService } from './auth.service';
 import { TasksComponent } from './tasks/tasks.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from './jwt.interceptor';
+import { DialogsModule, DeleteConfirmDialog, EditTagDialog, CreateTagDialog, EditTaskDialog } from './dialogs/dialogs.module';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { PasswordResetFormComponent } from './password-reset-form/password-reset-form.component';
 
@@ -39,15 +40,16 @@ const appRoutes: Routes = [
     AppComponent,
     HomeComponent,
     TagsComponent,
-    CreateTagDialog,
-    DeleteConfirmDialog,
-    EditTagDialog,
     ProfileComponent,
     CreateTaskComponent,
     LoginComponent,
     NavigationComponent,
     SignUpComponent,
     TasksComponent,
+    DeleteConfirmDialog,
+    CreateTagDialog,
+    EditTagDialog,
+    EditTaskDialog
     TaskCreateTagDialog,
     PasswordResetComponent,
     PasswordResetFormComponent
@@ -59,6 +61,7 @@ const appRoutes: Routes = [
     ReactiveFormsModule,
     HttpClientModule,
     FormsModule,
+    DialogsModule,
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true } 
@@ -69,6 +72,6 @@ const appRoutes: Routes = [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
   ],
   bootstrap: [AppComponent],
-  entryComponents: [CreateTagDialog, DeleteConfirmDialog, EditTagDialog, TaskCreateTagDialog]
+  entryComponents: [DeleteConfirmDialog, EditTagDialog, CreateTagDialog, EditTaskDialog]
 })
 export class AppModule { }

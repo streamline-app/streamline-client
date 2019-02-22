@@ -17,8 +17,7 @@
       <mat-icon>arrow_right_alt</mat-icon>
     </button>
     <h2>{{selectedTag.name}}</h2>
-    <mat-divider></mat-divider>
-    <h4 class="detail_H4">Description</h4>
+    <h4 class="detail_H4" style="margin-top: 10px;">Description</h4>
     <div class="details" style="height:15%;">
       <p>{{selectedTag.description}}</p>
     </div>
@@ -42,7 +41,6 @@
     <div class="color">
       <div class="square" [ngStyle]="{'background-color': selectedTag.color}"></div>
     </div>
-    <mat-divider></mat-divider>
     <button mat-stroked-button class="edit_button" (click)="editTag(selectedTag)">Edit Tag</button>
     <button mat-stroked-button class="del_button" (click)="deleteTag(selectedTag.id)">Delete Tag</button>
   </mat-sidenav>

@@ -1,21 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { BackendService } from '../backend.service';
-import { MatDialogRef, MatDialog, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { AuthService } from '../auth.service';
+import { CreateTagDialog, EditTagDialog, DeleteConfirmDialog } from '../dialogs/dialogs.module';
 
-
-interface Tag {
-  id: number,
-  name: string,
-  description: string
-  tasks_comp: number,
-  average_time: number,
-  average_acc: number,
-  task_overunder: number,
-  color: string,
-  userID: number
-};
-
+/*
 export interface CreateTagDialogData {
   name: string,
   desc: string,
@@ -27,7 +16,7 @@ export interface EditTagDialogData {
   desc: string,
   color: string
 };
-
+*/
 @Component({
   selector: 'app-tags',
   templateUrl: './tags.component.html',
@@ -213,7 +202,7 @@ export class TagsComponent implements OnInit {
   }
 }
 
-
+/*
 @Component({
   selector: 'create-tag/create-tag-dialog',
   templateUrl: 'create-tag/create-tag-dialog.html',
@@ -270,3 +259,16 @@ export class EditTagDialog {
     this.dialogRef.close();
   }
 }
+*/
+
+interface Tag {
+  id: number,
+  name: string,
+  description: string
+  tasks_comp: number,
+  average_time: number,
+  average_acc: number,
+  task_overunder: number,
+  color: string,
+  userID: number
+};
