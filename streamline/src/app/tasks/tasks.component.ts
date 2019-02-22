@@ -55,6 +55,20 @@ export class TasksComponent implements OnInit {
   }
 
   getTaskTags(taskID: number) {
+    this.backend.getTaskTags(taskID).subscribe(res => {
+      console.log('tags retrieved for task ' + taskID + ':');
+      console.log(res);
+
+      var count = 0;
+      this.tasks.forEach(t =>{
+        if(t.id === taskID){
+          this.tasks[count].tags = res;
+        }
+        count++;
+      });
+      
+    });
+    /*
     var count = 0;
     this.tasks.forEach(task => {
       this.backend.getTaskTags(task.id).subscribe(res => {
@@ -67,6 +81,7 @@ export class TasksComponent implements OnInit {
         count++;
       });
     });
+    */
   }
 
   removeTag(taskID: number, tagID: number) {
