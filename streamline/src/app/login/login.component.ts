@@ -32,7 +32,11 @@ export class LoginComponent {
 
   matcher = new MyErrorStateMatcher();
 
-  constructor(private backend: BackendService, private snackbar: MatSnackBar, private auth: AuthService, private router: Router) { }
+  constructor(private backend: BackendService, private snackbar: MatSnackBar, private auth: AuthService, private router: Router) { 
+    if (this.auth.isLoggedIn()) {
+      this.router.navigateByUrl('home');
+    }
+  }
 
 
   onSubmit() {
