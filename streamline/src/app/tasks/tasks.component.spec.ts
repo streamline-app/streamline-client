@@ -1,38 +1,34 @@
 import { async, ComponentFixture, TestBed, getTestBed } from '@angular/core/testing';
-import { MaterialModule } from '../material/material.module';
 
-import { TagsComponent } from './tags.component';
-import { BackendService } from '../backend.service';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { Routes, RouterModule } from '@angular/router';
-import { APP_BASE_HREF } from '@angular/common';
-import { HomeComponent } from '../home/home.component';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { TasksComponent } from './tasks.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { MaterialModule } from '../material/material.module';
+import { Routes, RouterModule } from '@angular/router';
+import { HomeComponent } from '../home/home.component';
+import { BackendService } from '../backend.service';
+import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
+import { APP_BASE_HREF } from '@angular/common';
 
 const appRoutes: Routes = [
   { path: 'home', component: HomeComponent },
 
 ];
 
-describe('TagsComponent', () => {
-  let component: TagsComponent;
-  let fixture: ComponentFixture<TagsComponent>;
+describe('TasksComponent', () => {
+  let component: TasksComponent;
+  let fixture: ComponentFixture<TasksComponent>;
   let injector : TestBed;
   let service: BackendService;
   let httpMock : HttpTestingController;
 
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TagsComponent, HomeComponent ],
-      providers: [BackendService, {provide: APP_BASE_HREF, useValue: '/'}],
+      declarations: [ TasksComponent, HomeComponent ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      providers: [BackendService, {provide: APP_BASE_HREF, useValue: '/'}],
       imports: [
         MaterialModule,
         HttpClientTestingModule, 
-        ReactiveFormsModule,
-        FormsModule,
         RouterModule.forRoot(
           appRoutes,
           { enableTracing: true } 
@@ -46,7 +42,7 @@ describe('TagsComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TagsComponent);
+    fixture = TestBed.createComponent(TasksComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

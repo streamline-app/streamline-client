@@ -26,7 +26,9 @@
       border-color: lightgrey;
       padding: 5px;
   }
-
+#tagname {
+  margin-left: 8px;
+}
 .selected {
     background-color: #CFD8DC !important;
     color: white;
@@ -64,7 +66,7 @@
     font-size: small;
     color: white;
     padding: 1.6em 0.7em 0 0.7em;
-    background-color: #607D8B;
+    /*background-color: #607D8B;*/
     line-height: 1em;
     position: relative;
     left: -1px;
@@ -80,6 +82,7 @@ h4.detail_H4 {
 
 div.details {
   margin-left: 10px;
+  margin-bottom: 10px;
   padding-left: 10px;
   padding-top: 10px;
   border: solid;
@@ -89,6 +92,7 @@ div.details {
 
 div.color{
   margin-left: 10px;
+  margin-bottom: 20px;
   padding-left: 10px;
   padding-top: 10px;
   height: 50px;
@@ -97,8 +101,23 @@ div.color{
   border-color: lightgrey;
 }
 
-
 div.square {
   height: 25px;
   width: 20%;
+}
+
+button.edit_button {
+  margin-left: 10px;
+  margin-top: 20px;
+  width: 100px;
+  background-color: lightgrey;
+}
+
+button.del_button {
+  float: right;
+  width: 100px;
+  margin-right: 10px;
+  margin-top: 20px;
+  background-color: #c90000;
+  color: white;
 }

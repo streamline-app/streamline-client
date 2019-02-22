@@ -11,8 +11,11 @@
     </div>
   </div>
   <mat-menu #menu="matMenu">
-    <button mat-menu-item (click)="onLogin()"> Login</button>
-    <button mat-menu-item (click)="onRegister()">Register</button>
+    <button mat-menu-item *ngIf="!auth.isLoggedIn()" (click)="onLogin()"> Login</button>
+    <button mat-menu-item *ngIf="!auth.isLoggedIn()" (click)="onRegister()">Register</button>
+    <button mat-menu-item *ngIf="auth.isLoggedIn()" (click)="onSettings()">Settings</button>
+    <button mat-menu-item *ngIf="auth.isLoggedIn()" (click) ="onLogout()">Logout</button>
+    <button mat-menu-item *ngIf="auth.isLoggedIn()" (click)="onHome()">Home</button>
   </mat-menu>
 </mat-card>
 
