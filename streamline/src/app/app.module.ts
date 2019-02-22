@@ -20,6 +20,8 @@ import { TasksComponent } from './tasks/tasks.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from './jwt.interceptor';
 import { DialogsModule, DeleteConfirmDialog, EditTagDialog, CreateTagDialog, EditTaskDialog } from './dialogs/dialogs.module';
+import { PasswordResetComponent } from './password-reset/password-reset.component';
+import { PasswordResetFormComponent } from './password-reset-form/password-reset-form.component';
 
 
 const appRoutes: Routes = [
@@ -29,6 +31,8 @@ const appRoutes: Routes = [
   { path: 'create/task', component: CreateTaskComponent, canActivate: [AuthService] },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignUpComponent }, 
+  { path: 'reset/password', component: PasswordResetComponent},
+  { path: 'reset/password/form', component: PasswordResetFormComponent}
 ];
 
 @NgModule({
@@ -46,6 +50,9 @@ const appRoutes: Routes = [
     CreateTagDialog,
     EditTagDialog,
     EditTaskDialog
+    TaskCreateTagDialog,
+    PasswordResetComponent,
+    PasswordResetFormComponent
   ],
   imports: [
     BrowserModule,
