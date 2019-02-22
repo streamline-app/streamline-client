@@ -1,0 +1,33 @@
+.container {
+  width: 100%;
+  height: calc(100vh - 20px);
+  margin: 2px;
+  margin-top: 5px;
+  background-color: brown;
+}
+
+.sidebar {
+    width: 240px;
+    padding: 5px;
+    padding-top: 50px;
+    display: block;
+    
+  background-color: brown;
+}
+
+.main_box { 
+    padding: 5px;
+    
+  background-color: brown;
+}
+
+.btn_group button {
+    margin: 0 auto;
+    margin-bottom: 5px;
+    color: black; /* White text */
+    padding: 10px 24px; /* Some padding */
+    cursor: pointer; /* Pointer/hand icon */
+    width: 75%; /* Set a width if needed */
+    display: block; /* Make the buttons appear below each other */
+  }
+  

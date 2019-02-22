@@ -1,0 +1,67 @@
+  .container {
+    width: 100%;
+    height: calc(100vh - 20px);
+    margin: 2px;
+    margin-top: 5px;
+    background-color: darkslategray;
+  }
+  
+  .sidebar {
+      width: 400px;
+      padding: 8px;
+      display: block;
+      background-color: darkslategray;
+  }
+  
+  .main_box { 
+      padding: 5px;
+      background-color: darkslategray;
+  }
+
+  .main_box button {
+      margin-left: 10px;
+      background-color: darkslategray;
+  }
+  .tag_box{
+      margin: 10px;
+      height: 80%;
+      border: solid;
+      border-width: 2px;
+      border-color: lightgrey;
+      padding: 5px;
+      background-color: darkslategray;
+  }
+  .background-light {
+    background-color: lightgrey;
+  }  
+  .background-dark {
+    background-color: darkslategray;
+  }
+
+
+div.color{
+  margin-left: 10px;
+  padding-left: 10px;
+  padding-top: 10px;
+  height: 50px;
+  border: solid;
+  border-width: 2px;
+  border-color: rgb(77, 54, 54);
+  background-color: darkslategray;
+}
+.blooo {
+  width: 100%;
+  height: calc(100vh - 20px);
+  margin: 2px;
+  margin-top: 5px;
+  background-color: var(--settingsBackground);
+  color: var(--settingsColor);
+}
+
+div.square {
+  height: 25px;
+  width: 20%;
+}
+span {
+  background-color: black;
+}

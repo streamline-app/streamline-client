@@ -41,6 +41,9 @@ export class BackendService {
   public editTagURL: string = 'http://' + this.root + '/api/tags/edit';
 
 
+  /*  Setting URLs */
+  public getUserSettingsURL: string = 'http://' + this.root + '/api/settings';
+  public updateSettingsURL: string = 'http://' + this.root + '/api/settings';
   /*  Auth URLs */
   public loginURL: string = 'http://' + this.root + '/api/auth/login';
   public signupURL: string = 'http://' + this.root + '/api/auth/signup';
@@ -137,6 +140,28 @@ export class BackendService {
   }
   /* ==================================== */
 
+
+  /* =======  Settings Functions ======== */
+  getUserSettings(userID: number): Observable<Setting> {
+    return this.http.get<Setting>(this.getUserSettingsURL,
+      {
+        params: { userID: userID.toString() }, //string is required for params
+        headers: {
+          Authorization: 'my-auth-token'
+        }
+      })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  updateSettings(settings: Setting): Observable<Setting> {
+    return this.http.put<Setting>(this.updateSettingsURL, settings, httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+  /* ==================================== */
   /* =======  Tag Functions ======== */
   createTag(tag: Tag): Observable<Tag> {
     return this.http.post<Tag>(this.createTagURL, tag, httpOptions)
@@ -168,7 +193,7 @@ export class BackendService {
       .pipe(catchError(this.handleError));
   }
   /* ============================== */
-
+ 
   login(login: LoginRequest) {
     return this.http.post<LoginResponse>(this.loginURL, login, httpOptions)
       .pipe(
@@ -250,6 +275,9 @@ interface Task {
   isFinished: number,
   tags: Tag[]
 };
+interface Setting {
+  theme: string
+}
 
 interface Tag {
   id: number,
@@ -286,7 +314,8 @@ interface LoginRequest {
 interface SignUpRequest {
   name: string,
   email: string,
-  password: string
+  password: string,
+  settings: string
 }
 
 interface LoginResponse {
