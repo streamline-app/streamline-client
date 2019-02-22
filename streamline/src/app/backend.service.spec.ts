@@ -3,6 +3,16 @@ import { TestBed, inject, getTestBed } from '@angular/core/testing';
 import { BackendService } from './backend.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { MaterialModule } from './material/material.module';
+import { APP_BASE_HREF } from '@angular/common';
+import { Routes, RouterModule } from '@angular/router';
+import { HomeComponent } from './home/home.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
+
+const appRoutes: Routes = [
+  { path: 'home', component: HomeComponent },
+];
 
 let injector : TestBed;
 let service: BackendService;
@@ -11,8 +21,15 @@ let httpMock : HttpTestingController;
 describe('BackendService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [BackendService],
-      imports: [HttpClientTestingModule, MaterialModule],
+    declarations: [HomeComponent],
+      providers: [BackendService, {provide: APP_BASE_HREF, useValue: '/'}],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      imports: [HttpClientTestingModule, MaterialModule, ReactiveFormsModule, FormsModule,
+      RouterModule.forRoot(
+        appRoutes,
+        { enableTracing: true }
+      )
+      ],
     });
     injector = getTestBed();
     service = injector.get(BackendService);
@@ -86,9 +103,12 @@ describe('BackendService', () => {
       id: 0,
       title: 'title',
       body: 'body',
+      workedDuration: 0,
+      lastWorkedAt: 0,
       estimatedMin: 20,
       estimatedHour: 20,
       expDuration: 0,
+      isFinished: 0,
       tags: []
     }
 
@@ -97,9 +117,12 @@ describe('BackendService', () => {
         id: 0,
         title: 'title',
         body: 'body',
+        workedDuration: 0,
+        lastWorkedAt: 0,
         estimatedMin: 20,
         estimatedHour: 20,
         expDuration: 0,
+        isFinished: 0,
         tags: [],
       }
       );
@@ -109,6 +132,117 @@ describe('BackendService', () => {
     expect(req.request.method).toBe("POST");
     req.flush(request);
   });
+
+  it ('Get Task should get a task and return an observable<task>', () => {
+    service.getTask(1).subscribe(response => {
+      expect(response).toEqual( {
+        id: 0,
+        title: 'title',
+        body: 'body',
+        workedDuration: 0,
+        lastWorkedAt: 0,
+        estimatedMin: 20,
+        estimatedHour: 20,
+        expDuration: 0,
+        isFinished: 0,
+        tags: [],
+      });
+    })
+
+    const req = httpMock.expectOne(`${service.getUserTasksURL}` + '1');
+    expect(req.request.method).toBe("GET");
+    req.flush( {
+      id: 0,
+        title: 'title',
+        body: 'body',
+        workedDuration: 0,
+        lastWorkedAt: 0,
+        estimatedMin: 20,
+        estimatedHour: 20,
+        expDuration: 0,
+        isFinished: 0,
+        tags: [],
+    });    
+  })
+
+  it ('Get User Tasks should get a task and return an observable<task[]>', () => {
+    service.getTask(1).subscribe(response => {
+      expect(response).toEqual( [{
+        id: 0,
+        title: 'title',
+        body: 'body',
+        workedDuration: 0,
+        lastWorkedAt: 0,
+        estimatedMin: 20,
+        estimatedHour: 20,
+        expDuration: 0,
+        isFinished: 0,
+        tags: [],
+      }]);
+    })
+
+    const req = httpMock.expectOne(`${service.getUserTasksURL}` + '1');
+    expect(req.request.method).toBe("GET");
+    req.flush( [{
+      id: 0,
+        title: 'title',
+        body: 'body',
+        workedDuration: 0,
+        lastWorkedAt: 0,
+        estimatedMin: 20,
+        estimatedHour: 20,
+        expDuration: 0,
+        isFinished: 0,
+        tags: [],
+    }]);    
+  })
+
+
+  it ('Delete task should request to delete a task from the database', () => {
+    service.deleteTask(1).subscribe(res => {
+      expect(res).toEqual({
+        message: 'success'
+      })
+    })
+
+
+    const req = httpMock.expectOne(`${service.deleteTaskURL}` + '/1');
+    expect(req.request.method).toBe("DELETE");
+    req.flush({
+      message: 'success'
+    })
+  })
+
+
+  it ('Edit task should edit a task in the database', () => {
+    let request = {
+      title: '',
+      body: '',
+      workedDuration: 0,
+      estimatedMin: 0,
+      estimatedHour: 0,
+      expDuration: 0
+    }
+
+    service.editTask(1, request).subscribe(res => {
+      expect(res).toEqual([]);
+    })
+
+    const req = httpMock.expectOne(`${service.editTaskURL}` + '/1');
+    expect(req.request.method).toBe("PUT");
+    req.flush([])
+  })
+
+  it ('Start task should request to start a task in our database', () => {
+    service.startTask(1).subscribe(res => {
+      expect(res).toEqual([]);
+    })
+
+    const req = httpMock.expectOne(`${service.startTaskURL}` + '1' + '/start');
+    expect(req.request.method).toBe("POST");
+    req.flush([])
+  })
+
 
 });
 
