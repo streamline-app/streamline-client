@@ -1,0 +1,13 @@
+#logo {
+    width: 10px;
+    height: 10px;
+}
+  
+  .full-width {
+    width: 100%;
+  }
+
+#reset {
+  margin-top: 8px;
+  float: right;
+}

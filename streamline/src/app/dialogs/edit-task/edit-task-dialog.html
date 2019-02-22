@@ -1,0 +1,28 @@
+<h1 mat-dialog-title>Edit Task</h1>
+<div mat-dialog-content class="diag_box">
+    <mat-form-field>
+        <mat-label>Edit Name</mat-label>
+        <input matInput type="text" matInput [(ngModel)]="data.title">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Change Description</mat-label>
+        <textarea matInput type="text" [(ngModel)]="data.body"></textarea>
+    </mat-form-field>
+    <div class="slider">
+        <mat-label>Edit Expected Duration (hrs)</mat-label>
+        <mat-slider matInput min="0" max="10" step="1" value="2" thumbLabel tickInterval="1"
+            [(ngModel)]="data.estimatedHour">
+        </mat-slider>
+    </div>
+    <div class="slider">
+    <mat-label>Edit Expected Duration (min)</mat-label>
+    <mat-slider matInput min="0" max="59" step="1" value="3" thumbLabel tickInterval="1"
+        [(ngModel)]="data.estimatedMin">
+    </mat-slider>
+    </div>
+</div>
+
+<mat-dialog-actions align="end" style="width: inherit;" class="button_box">
+    <button mat-stroked-button (click)="editTask()">Update</button>
+    <button mat-stroked-button style="margin-left: 5px;" (click)="closeDialog()">Cancel</button>
+</mat-dialog-actions>

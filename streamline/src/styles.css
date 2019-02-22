@@ -1,8 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
+  
 
-#form {
+.form {
     margin-top: 8px;
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
 }
 
 #submit {
@@ -23,8 +27,15 @@
     width: 100%;
 }
 
-.mat-card {
-    width: 90%;
-    margin-left: 3%;
-    margin-right: 5%;
+.header {
+    margin-left: 8px;
 }
+
+.seperator {
+    width: 100%;
+}
+
+hr {
+    width: 100%;
+}
+

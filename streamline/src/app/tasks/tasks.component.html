@@ -1,0 +1,101 @@
+<h1 class="header">Tasks</h1>
+<hr class="seperator" />
+<button mat-stroked-button style="margin: 0px 0px 5px 10px;" (click)="onCreatePressed()">+ Create Task</button>
+<div *ngFor="let task of tasks; index as i">
+  <div>
+    <mat-card class="mat-elevation-z10" id="task-card">
+      <div class="row">
+        <div class="col-md-6" id="left">
+          <div id="large">
+            <div class="row">
+              <div class="col-md-1">
+                <div id="status" [ngStyle]="{'background-color': task.isFinished === 0 ? 'green' : 'red'}"></div>
+              </div>
+              <div class="col-md-11">
+                <h4 class="task-header">{{task.title}}</h4>
+                <p class="task-body">{{task.body}}</p>
+              </div>
+            </div>
+          </div>
+          <div id="small">
+            <h4 class="task-header">{{task.title}}</h4>
+            <p class="task-body">{{task.body}}</p>
+          </div>
+        </div>
+        <!--
+        <div class="col-md-6">
+          <div class="row">
+            <h4 class="task-header">89%</h4>
+            <mat-progress-bar class="example-margin" [color]="lightblue" [mode]="determinate" [value]="50"
+              [bufferValue]="75">
+            </mat-progress-bar>
+          </div>
+        </div>
+      -->
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="tag_box">
+            <ul class="tags">
+              <li *ngFor="let tag of task.tags" [ngStyle]="{'background-color': tag.color}"
+                (click)="removeTag(task.id, tag.id)">
+                {{tag.name}}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <button mat-stroked-button id="play_{{i}}" class="ctrl_btn" (click)="startTask(task.id, i)"
+            [disabled]="task.lastWorkedAt != null">
+            <mat-icon>play_arrow</mat-icon>
+            <span class="tooltiptext">Start</span>
+          </button>
+          <button mat-stroked-button id="stop_{{i}}" class="ctrl_btn" (click)="stopTask(task.id, i)"
+            [disabled]="task.lastWorkedAt == null">
+            <mat-icon>pause</mat-icon>
+            <span class="tooltiptext">Stop</span>
+          </button>
+          <button mat-stroked-button id="finish_{{i}}" class="ctrl_btn" (click)="finishTask(task.id, i)"
+            [disabled]="task.lastWorkedAt != null">
+            <mat-icon>check</mat-icon>
+            <span class="tooltiptext">Finished</span>
+          </button>
+        </div>
+        <div class="col-md-6">
+          <button mat-stroked-button style="float: right" class="collapsible" (click)="collapse(task.id)">
+            <mat-icon>arrow_drop_down</mat-icon>
+          </button>
+        </div>
+      </div>
+      <!-- Removed until implementation of subtasks feature -->
+      <div id="content_{{task.id}}" style="padding: 0 18px; display: none; overflow: hidden; height: 200px;">
+        <div class="row">
+          <div class="col-md-6"
+            style="height: 150px; border: solid; width: 100%; border-width: 1px; border-color: lightgrey; margin: 5px 0px 5px 0px;">
+            <div class="row" style="margin: 0px 2.5px 0px 2.5px;">
+                <h4 style="float:left;">Estimated Time:</h4>
+              <p style="float: right; margin-top: 10px;">
+                {{task.estimatedHour}} hrs. and {{task.estimatedMin}} min.
+              </p>
+            </div>
+            <div class="row" style="margin: 0px 2.5px 0px 0px;">
+                <h4 style="float:left;">Current Time:</h4>
+              <p style="float: right; margin-top: 10px;">
+                {{getHours(task.workedDuration)}} hrs. and {{getMinutes(task.workedDuration)}} min.
+              </p>
+            </div>
+          </div>
+          <div class="col-md-6" style="float:right;">
+            <button mat-stroked-button class="edit_btn" style="background-color: #c90000; color: white"
+              (click)="deleteTask(task)">Delete</button>
+            <button mat-stroked-button class="edit_btn" (click)="editTask(task)">Edit</button>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+
+  </div>
+
+</div>

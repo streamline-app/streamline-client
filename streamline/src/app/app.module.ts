@@ -11,12 +11,29 @@ import { ProfileComponent } from './profile/profile.component';
 import { CreateTaskComponent } from './create-task/create-task.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { LoginComponent } from './login/login.component';
+import { NavigationComponent } from './navigation/navigation.component';
+import { FormsModule } from '@angular/forms';
+import { SignUpComponent } from './sign-up/sign-up.component';
+import { AuthService } from './auth.service';
+import { TasksComponent } from './tasks/tasks.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { JwtInterceptor } from './jwt.interceptor';
+import { DialogsModule, DeleteConfirmDialog, EditTagDialog, CreateTagDialog, EditTaskDialog } from './dialogs/dialogs.module';
+import { PasswordResetComponent } from './password-reset/password-reset.component';
+import { PasswordResetFormComponent } from './password-reset-form/password-reset-form.component';
+import { SettingsComponent } from './settings/settings.component';
 
 const appRoutes: Routes = [
-  { path: 'home', component: HomeComponent },
-  { path: 'tags', component: TagsComponent },
-  { path: 'profile', component: ProfileComponent },
-  { path: 'create/task', component: CreateTaskComponent }
+  { path: 'home', component: HomeComponent, canActivate: [AuthService] },
+  { path: 'tags', component: TagsComponent, canActivate: [AuthService] },
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthService] },
+  { path: 'create/task', component: CreateTaskComponent, canActivate: [AuthService] },
+  { path: 'login', component: LoginComponent },
+  { path: 'signup', component: SignUpComponent }, 
+  { path: 'reset/password', component: PasswordResetComponent},
+  { path: 'reset/password/form', component: PasswordResetFormComponent},
+  { path: 'settings', component: SettingsComponent }
 ];
 
 @NgModule({
@@ -26,6 +43,17 @@ const appRoutes: Routes = [
     TagsComponent,
     ProfileComponent,
     CreateTaskComponent,
+    LoginComponent,
+    NavigationComponent,
+    SignUpComponent,
+    TasksComponent,
+    DeleteConfirmDialog,
+    CreateTagDialog,
+    EditTagDialog,
+    EditTaskDialog,
+    PasswordResetComponent,
+    PasswordResetFormComponent,
+    SettingsComponent,
   ],
   imports: [
     BrowserModule,
@@ -33,14 +61,18 @@ const appRoutes: Routes = [
     MaterialModule,
     ReactiveFormsModule,
     HttpClientModule,
+    FormsModule,
+    DialogsModule,
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true } 
-    )
+    ),
   ],
   providers: [ 
     {provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig},
+    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [DeleteConfirmDialog, EditTagDialog, CreateTagDialog, EditTaskDialog]
 })
 export class AppModule { }
