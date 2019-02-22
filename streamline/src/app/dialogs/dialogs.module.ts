@@ -86,6 +86,24 @@ export class EditTaskDialog {
   }
 }
 
+@Component({
+  selector: 'unregister-dialog',
+  templateUrl: 'unregister/unregister-dialog.html',
+})
+export class UnregisterDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<UnregisterDialog>) {}
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  onYesClick(): void {
+    this.dialogRef.close('yes');
+  }
+
+}
 export interface CreateTagDialogData {
   name: string,
   desc: string,
