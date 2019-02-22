@@ -21,6 +21,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from './jwt.interceptor';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { PasswordResetFormComponent } from './password-reset-form/password-reset-form.component';
+import { SettingsComponent } from './settings/settings.component';
 
 
 const appRoutes: Routes = [
@@ -31,7 +32,8 @@ const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignUpComponent }, 
   { path: 'reset/password', component: PasswordResetComponent},
-  { path: 'reset/password/form', component: PasswordResetFormComponent}
+  { path: 'reset/password/form', component: PasswordResetFormComponent},
+  { path: 'settings', component: SettingsComponent }
 ];
 
 @NgModule({
@@ -50,7 +52,8 @@ const appRoutes: Routes = [
     TasksComponent,
     TaskCreateTagDialog,
     PasswordResetComponent,
-    PasswordResetFormComponent
+    PasswordResetFormComponent,
+    SettingsComponent,
   ],
   imports: [
     BrowserModule,

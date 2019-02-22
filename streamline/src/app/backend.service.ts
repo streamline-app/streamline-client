@@ -4,6 +4,7 @@ import { catchError, retry } from 'rxjs/operators';
 import { HttpHeaders } from '@angular/common/http';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material';
+import { AuthService } from './auth.service';
 
 
 const httpOptions = {
@@ -38,6 +39,7 @@ export class BackendService {
   public signupURL: string = 'http://' + this.root + '/api/auth/signup';
   public passwordResetURL: string = 'http://' + this.root + '/api/auth/reset/password';
   public changePasswordURL: string = 'http://' + this.root + '/api/auth/change/password';
+  public deleteUserURL : string = 'http://' + this.root + '/api/auth/user/delete';
 
   /* Auth Token URLs */
   public setTokenURL: string = 'http://' + this.root + '/api/tokens/create';
@@ -45,7 +47,7 @@ export class BackendService {
 
 
 
-  constructor(private http: HttpClient, private snackbar: MatSnackBar) { }
+  constructor(private http: HttpClient, private auth: AuthService) { }
 
   /* ============ Task Functions ========== */
   createTask(task: Task): Observable<Task> {
@@ -160,6 +162,13 @@ export class BackendService {
       .pipe(
         catchError(this.handleError)
       )
+  }
+
+  deleteUser(id) {
+    return this.http.get(this.deleteUserURL + '/' + id, httpOptions)
+    .pipe (
+      catchError(this.handleError)
+    )
   }
 
 

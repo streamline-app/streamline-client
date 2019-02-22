@@ -21,7 +21,11 @@ export class NavigationComponent{
   }
 
   public onSettings() {
-    window.alert('settings clicked');
+    this.router.navigateByUrl('settings');
+  }
+
+  public onHome() {
+    this.router.navigateByUrl('home');
   }
 
   public onLogout() {
