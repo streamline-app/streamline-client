@@ -1,0 +1,30 @@
+// default colors
+.theme-wrapper {
+    --navBarBackground: #CCC;
+    --settingsBackground: #FFF;
+    --tagsBackground: #FFF;
+    --tasksBackground: #FFF;
+    --signupBackground: #FFF;
+    --profileBackground: #FFF;
+    --homeBackground: #FFF;
+    --createTaskBackground: #FFF;
+    --dialogsBackground: #FFF;
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 8px;
+}
+// pass variables into a sass map
+$variables: (
+    --navBarBackground: var(--navBarBackground),
+    --navBarTextColor: var(--navBarTextColor),
+    --menuButtonBackground: var(--menuButtonBackground),
+    --settingsBackground: var(--settingsBackground),
+    --tagsBackground: var(--tagsBackground),
+    --tasksBackground: var(--tasksBackground),
+    --signupBackground: var(--signupBackground),
+    --profileBackground: var(--profileBackground),
+    --homeBackground: var(--homeBackground),
+    --createTaskBackground: var(--createTaskBackground),
+    --dialogsBackground: var(--dialogsBackground)
+);

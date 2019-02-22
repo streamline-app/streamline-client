@@ -140,6 +140,28 @@ export class BackendService {
   }
   /* ==================================== */
 
+
+  /* =======  Settings Functions ======== */
+  getUserSettings(userID: number): Observable<Setting> {
+    return this.http.get<Setting>(this.getUserSettingsURL,
+      {
+        params: { userID: userID.toString() }, //string is required for params
+        headers: {
+          Authorization: 'my-auth-token'
+        }
+      })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  updateSettings(settings: Setting): Observable<Setting> {
+    return this.http.put<Setting>(this.updateSettingsURL, settings, httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+  /* ==================================== */
   /* =======  Tag Functions ======== */
   createTag(tag: Tag): Observable<Tag> {
     return this.http.post<Tag>(this.createTagURL, tag, httpOptions)
@@ -173,25 +195,9 @@ export class BackendService {
   /* ============================== */
  
   /*       Settings Functions       */
-  getUserSettings(userID: string): Observable<string> {
-    return this.http.get<string>(this.getUserSettingsURL,
-      {
-        params: { userID: userID }, //string is required, must parse it back into int in backend
-        headers: {
-          Authorization: 'my-auth-token'
-        }
-      }) 
-      .pipe(
-        catchError(this.handleError)
-      );
-  }
 
-  updateSetting(setting: string): Observable<string> {
-    return this.http.put<string>(this.updateSettingsURL, setting, httpOptions)
-      .pipe(
-        catchError(this.handleError)
-      );
-  }
+
+
 
 
 
@@ -276,6 +282,9 @@ interface Task {
   isFinished: number,
   tags: Tag[]
 };
+interface Setting {
+  theme: string
+}
 
 interface Tag {
   id: number,
