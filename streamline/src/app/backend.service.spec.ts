@@ -167,7 +167,7 @@ describe('BackendService', () => {
 
   it ('Get User Tasks should get a task and return an observable<task[]>', () => {
     service.getTask(1).subscribe(response => {
-      expect(response).toEqual( [{
+      expect(response).toEqual( {
         id: 0,
         title: 'title',
         body: 'body',
@@ -178,12 +178,12 @@ describe('BackendService', () => {
         expDuration: 0,
         isFinished: 0,
         tags: [],
-      }]);
+      });
     })
 
     const req = httpMock.expectOne(`${service.getUserTasksURL}` + '1');
     expect(req.request.method).toBe("GET");
-    req.flush( [{
+    req.flush( {
       id: 0,
         title: 'title',
         body: 'body',
@@ -194,7 +194,7 @@ describe('BackendService', () => {
         expDuration: 0,
         isFinished: 0,
         tags: [],
-    }]);    
+    });    
   })
 
 
