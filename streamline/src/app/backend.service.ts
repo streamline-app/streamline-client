@@ -194,13 +194,6 @@ export class BackendService {
   }
   /* ============================== */
  
-  /*       Settings Functions       */
-
-
-
-
-
-
   login(login: LoginRequest) {
     return this.http.post<LoginResponse>(this.loginURL, login, httpOptions)
       .pipe(
@@ -321,7 +314,8 @@ interface LoginRequest {
 interface SignUpRequest {
   name: string,
   email: string,
-  password: string
+  password: string,
+  settings: string
 }
 
 interface LoginResponse {

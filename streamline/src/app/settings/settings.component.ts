@@ -32,7 +32,8 @@ export class SettingsComponent {
     }, error => {
       console.log(error.message);
       //three second snackbar pop up notification
-      let snackbarRef = this.snackbar.open('Oh no, coudlnt grab personal settings!', 'Ok', { duration: 3000 });
+      this.theme = 'light';
+
     });
     
     if(this.theme == 'dark') {
@@ -42,26 +43,41 @@ export class SettingsComponent {
       this.newTheme.theme = 'dark';
     }
     if(this.theme == 'light') {
-      this.newTheme.theme = 'light'
+      this.newTheme.theme = 'light';
     }
 
    }
   private themeWrapper = document.querySelector('body');
 
   swapTheme() {
+    this.backend.updateSettings(this.newTheme).subscribe(res => {
+      console.log('updated Settings');
 
+      //three second snackbar pop up notification
+      let snackbarRef = this.snackbar.open('Settings Updated!', 'Ok', { duration: 3000 });
+
+    }, error => {
+      console.log(error.message);
+      //three second snackbar pop up notification
+      let snackbarRef = this.snackbar.open('Settings werent updated', 'Ok', { duration: 3000 });
+
+    })
     if(this.newTheme.theme == 'dark') {
       this.newTheme.theme = 'light';
       this.themeWrapper.style.setProperty('--navBarBackground', 'white');
       this.themeWrapper.style.setProperty('--navBarTextColor', 'black');
       this.themeWrapper.style.setProperty('--menuButtonBackground', 'white');
     }
-    if(this.newTheme.theme = 'dark') {
-      this.newTheme.theme = 'light';
+    let snackbarRef = this.snackbar.open('If statements1', 'Ok', { duration: 3000 });
+    if(this.newTheme.theme = 'light') {
+      this.newTheme.theme = 'dark';
       this.themeWrapper.style.setProperty('--navBarBackground', 'darkslategray');
       this.themeWrapper.style.setProperty('--navBarTextColor', 'white');
       this.themeWrapper.style.setProperty('--menuButtonBackground', 'gray');
     }
+    
+    let snackbarRef = this.snackbar.open('If statements', 'Ok', { duration: 3000 });
+    
   }
   onResetPassword() {
     this.router.navigateByUrl('/reset/password');
