@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { AuthService } from '../auth.service';
 import { BackendService } from '../backend.service';
+import { UnregisterDialog } from '../dialogs/dialogs.module';
 
 
 @Component({
@@ -19,14 +20,25 @@ export class SettingsComponent {
   }
 
   onUnregister() {
-    let userId = this.auth.getUserId();
-    this.backend.deleteUser(userId).subscribe(res => {
-      this.auth.setLoggedOut();
-      window.alert('Account unregistered');
-      this.router.navigateByUrl('/login');
-    }, error => {
-      window.alert('Unable to unregister your account.')
+
+    const dialogRef = this.dialog.open(UnregisterDialog, {
+      width: '250px',
+      height: '250px',
     });
+
+    dialogRef.afterClosed().subscribe((res) => {
+      if (res != null) {
+        let userId = this.auth.getUserId();
+        this.backend.deleteUser(userId).subscribe(res => {
+          this.auth.setLoggedOut();
+          window.alert('Account unregistered');
+          this.router.navigateByUrl('/login');
+        }, error => {
+          window.alert('Unable to unregister your account.')
+        });
+      } 
+    })
+
   }
 
 
