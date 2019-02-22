@@ -22,6 +22,7 @@ import { JwtInterceptor } from './jwt.interceptor';
 import { DialogsModule, DeleteConfirmDialog, EditTagDialog, CreateTagDialog, EditTaskDialog } from './dialogs/dialogs.module';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { PasswordResetFormComponent } from './password-reset-form/password-reset-form.component';
+import { SettingsComponent } from './settings/settings.component';
 
 const appRoutes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthService] },
@@ -31,7 +32,8 @@ const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignUpComponent }, 
   { path: 'reset/password', component: PasswordResetComponent},
-  { path: 'reset/password/form', component: PasswordResetFormComponent}
+  { path: 'reset/password/form', component: PasswordResetFormComponent},
+  { path: 'settings', component: SettingsComponent }
 ];
 
 @NgModule({
@@ -50,7 +52,8 @@ const appRoutes: Routes = [
     EditTagDialog,
     EditTaskDialog,
     PasswordResetComponent,
-    PasswordResetFormComponent
+    PasswordResetFormComponent,
+    SettingsComponent,
   ],
   imports: [
     BrowserModule,
