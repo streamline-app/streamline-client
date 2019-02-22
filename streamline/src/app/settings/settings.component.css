@@ -3,24 +3,24 @@
     height: calc(100vh - 20px);
     margin: 2px;
     margin-top: 5px;
-    background-color: green;
+    background-color: darkslategray;
   }
   
   .sidebar {
       width: 400px;
       padding: 8px;
       display: block;
-      background-color: green;
+      background-color: darkslategray;
   }
   
   .main_box { 
       padding: 5px;
-      background-color: green;
+      background-color: darkslategray;
   }
 
   .main_box button {
       margin-left: 10px;
-      background-color: green;
+      background-color: darkslategray;
   }
   .tag_box{
       margin: 10px;
@@ -29,13 +29,13 @@
       border-width: 2px;
       border-color: lightgrey;
       padding: 5px;
-      background-color: green;
+      background-color: darkslategray;
   }
   .background-light {
     background-color: lightgrey;
   }  
   .background-dark {
-    background-color: green;
+    background-color: darkslategray;
   }
 
 
@@ -53,7 +53,7 @@ div.color{
   height: calc(100vh - 20px);
   margin: 2px;
   margin-top: 5px;
-  background-color: green;
+  background-color: darkslategray;
 }
 
 div.square {
