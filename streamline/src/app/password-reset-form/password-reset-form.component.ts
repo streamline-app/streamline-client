@@ -38,7 +38,7 @@ export class PasswordResetFormComponent {
   ]);
 
 
-  constructor(private snackbar: MatSnackBar, private backend: BackendService, private route: ActivatedRoute, private router: Router) {
+  constructor(private snackbar: MatSnackBar, private backend: BackendService, private route: ActivatedRoute, private auth: AuthService, private router: Router) {
     route.queryParams.subscribe(params => {
       this.token = params['token'];
     })
@@ -64,7 +64,12 @@ export class PasswordResetFormComponent {
     this.backend.changePassword(request).subscribe(res => {
       if (res) {
         window.alert('Password reset successful!');
-        this.router.navigateByUrl('login');
+        if (this.auth.isLoggedIn()) {
+          this.router.navigateByUrl('home');
+        } else {
+          this.router.navigateByUrl('login');
+
+        }
       } else {
         window.alert('Invalid information given');
       }
@@ -72,7 +77,11 @@ export class PasswordResetFormComponent {
   }
 
   onCancel() {
-    this.router.navigateByUrl('/login');
+    if (this.auth.isLoggedIn()) {
+      this.router.navigateByUrl('home');
+    } else {
+      this.router.navigateByUrl('login');
+    }
   }
 
 }
