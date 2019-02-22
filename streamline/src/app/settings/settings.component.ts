@@ -15,6 +15,7 @@ interface Setting {
 export class SettingsComponent {
   theme: string;
   newTheme: Setting;
+  helloMoto: string;
   constructor(
     private router: Router,
     public dialog: MatDialog,
@@ -22,7 +23,8 @@ export class SettingsComponent {
     private backend: BackendService, 
     private snackbar: MatSnackBar,
     ) {
-
+      this.helloMoto = 'HEY';
+      /*
     this.backend.getUserSettings(this.auth.getUserId()).subscribe(result => { //TODO change userID
       console.log(result);
       //window.alert('Got Tags');
@@ -32,9 +34,10 @@ export class SettingsComponent {
     }, error => {
       console.log(error.message);
       //three second snackbar pop up notification
+      let snackbarRef = this.snackbar.open('Oh no, coudlnt grab personal settings!', 'Ok', { duration: 3000 });
       this.theme = 'light';
-
     });
+    
     
     if(this.theme == 'dark') {
       this.themeWrapper.style.setProperty('--navBarBackground', 'darkslategray');
@@ -45,11 +48,43 @@ export class SettingsComponent {
     if(this.theme == 'light') {
       this.newTheme.theme = 'light';
     }
+    */
 
    }
   private themeWrapper = document.querySelector('body');
 
   swapTheme() {
+    
+    if(this.helloMoto == 'HEY') {
+      this.themeWrapper.style.setProperty('--navBarBackground', 'darkslategray');
+      this.themeWrapper.style.setProperty('--navBarTextColor', 'white');
+      this.themeWrapper.style.setProperty('--menuButtonBackground', 'gray');
+      this.themeWrapper.style.setProperty('--settingsBackground', 'darkslategray');
+      this.themeWrapper.style.setProperty('--settingsColor', 'white');
+      this.helloMoto = 'NO';
+    } else {
+      this.themeWrapper.style.setProperty('--navBarBackground', 'white');
+      this.themeWrapper.style.setProperty('--navBarTextColor', 'black');
+      this.themeWrapper.style.setProperty('--menuButtonBackground', 'white');
+      this.themeWrapper.style.setProperty('--settingsBackground', 'white');
+      this.themeWrapper.style.setProperty('--settingsColor', 'black');
+      this.helloMoto = 'HEY';
+    }
+    /*
+    if(this.newTheme.theme == 'dark') {
+      this.newTheme.theme = 'light';
+      this.themeWrapper.style.setProperty('--navBarBackground', 'white');
+      this.themeWrapper.style.setProperty('--navBarTextColor', 'black');
+      this.themeWrapper.style.setProperty('--menuButtonBackground', 'white');
+    }
+    if(this.newTheme.theme = 'dark') {
+      this.newTheme.theme = 'light';
+      this.themeWrapper.style.setProperty('--navBarBackground', 'darkslategray');
+      this.themeWrapper.style.setProperty('--navBarTextColor', 'white');
+      this.themeWrapper.style.setProperty('--menuButtonBackground', 'gray');
+    }
+    
+    let snackbarRef = this.snackbar.open('If statements', 'Ok', { duration: 3000 });
     this.backend.updateSettings(this.newTheme).subscribe(res => {
       console.log('updated Settings');
 
@@ -62,22 +97,7 @@ export class SettingsComponent {
       let snackbarRef = this.snackbar.open('Settings werent updated', 'Ok', { duration: 3000 });
 
     })
-    if(this.newTheme.theme == 'dark') {
-      this.newTheme.theme = 'light';
-      this.themeWrapper.style.setProperty('--navBarBackground', 'white');
-      this.themeWrapper.style.setProperty('--navBarTextColor', 'black');
-      this.themeWrapper.style.setProperty('--menuButtonBackground', 'white');
-    }
-    let snackbarRef = this.snackbar.open('If statements1', 'Ok', { duration: 3000 });
-    if(this.newTheme.theme = 'light') {
-      this.newTheme.theme = 'dark';
-      this.themeWrapper.style.setProperty('--navBarBackground', 'darkslategray');
-      this.themeWrapper.style.setProperty('--navBarTextColor', 'white');
-      this.themeWrapper.style.setProperty('--menuButtonBackground', 'gray');
-    }
-    
-    let snackbarRef = this.snackbar.open('If statements', 'Ok', { duration: 3000 });
-    
+    */
   }
   onResetPassword() {
     this.router.navigateByUrl('/reset/password');
