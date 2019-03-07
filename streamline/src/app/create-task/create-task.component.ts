@@ -1,12 +1,13 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component} from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { BackendService } from '../backend.service';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
-import { MatSnackBar, MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
+import { MatSnackBar, MatDialog } from '@angular/material';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { CreateTagDialog, CreateTagDialogData } from '../dialogs/dialogs.module'
+import { CreateTagDialog } from '../dialogs/dialogs.module'
+import { formatDate } from '@angular/common';
 
 const MINUTES_TO_SECONDS: number = 60;
 const HOURS_TO_SECONDS: number = 3600;
@@ -26,6 +27,8 @@ export class CreateTaskComponent {
   public task: FormGroup = new FormGroup({
     title: new FormControl(''),
     body: new FormControl(''),
+    priority: new FormControl(0),
+    completeDate: new FormControl(new Date()),
     estimatedMin: new FormControl(0),
     estimatedHour: new FormControl(0),
     tags: new FormControl({ value: '', disabled: 'true' })
@@ -49,6 +52,8 @@ export class CreateTaskComponent {
       body: this.task.controls['body'].value,
       estimatedMin: this.task.controls['estimatedMin'].value,
       estimatedHour: this.task.controls['estimatedHour'].value,
+      priority: this.task.controls['priority'].value,
+      completeDate:  formatDate(this.task.controls['completeDate'].value , 'yyyy-MM-dd', 'en-US'),
       expDuration: (this.task.controls['estimatedMin'].value * MINUTES_TO_SECONDS) + (this.task.controls['estimatedHour'].value * HOURS_TO_SECONDS), //convert sum of estimations to seconds
       tags: this.parseTagArray(this.selectedTags),//list of tagIDs
       userID: this.auth.getUserId()
