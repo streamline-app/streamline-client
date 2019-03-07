@@ -1,5 +1,5 @@
 import { NgModule, Component, Inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @NgModule({
@@ -72,8 +72,11 @@ export class EditTagDialog {
   templateUrl: 'edit-task/edit-task-dialog.html',
 })
 export class EditTaskDialog {
+  private oldDate: Date = new Date();
   constructor(public dialogRef: MatDialogRef<EditTaskDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: EditTaskDialogData) { }
+    @Inject(MAT_DIALOG_DATA) public data: EditTaskDialogData) { 
+      this.oldDate = data.completeDate;
+    }
 
   editTask() {
     //update expDuration
@@ -83,6 +86,10 @@ export class EditTaskDialog {
 
   closeDialog() {
     this.dialogRef.close();
+  }
+
+  _formatDate(d: Date): string{ //special function to format date for UI
+    return formatDate(d, 'MM/dd/yyyy', 'en-US');
   }
 }
 

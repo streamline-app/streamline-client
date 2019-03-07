@@ -28,10 +28,10 @@
     </div>
     <div>
         <mat-form-field>
-            <mat-label>Edit Due Date</mat-label>
-            <input matInput [(ngModel)]="data.completeDate" [matDatepicker]="picker" placeholder="Choose a date">
+          <!--  <mat-label>Edit Due Date</mat-label>-->
+            <input matInput [(ngModel)]="data.completeDate" [matDatepicker]="picker" placeholder="Old Due Date: {{_formatDate(this.oldDate)}}" disabled>
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
+            <mat-datepicker #picker disabled="false"></mat-datepicker>
         </mat-form-field>
     </div>
 </div>

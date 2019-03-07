@@ -53,7 +53,7 @@ export class CreateTaskComponent {
       estimatedMin: this.task.controls['estimatedMin'].value,
       estimatedHour: this.task.controls['estimatedHour'].value,
       priority: this.task.controls['priority'].value,
-      completeDate:  formatDate(this.task.controls['completeDate'].value , 'yyyy-MM-dd', 'en-US'),
+      completeDate:  formatDate(this.task.controls['completeDate'].value , 'yyyy-MM-dd', 'en-US'), //format Date for backend
       expDuration: (this.task.controls['estimatedMin'].value * MINUTES_TO_SECONDS) + (this.task.controls['estimatedHour'].value * HOURS_TO_SECONDS), //convert sum of estimations to seconds
       tags: this.parseTagArray(this.selectedTags),//list of tagIDs
       userID: this.auth.getUserId()

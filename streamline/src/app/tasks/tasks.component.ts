@@ -118,7 +118,15 @@ export class TasksComponent implements OnInit {
   editTask(task: Task) {
     let dialogRef = this.create_dialog.open(EditTaskDialog, {
       width: '400px',
-      data: { title: task.title, body: task.body, workedDuration: task.workedDuration, estimatedHour: task.estimatedHour, estimatedMin: task.estimatedMin, expDuration: task.expDuration, priority: task.priority, completeDate: task.completeDate }
+      data: { 
+        title: task.title,
+        body: task.body, 
+        workedDuration: task.workedDuration, 
+        estimatedHour: task.estimatedHour, 
+        estimatedMin: task.estimatedMin, 
+        expDuration: task.expDuration, 
+        priority: task.priority, 
+        completeDate: task.completeDate }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -140,6 +148,9 @@ export class TasksComponent implements OnInit {
         if (exists) { //if it already exists, don't make a new one
           return;
         }
+
+        //format Date into string for backend
+        result.completeDate = formatDate(result.completeDate , 'yyyy-MM-dd', 'en-US');
 
         this.backend.editTask(task.id, result).subscribe(res => {
           console.log('task ' + task.id + ' udpated');
@@ -245,7 +256,7 @@ export class TasksComponent implements OnInit {
     this.router.navigateByUrl('create/task');
   }
 
-  _formatDate(d: Date): string{
+  _formatDate(d: Date): string{ //special function to format date for UI
     return formatDate(d, 'MMMM dd, yyyy', 'en-US');
   }
 }
