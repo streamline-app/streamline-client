@@ -118,7 +118,7 @@ export class TasksComponent implements OnInit {
   editTask(task: Task) {
     let dialogRef = this.create_dialog.open(EditTaskDialog, {
       width: '400px',
-      data: { title: task.title, body: task.body, workedDuration: task.workedDuration, estimatedHour: task.estimatedHour, estimatedMin: task.estimatedMin, expDuration: task.expDuration }
+      data: { title: task.title, body: task.body, workedDuration: task.workedDuration, estimatedHour: task.estimatedHour, estimatedMin: task.estimatedMin, expDuration: task.expDuration, priority: task.priority, completeDate: task.completeDate }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -142,7 +142,7 @@ export class TasksComponent implements OnInit {
         }
 
         this.backend.editTask(task.id, result).subscribe(res => {
-          console.log('tag ' + task.id + ' udpated');
+          console.log('task ' + task.id + ' udpated');
 
           //three second snackbar pop up notification
           let snackbarRef = this.snackbar.open('Task Updated!', 'Ok', { duration: 3000 });
@@ -254,6 +254,8 @@ interface Task {
   id: number;
   title: string,
   body: string,
+  priority: number,
+  completeDate: Date,
   workedDuration: number,
   estimatedMin: number,
   estimatedHour: number,
