@@ -4,6 +4,8 @@ import { AuthService } from '../auth.service';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { DeleteConfirmDialog, EditTaskDialog } from '../dialogs/dialogs.module';
+import { format } from 'url';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-tasks',
@@ -243,7 +245,9 @@ export class TasksComponent implements OnInit {
     this.router.navigateByUrl('create/task');
   }
 
-
+  _formatDate(d: Date): string{
+    return formatDate(d, 'MMMM dd, yyyy', 'en-US');
+  }
 }
 
 interface Task {
