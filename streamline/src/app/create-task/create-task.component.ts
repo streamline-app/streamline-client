@@ -23,12 +23,13 @@ export class CreateTaskComponent {
 
   public rawTagsForm: FormControl = new FormControl();
   public filteredTags: Observable<Tag[]>;
+  private currDate: Date = new Date();
 
   public task: FormGroup = new FormGroup({
     title: new FormControl(''),
     body: new FormControl(''),
     priority: new FormControl(0),
-    completeDate: new FormControl(new Date()),
+    completeDate: new FormControl( {value: new Date(), disabled: 'true'}),
     estimatedMin: new FormControl(0),
     estimatedHour: new FormControl(0),
     tags: new FormControl({ value: '', disabled: 'true' })
@@ -40,7 +41,12 @@ export class CreateTaskComponent {
     private snackbar: MatSnackBar,
     public create_dialog: MatDialog,
   ) {
-    
+
+    /* used to set a min date for datepicker, for some reason sets min 
+    *  to previous day so have to add one to the current date.
+    */
+    this.currDate.setDate(this.currDate.getDate() + 1);
+
     //retrieve tags for display
     this.getTags();
   }
