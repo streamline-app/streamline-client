@@ -3,7 +3,7 @@ import { BackendService } from '../backend.service';
 import { AuthService } from '../auth.service';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
-import { DeleteConfirmDialog, EditTaskDialog } from '../dialogs/dialogs.module';
+import { DeleteConfirmDialog, EditTaskDialog, AddTagDialog } from '../dialogs/dialogs.module';
 
 @Component({
   selector: 'app-tasks',
@@ -60,45 +60,63 @@ export class TasksComponent implements OnInit {
       console.log(res);
 
       var count = 0;
-      this.tasks.forEach(t =>{
-        if(t.id === taskID){
+      this.tasks.forEach(t => {
+        if (t.id === taskID) {
           this.tasks[count].tags = res;
         }
         count++;
       });
-      
+
     });
     /*
-    var count = 0;
-    this.tasks.forEach(task => {
-      this.backend.getTaskTags(task.id).subscribe(res => {
-        console.log('tags retrieved for task ' + task.id + ':');
-        console.log(res);
-
-        this.tasks[count].tags = res;
-        console.log(this.tasks[count].tags);
-
-        count++;
+      var count = 0;
+      this.tasks.forEach(task => {
+        this.backend.getTaskTags(task.id).subscribe(res => {
+          console.log('tags retrieved for task ' + task.id + ':');
+          console.log(res);
+  
+          this.tasks[count].tags = res;
+          console.log(this.tasks[count].tags);
+  
+          count++;
+        });
       });
-    });
     */
   }
 
   removeTag(taskID: number, tagID: number) {
-    this.backend.removeTag(taskID, tagID).subscribe(res => {
-      console.log('TagID ' + tagID + ' removed From TaskID' + taskID);
+    const dialogRef = this.create_dialog.open(DeleteConfirmDialog, {
+      width: '325px',
+    });
 
-      //three second snackbar pop up notification
-      let snackbarRef = this.snackbar.open('Tag removed from that task!', 'Ok', { duration: 3000 });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) { //if confirmed, delete
+        this.backend.removeTag(taskID, tagID).subscribe(res => {
+          console.log('TagID ' + tagID + ' removed From TaskID' + taskID);
 
-      //reload tags
-      this.getTaskTags(taskID);
-    },
-      error => {
-        console.log(error.message);
-        //three second snackbar pop up notification
-        let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
-      });
+          //three second snackbar pop up notification
+          let snackbarRef = this.snackbar.open('Tag removed from that task!', 'Ok', { duration: 3000 });
+
+          //reload tags
+          this.getTaskTags(taskID);
+        },
+          error => {
+            console.log(error.message);
+            //three second snackbar pop up notification
+            let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
+          });
+      }
+      else { /* do nothing */ }
+    });
+  }
+
+  addTag(taskID: number) {
+    const dialogRef = this.create_dialog.open(AddTagDialog, {
+      width: '325px',
+    });
+
+
+
   }
 
   deleteTask(task: Task) {
@@ -228,19 +246,19 @@ export class TasksComponent implements OnInit {
     });
   }
 
-  getMinutes(seconds: number): number{
+  getMinutes(seconds: number): number {
     var hrs = 0;
-    if(seconds > 3600)
+    if (seconds > 3600)
       hrs = Math.floor(seconds / 3600);
-    
+
     var min = (seconds - (hrs * 3600)) / 60;
     return Math.floor(min);
   }
 
-  getHours(seconds: number) : number{
-    if(seconds > 3600)
+  getHours(seconds: number): number {
+    if (seconds > 3600)
       return Math.floor(seconds / 3600);
-    else 
+    else
       return 0;
   }
 

@@ -19,7 +19,7 @@ import { AuthService } from './auth.service';
 import { TasksComponent } from './tasks/tasks.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from './jwt.interceptor';
-import { DialogsModule, DeleteConfirmDialog, EditTagDialog, CreateTagDialog, EditTaskDialog, UnregisterDialog } from './dialogs/dialogs.module';
+import { DialogsModule, DeleteConfirmDialog, EditTagDialog, CreateTagDialog, EditTaskDialog, UnregisterDialog, AddTagDialog } from './dialogs/dialogs.module';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { PasswordResetFormComponent } from './password-reset-form/password-reset-form.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -52,6 +52,7 @@ const appRoutes: Routes = [
     EditTagDialog,
     EditTaskDialog,
     UnregisterDialog,
+    AddTagDialog,
     PasswordResetComponent,
     PasswordResetFormComponent,
     SettingsComponent,
@@ -74,6 +75,6 @@ const appRoutes: Routes = [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
   ],
   bootstrap: [AppComponent],
-  entryComponents: [DeleteConfirmDialog, EditTagDialog, CreateTagDialog, EditTaskDialog, UnregisterDialog]
+  entryComponents: [DeleteConfirmDialog, EditTagDialog, CreateTagDialog, EditTaskDialog, UnregisterDialog, AddTagDialog]
 })
 export class AppModule { }

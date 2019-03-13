@@ -1,22 +1,9 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BackendService } from '../backend.service';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { AuthService } from '../auth.service';
 import { CreateTagDialog, EditTagDialog, DeleteConfirmDialog } from '../dialogs/dialogs.module';
 
-/*
-export interface CreateTagDialogData {
-  name: string,
-  desc: string,
-  color: string
-};
-
-export interface EditTagDialogData {
-  name: string,
-  desc: string,
-  color: string
-};
-*/
 @Component({
   selector: 'app-tags',
   templateUrl: './tags.component.html',
@@ -43,7 +30,7 @@ export class TagsComponent implements OnInit {
   }
 
   createTag() {
-    console.log('Hello Moto Tags');
+    //console.log('Hello Moto Tags');
     const dialogRef = this.create_dialog.open(CreateTagDialog, {
       width: '250px',
       data: { name: '', desc: '', color: "#c4c4c4" }
@@ -202,65 +189,6 @@ export class TagsComponent implements OnInit {
     });
   }
 }
-
-/*
-@Component({
-  selector: 'create-tag/create-tag-dialog',
-  templateUrl: 'create-tag/create-tag-dialog.html',
-})
-export class CreateTagDialog {
-
-  constructor(public dialogRef: MatDialogRef<CreateTagDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: CreateTagDialogData) {
-
-  }
-
-  createTag() {
-    //close the dialog, data will be returned to parent component
-    this.dialogRef.close(this.data);
-  }
-
-  closeDiag() {
-    //return to parent component, result will be undefined
-    this.dialogRef.close();
-  }
-}
-
-@Component({
-  selector: 'delete-tag/delete-confirm-dialog',
-  templateUrl: 'delete-tag/delete-confirm-dialog.html',
-})
-export class DeleteConfirmDialog {
-
-  constructor(public dialogRef: MatDialogRef<DeleteConfirmDialog>) { }
-
-  yes() {
-    this.dialogRef.close(true); //return true to parent component
-  }
-
-  no() {
-    this.dialogRef.close(false); //return false to parent component
-  }
-}
-
-
-@Component({
-  selector: 'edit-tag/edit-dialog',
-  templateUrl: 'edit-tag/edit-dialog.html',
-})
-export class EditTagDialog {
-  constructor(public dialogRef: MatDialogRef<EditTagDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: EditTagDialogData) { }
-
-  editTag() {
-    this.dialogRef.close(this.data); //return data fields to parent
-  }
-
-  closeDialog() {
-    this.dialogRef.close();
-  }
-}
-*/
 
 interface Tag {
   id: number,

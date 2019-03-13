@@ -49,7 +49,6 @@ export class DeleteConfirmDialog {
   }
 }
 
-
 @Component({
   selector: 'edit-tag/edit-tag-dialog',
   templateUrl: 'edit-tag/edit-tag-dialog.html',
@@ -87,6 +86,23 @@ export class EditTaskDialog {
 }
 
 @Component({
+  selector: 'add-tag/add-tag-dialog',
+  templateUrl: 'add-tag/add-tag-dialog.html',
+})
+export class AddTagDialog {
+  constructor(public dialogRef: MatDialogRef<AddTagDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: EditTagDialogData){}
+
+    addTag(){
+      alert('acknowledged!');
+    }
+
+    closeDialog(){
+      this.dialogRef.close();
+    }
+}
+
+@Component({
   selector: 'unregister-dialog',
   templateUrl: 'unregister/unregister-dialog.html',
 })
@@ -104,6 +120,8 @@ export class UnregisterDialog {
   }
 
 }
+
+
 export interface CreateTagDialogData {
   name: string,
   desc: string,
@@ -123,4 +141,8 @@ export interface EditTaskDialogData {
   estimatedMin: number,
   estimatedHour: number,
   expDuration: number
+};
+
+export interface AddTagDialogData {
+
 }
