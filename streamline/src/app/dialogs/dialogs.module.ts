@@ -1,6 +1,9 @@
 import { NgModule, Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Observable } from 'rxjs';
+import { FormControl } from '@angular/forms';
+import { Tag } from '../app.module'
 
 @NgModule({
   imports: [
@@ -90,16 +93,28 @@ export class EditTaskDialog {
   templateUrl: 'add-tag/add-tag-dialog.html',
 })
 export class AddTagDialog {
+  public rawTagsForm: FormControl = new FormControl();
+  public filteredTags: Observable<Tag[]>;
+  public tags: Tag[];
+
   constructor(public dialogRef: MatDialogRef<AddTagDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: EditTagDialogData){}
+    @Inject(MAT_DIALOG_DATA) public data: AddTagDialogData){}
 
     addTag(){
-      alert('acknowledged!');
+
     }
 
     closeDialog(){
       this.dialogRef.close();
     }
+
+
+    private _filterTags(value: string): Tag[] {
+      const filterValue = value.toLowerCase();
+  
+      return this.tags.filter(tag => tag.name.toLowerCase().indexOf(filterValue) === 0);
+    }
+
 }
 
 @Component({
@@ -120,7 +135,6 @@ export class UnregisterDialog {
   }
 
 }
-
 
 export interface CreateTagDialogData {
   name: string,
@@ -145,4 +159,5 @@ export interface EditTaskDialogData {
 
 export interface AddTagDialogData {
 
-}
+};
+

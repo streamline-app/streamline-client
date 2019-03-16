@@ -1,9 +1,10 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BackendService } from '../backend.service';
 import { AuthService } from '../auth.service';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { DeleteConfirmDialog, EditTaskDialog, AddTagDialog } from '../dialogs/dialogs.module';
+import { Tag, Task } from '../app.module'
 
 @Component({
   selector: 'app-tasks',
@@ -278,27 +279,4 @@ export class TasksComponent implements OnInit {
 
 }
 
-interface Task {
-  id: number;
-  title: string,
-  body: string,
-  workedDuration: number,
-  estimatedMin: number,
-  estimatedHour: number,
-  lastWorkedAt: number,
-  expDuration: number,
-  isFinished: number,
-  tags: Tag[]
-};
 
-interface Tag {
-  id: number,
-  name: string,
-  description: string,
-  tasks_comp: number,
-  average_time: number,
-  average_acc: number,
-  task_overunder: number,
-  color: string,
-  userID: number
-};

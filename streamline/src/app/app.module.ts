@@ -78,3 +78,28 @@ const appRoutes: Routes = [
   entryComponents: [DeleteConfirmDialog, EditTagDialog, CreateTagDialog, EditTaskDialog, UnregisterDialog, AddTagDialog]
 })
 export class AppModule { }
+
+export interface Tag {
+  id: number,
+  name: string,
+  description: string,
+  tasks_comp: number,
+  average_time: number,
+  average_acc: number,
+  task_overunder: number,
+  color: string,
+  userID: number
+};
+
+export interface Task {
+  id: number;
+  title: string,
+  body: string,
+  workedDuration: number,
+  estimatedMin: number,
+  estimatedHour: number,
+  lastWorkedAt: number,
+  expDuration: number,
+  isFinished: number,
+  tags: Tag[]
+};

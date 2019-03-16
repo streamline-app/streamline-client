@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { HttpHeaders } from '@angular/common/http';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { MatSnackBar } from '@angular/material';
 import { AuthService } from './auth.service';
+import { Tag, Task } from './app.module'
 
 
 const httpOptions = {
@@ -263,33 +263,10 @@ export class BackendService {
   };
 }
 
-interface Task {
-  id: number;
-  title: string,
-  body: string,
-  workedDuration: number,
-  estimatedMin: number,
-  estimatedHour: number,
-  lastWorkedAt: number,
-  expDuration: number,
-  isFinished: number,
-  tags: Tag[]
-};
+
 interface Setting {
   theme: string
 }
-
-interface Tag {
-  id: number,
-  name: string,
-  description: string,
-  tasks_comp: number,
-  average_time: number,
-  average_acc: number,
-  task_overunder: number,
-  color: string,
-  userID: number
-};
 
 interface TagEdit {
   name: string,
