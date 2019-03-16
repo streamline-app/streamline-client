@@ -28,6 +28,7 @@ export class BackendService {
   public removeTagURL: string = 'http://' + this.root + '/api/tasks/removeTag';
   public deleteTaskURL: string = 'http://' + this.root + '/api/tasks/delete';
   public editTaskURL: string = 'http://' + this.root + '/api/tasks/update';
+  public addTagtoTaskURL: string = 'http://' + this.root + '/api/tasks/addTag';
 
   /* Task Control URLs */
   public startTaskURL: string = 'http://' + this.root + '/api/tasks/';
@@ -84,11 +85,18 @@ export class BackendService {
       .pipe(catchError(this.handleError));
   }
 
-  removeTag(taskID: number, tagID: number) {
-    return this.http.post(this.removeTagURL + '/' + taskID + '/' + tagID, httpOptions) //append taskID then tagID
+  removeTag(taskID: number, tagID: number): Observable<any> {
+    return this.http.put(this.removeTagURL + '/' + taskID + '/' + tagID, httpOptions) //append taskID then tagID
       .pipe(
         catchError(this.handleError)
       );
+  }
+
+  addTag(taskID: number, tagID: number): Observable<any> {
+    return this.http.put(this.addTagtoTaskURL + '/' + taskID + '/' + tagID, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    );
   }
 
   getTaskTags(taskID: number): Observable<Tag[]> {

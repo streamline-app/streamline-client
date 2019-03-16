@@ -1,4 +1,19 @@
-<div mat-dialog-actions class="button_box">
-        <button mat-button (click)="addTag()">Add</button>
-        <button mat-button (click)="closeDialog()">Cancel</button>
+<div class="row">
+    <div class="col-md-6">
+        <h4>Add a Tag</h4>
+        <mat-form-field>
+            <input matInput [matAutocomplete]="auto" [formControl]="rawTagsForm">
+            <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let tag of filteredTags | async" (click)="onTagSelect(tag.id)" [value]="tag.name">
+                    <div class="square" [ngStyle]="{'background-color': tag.color}"></div> |
+                    <span>{{tag.name}}</span>
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
     </div>
+</div>
+
+<div mat-dialog-actions class="button_box">
+    <button mat-button (click)="addTag()">Add</button>
+    <button mat-button (click)="closeDialog()">Cancel</button>
+</div>

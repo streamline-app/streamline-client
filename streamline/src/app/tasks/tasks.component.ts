@@ -69,20 +69,6 @@ export class TasksComponent implements OnInit {
       });
 
     });
-    /*
-      var count = 0;
-      this.tasks.forEach(task => {
-        this.backend.getTaskTags(task.id).subscribe(res => {
-          console.log('tags retrieved for task ' + task.id + ':');
-          console.log(res);
-  
-          this.tasks[count].tags = res;
-          console.log(this.tasks[count].tags);
-  
-          count++;
-        });
-      });
-    */
   }
 
   removeTag(taskID: number, tagID: number) {
@@ -114,10 +100,28 @@ export class TasksComponent implements OnInit {
   addTag(taskID: number) {
     const dialogRef = this.create_dialog.open(AddTagDialog, {
       width: '325px',
+      data: { tagID: -1, userID: this.auth.getUserId() }
     });
 
+    dialogRef.afterClosed().subscribe(result => {
+      if (result >= 0) {
+        var tagID = result;
 
+        this.backend.addTag(taskID, tagID).subscribe(res => {
+          //three second snackbar pop up notification
+          let snackbarRef = this.snackbar.open('Tag added to that Task!', 'Ok', { duration: 3000 });
 
+          this.getTaskTags(taskID);
+        },
+          error => {
+            console.log(error.message);
+            //three second snackbar pop up notification
+            let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
+          }
+        );
+      }
+      else { /* do nothing for now */ }
+    });
   }
 
   deleteTask(task: Task) {
