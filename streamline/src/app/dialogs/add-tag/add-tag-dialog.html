@@ -1,19 +1,17 @@
-<div class="row">
-    <div class="col-md-6">
-        <h4>Add a Tag</h4>
-        <mat-form-field>
-            <input matInput [matAutocomplete]="auto" [formControl]="rawTagsForm">
-            <mat-autocomplete #auto="matAutocomplete">
-                <mat-option *ngFor="let tag of filteredTags | async" (click)="onTagSelect(tag.id)" [value]="tag.name">
-                    <div class="square" [ngStyle]="{'background-color': tag.color}"></div> |
-                    <span>{{tag.name}}</span>
-                </mat-option>
-            </mat-autocomplete>
-        </mat-form-field>
-    </div>
+<h1 mat-dialog-title>Add a Tag</h1>
+<div mat-dialog-content class="diag_box">
+    <mat-form-field>
+        <mat-label>Tag Name</mat-label>
+        <input matInput [matAutocomplete]="auto" [formControl]="rawTagsForm">
+        <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let tag of filteredTags | async" (click)="onTagSelect(tag.id)" [value]="tag.name">
+                <div class="square" [ngStyle]="{'background-color': tag.color}"></div> |
+                <span>{{tag.name}}</span>
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
 </div>
-
-<div mat-dialog-actions class="button_box">
-    <button mat-button (click)="addTag()">Add</button>
-    <button mat-button (click)="closeDialog()">Cancel</button>
+<div mat-dialog-actions style="float: right;" class="button_box">
+    <button mat-button style="background-color: lightgreen;" (click)="addTag()">Add</button>
+    <button mat-button style="background-color: lightcoral;" (click)="closeDialog()">Cancel</button>
 </div>
