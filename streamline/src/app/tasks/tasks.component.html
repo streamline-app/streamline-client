@@ -41,7 +41,7 @@
                 (click)="removeTag(task.id, tag.id)">
                 {{tag.name}}
               </li>
-              <li (click)="addTag(task.id)">
+              <li (click)="addTag(task)">
               +<!-- causes weird alignment issues  <mat-icon style="width: 30px;height: 30px;">add</mat-icon> -->
               </li>
             </ul>
@@ -72,7 +72,6 @@
           </button>
         </div>
       </div>
-      <!-- Removed until implementation of subtasks feature -->
       <div id="content_{{task.id}}" style="padding: 0 18px; display: none; overflow: hidden; height: 200px;">
         <div class="row">
           <div class="col-md-6"

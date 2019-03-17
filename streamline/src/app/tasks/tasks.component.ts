@@ -97,7 +97,7 @@ export class TasksComponent implements OnInit {
     });
   }
 
-  addTag(taskID: number) {
+  addTag(task: Task) {
     const dialogRef = this.create_dialog.open(AddTagDialog, {
       width: '325px',
       data: { tagID: -1, userID: this.auth.getUserId() }
@@ -106,19 +106,31 @@ export class TasksComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result >= 0) {
         var tagID = result;
+        let exists: boolean = false;
+        console.log(task.tags);
 
-        this.backend.addTag(taskID, tagID).subscribe(res => {
-          //three second snackbar pop up notification
-          let snackbarRef = this.snackbar.open('Tag added to that Task!', 'Ok', { duration: 3000 });
-
-          this.getTaskTags(taskID);
-        },
-          error => {
-            console.log(error.message);
+        task.tags.forEach(t => {
+          if (t.id === tagID) { //if this task already has that tag, don't add it
             //three second snackbar pop up notification
-            let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
+            let snackbarRef = this.snackbar.open('That Task already has that Tag!', 'Ok', { duration: 3000 });
+            exists = true;
           }
-        );
+        });
+
+        if (!exists) {
+          this.backend.addTag(task.id, tagID).subscribe(res => {
+            //three second snackbar pop up notification
+            let snackbarRef = this.snackbar.open('Tag added to that Task!', 'Ok', { duration: 3000 });
+
+            this.getTaskTags(task.id);
+          },
+            error => {
+              console.log(error.message);
+              //three second snackbar pop up notification
+              let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
+            }
+          );
+        }
       }
       else { /* do nothing for now */ }
     });
