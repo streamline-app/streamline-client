@@ -1,6 +1,13 @@
 <h1 class="header">Tasks</h1>
 <hr class="seperator" />
-<button mat-stroked-button style="margin: 0px 0px 5px 10px;" (click)="onCreatePressed()">+ Create Task</button>
+<div>
+  <button mat-stroked-button style="margin: 0px 0px 5px 10px;" (click)="onCreatePressed()">+ Create Task</button>
+  <button mat-stroked-button style="float:right;" [matMenuTriggerFor]="menu">Sort By...</button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="sortbyPrio()">Priority</button>
+    <button mat-menu-item>Creation Date</button>
+  </mat-menu>
+</div>
 <div *ngFor="let task of tasks; index as i">
   <div>
     <mat-card class="mat-elevation-z10" id="task-card">
@@ -75,13 +82,13 @@
           <div class="col-md-6"
             style="height: 150px; border: solid; width: 100%; border-width: 1px; border-color: lightgrey; margin: 5px 0px 5px 0px;">
             <div class="row" style="margin: 0px 2.5px 0px 2.5px;">
-                <h4 style="float:left;">Estimated Time:</h4>
+              <h4 style="float:left;">Estimated Time:</h4>
               <p style="float: right; margin-top: 10px;">
                 {{task.estimatedHour}} hrs. and {{task.estimatedMin}} min.
               </p>
             </div>
             <div class="row" style="margin: 0px 2.5px 0px 0px;">
-                <h4 style="float:left;">Current Time:</h4>
+              <h4 style="float:left;">Current Time:</h4>
               <p style="float: right; margin-top: 10px;">
                 {{getHours(task.workedDuration)}} hrs. and {{getMinutes(task.workedDuration)}} min.
               </p>

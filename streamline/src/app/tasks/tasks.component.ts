@@ -244,6 +244,13 @@ export class TasksComponent implements OnInit {
       return 0;
   }
 
+  sortbyPrio(){
+     this.tasks.sort()
+  }
+
+  _prioCompare(t1: Task, t2: Task){
+  }
+
   collapse(id) {
     var content = document.getElementById('content_' + id).style;
     if (content.display == "block") {
