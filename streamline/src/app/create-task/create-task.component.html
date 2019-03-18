@@ -27,7 +27,24 @@
       </div>
 
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6" style="float:left; width:50%; height:inherit;">
+          <h4>Priority (Optional)</h4>
+          <mat-slider min="0" max="10" step="1" value="4" thumbLabel tickInterval="1" formControlName="priority" style="margin-top:14px;">
+          </mat-slider>
+        </div>
+        <div class="col-md-6" style="float:right; width:50%; height:inherit;">
+          <h4>Date (Optional)</h4>
+          <mat-form-field>
+            <input matInput [matDatepicker]="picker" formControlName="completeDate"
+              min="{{currDate | date: 'yyyy-MM-dd'}}">
+            <mat-datepicker-toggle matSuffix [for]="picker" disabled="false"></mat-datepicker-toggle>
+            <mat-datepicker #picker disabled="false"></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
           <h4>Tags</h4>
           <button mat-stroked-button (click)="createNewTag()">+ Create New</button>
           <mat-form-field>

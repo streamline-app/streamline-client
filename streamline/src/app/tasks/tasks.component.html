@@ -76,11 +76,10 @@
           </button>
         </div>
       </div>
-      <!-- Removed until implementation of subtasks feature -->
-      <div id="content_{{task.id}}" style="padding: 0 18px; display: none; overflow: hidden; height: 200px;">
+      <div id="content_{{task.id}}" style="padding: 0 18px; display: none; overflow: hidden; height: 225px;">
         <div class="row">
           <div class="col-md-6"
-            style="height: 150px; border: solid; width: 100%; border-width: 1px; border-color: lightgrey; margin: 5px 0px 5px 0px;">
+            style="height: 175px; border: solid; width: 100%; border-width: 1px; border-color: lightgrey; margin: 5px 0px 5px 0px;">
             <div class="row" style="margin: 0px 2.5px 0px 2.5px;">
               <h4 style="float:left;">Estimated Time:</h4>
               <p style="float: right; margin-top: 10px;">
@@ -93,6 +92,18 @@
                 {{getHours(task.workedDuration)}} hrs. and {{getMinutes(task.workedDuration)}} min.
               </p>
             </div>
+            <div class="row" style="margin: 0px 2.5px 0px 0px;">
+              <h4 style="float:left;">Priority</h4>
+            <p style="float: right; margin-top: 10px;">
+              {{task.priority}}
+            </p>
+          </div>
+          <div class="row" style="margin: 0px 2.5px 0px 0px;">
+            <h4 style="float:left;">Set For:</h4>
+          <p style="float: right; margin-top: 10px;">
+            {{_formatDate(task.completeDate)}}
+          </p>
+        </div>
           </div>
           <div class="col-md-6" style="float:right;">
             <button mat-stroked-button class="edit_btn" style="background-color: #c90000; color: white"

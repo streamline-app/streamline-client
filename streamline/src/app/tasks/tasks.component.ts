@@ -4,6 +4,8 @@ import { AuthService } from '../auth.service';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { DeleteConfirmDialog, EditTaskDialog } from '../dialogs/dialogs.module';
+import { format } from 'url';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-tasks',
@@ -68,20 +70,6 @@ export class TasksComponent implements OnInit {
       });
       
     });
-    /*
-    var count = 0;
-    this.tasks.forEach(task => {
-      this.backend.getTaskTags(task.id).subscribe(res => {
-        console.log('tags retrieved for task ' + task.id + ':');
-        console.log(res);
-
-        this.tasks[count].tags = res;
-        console.log(this.tasks[count].tags);
-
-        count++;
-      });
-    });
-    */
   }
 
   removeTag(taskID: number, tagID: number) {
@@ -130,7 +118,15 @@ export class TasksComponent implements OnInit {
   editTask(task: Task) {
     let dialogRef = this.create_dialog.open(EditTaskDialog, {
       width: '400px',
-      data: { title: task.title, body: task.body, workedDuration: task.workedDuration, estimatedHour: task.estimatedHour, estimatedMin: task.estimatedMin, expDuration: task.expDuration }
+      data: { 
+        title: task.title,
+        body: task.body, 
+        workedDuration: task.workedDuration, 
+        estimatedHour: task.estimatedHour, 
+        estimatedMin: task.estimatedMin, 
+        expDuration: task.expDuration, 
+        priority: task.priority, 
+        completeDate: task.completeDate }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -153,8 +149,11 @@ export class TasksComponent implements OnInit {
           return;
         }
 
+        //format Date into string for backend
+        result.completeDate = formatDate(result.completeDate , 'yyyy-MM-dd', 'en-US');
+
         this.backend.editTask(task.id, result).subscribe(res => {
-          console.log('tag ' + task.id + ' udpated');
+          console.log('task ' + task.id + ' udpated');
 
           //three second snackbar pop up notification
           let snackbarRef = this.snackbar.open('Task Updated!', 'Ok', { duration: 3000 });
@@ -264,13 +263,17 @@ export class TasksComponent implements OnInit {
     this.router.navigateByUrl('create/task');
   }
 
-
+  _formatDate(d: Date): string{ //special function to format date for UI
+    return formatDate(d, 'MMMM dd, yyyy', 'en-US');
+  }
 }
 
 interface Task {
   id: number;
   title: string,
   body: string,
+  priority: number,
+  completeDate: Date,
   workedDuration: number,
   estimatedMin: number,
   estimatedHour: number,

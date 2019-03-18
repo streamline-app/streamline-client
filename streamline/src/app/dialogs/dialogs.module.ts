@@ -1,5 +1,5 @@
 import { NgModule, Component, Inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @NgModule({
@@ -72,8 +72,17 @@ export class EditTagDialog {
   templateUrl: 'edit-task/edit-task-dialog.html',
 })
 export class EditTaskDialog {
+  private oldDate: Date = new Date();
+  private currDate: Date = new Date();
   constructor(public dialogRef: MatDialogRef<EditTaskDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: EditTaskDialogData) { }
+    @Inject(MAT_DIALOG_DATA) public data: EditTaskDialogData) {
+    this.oldDate = data.completeDate;
+
+    /* used to set a min date for datepicker, for some reason sets min 
+    *  to previous day so have to add one to the current date.
+    */
+    this.currDate.setDate(this.currDate.getDate() + 1);
+  }
 
   editTask() {
     //update expDuration
@@ -84,6 +93,10 @@ export class EditTaskDialog {
   closeDialog() {
     this.dialogRef.close();
   }
+
+  _formatDate(d: Date): string { //special function to format date for UI
+    return formatDate(d, 'MM/dd/yyyy', 'en-US');
+  }
 }
 
 @Component({
@@ -93,7 +106,7 @@ export class EditTaskDialog {
 export class UnregisterDialog {
 
   constructor(
-    public dialogRef: MatDialogRef<UnregisterDialog>) {}
+    public dialogRef: MatDialogRef<UnregisterDialog>) { }
 
   onNoClick(): void {
     this.dialogRef.close();
@@ -122,5 +135,7 @@ export interface EditTaskDialogData {
   workedDuration: number, //not actually edited
   estimatedMin: number,
   estimatedHour: number,
-  expDuration: number
-}
+  expDuration: number,
+  priority: number,
+  completeDate: Date
+};

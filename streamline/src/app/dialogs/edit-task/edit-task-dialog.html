@@ -5,7 +5,7 @@
         <input matInput type="text" matInput [(ngModel)]="data.title">
     </mat-form-field>
     <mat-form-field>
-        <mat-label>Change Description</mat-label>
+        <mat-label>Edit Description</mat-label>
         <textarea matInput type="text" [(ngModel)]="data.body"></textarea>
     </mat-form-field>
     <div class="slider">
@@ -15,10 +15,25 @@
         </mat-slider>
     </div>
     <div class="slider">
-    <mat-label>Edit Expected Duration (min)</mat-label>
-    <mat-slider matInput min="0" max="59" step="1" value="3" thumbLabel tickInterval="1"
-        [(ngModel)]="data.estimatedMin">
-    </mat-slider>
+        <mat-label>Edit Expected Duration (min)</mat-label>
+        <mat-slider matInput min="0" max="59" step="1" value="3" thumbLabel tickInterval="1"
+            [(ngModel)]="data.estimatedMin">
+        </mat-slider>
+    </div>
+    <div class="slider">
+        <mat-label>Edit Priority</mat-label>
+        <mat-slider matInput min="0" max="10" step="1" value="4" thumbLabel tickInterval="1"
+            [(ngModel)]="data.priority">
+        </mat-slider>
+    </div>
+    <div>
+        <mat-form-field>
+          <!--  <mat-label>Edit Due Date</mat-label>-->
+            <input matInput [(ngModel)]="data.completeDate" [matDatepicker]="picker" placeholder="Old Due Date: {{_formatDate(this.oldDate)}}" 
+            min="{{currDate | date: 'yyyy-MM-dd'}}" disabled>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker disabled="false"></mat-datepicker>
+        </mat-form-field>
     </div>
 </div>
 
