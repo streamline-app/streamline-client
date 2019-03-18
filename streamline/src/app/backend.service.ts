@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { HttpHeaders } from '@angular/common/http';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { MatSnackBar } from '@angular/material';
 import { AuthService } from './auth.service';
+import { Tag, Task } from './app.module'
 
 
 const httpOptions = {
@@ -28,6 +28,7 @@ export class BackendService {
   public removeTagURL: string = 'http://' + this.root + '/api/tasks/removeTag';
   public deleteTaskURL: string = 'http://' + this.root + '/api/tasks/delete';
   public editTaskURL: string = 'http://' + this.root + '/api/tasks/update';
+  public addTagtoTaskURL: string = 'http://' + this.root + '/api/tasks/addTag';
 
   /* Task Control URLs */
   public startTaskURL: string = 'http://' + this.root + '/api/tasks/';
@@ -84,11 +85,18 @@ export class BackendService {
       .pipe(catchError(this.handleError));
   }
 
-  removeTag(taskID: number, tagID: number) {
-    return this.http.post(this.removeTagURL + '/' + taskID + '/' + tagID, httpOptions) //append taskID then tagID
+  removeTag(taskID: number, tagID: number): Observable<any> {
+    return this.http.put(this.removeTagURL + '/' + taskID + '/' + tagID, httpOptions) //append taskID then tagID
       .pipe(
         catchError(this.handleError)
       );
+  }
+
+  addTag(taskID: number, tagID: number): Observable<any> {
+    return this.http.put(this.addTagtoTaskURL + '/' + taskID + '/' + tagID, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    );
   }
 
   getTaskTags(taskID: number): Observable<Tag[]> {
@@ -263,35 +271,9 @@ export class BackendService {
   };
 }
 
-interface Task {
-  id: number;
-  title: string,
-  body: string,
-  priority: number,
-  completeDate: Date,
-  workedDuration: number,
-  estimatedMin: number,
-  estimatedHour: number,
-  lastWorkedAt: number,
-  expDuration: number,
-  isFinished: number,
-  tags: Tag[]
-};
 interface Setting {
   theme: string
 }
-
-interface Tag {
-  id: number,
-  name: string,
-  description: string,
-  tasks_comp: number,
-  average_time: number,
-  average_acc: number,
-  task_overunder: number,
-  color: string,
-  userID: number
-};
 
 interface TagEdit {
   name: string,
