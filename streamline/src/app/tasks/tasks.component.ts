@@ -244,10 +244,9 @@ export class TasksComponent implements OnInit {
   }
 
   sortbyPrio(){
-     this.tasks.sort()
-  }
-
-  _prioCompare(t1: Task, t2: Task){
+     this.tasks.sort(function(a, b){
+       return b.priority - a.priority; //sort from highest to lowest
+     });
   }
 
   collapse(id) {
