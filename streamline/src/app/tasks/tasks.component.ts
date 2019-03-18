@@ -3,6 +3,9 @@ import { BackendService } from '../backend.service';
 import { AuthService } from '../auth.service';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
+import { DeleteConfirmDialog, EditTaskDialog } from '../dialogs/dialogs.module';
+import { format } from 'url';
+import { formatDate } from '@angular/common';
 import { DeleteConfirmDialog, EditTaskDialog, AddTagDialog } from '../dialogs/dialogs.module';
 import { Tag, Task } from '../app.module'
 
@@ -165,7 +168,15 @@ export class TasksComponent implements OnInit {
   editTask(task: Task) {
     let dialogRef = this.create_dialog.open(EditTaskDialog, {
       width: '400px',
-      data: { title: task.title, body: task.body, workedDuration: task.workedDuration, estimatedHour: task.estimatedHour, estimatedMin: task.estimatedMin, expDuration: task.expDuration }
+      data: { 
+        title: task.title,
+        body: task.body, 
+        workedDuration: task.workedDuration, 
+        estimatedHour: task.estimatedHour, 
+        estimatedMin: task.estimatedMin, 
+        expDuration: task.expDuration, 
+        priority: task.priority, 
+        completeDate: task.completeDate }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -188,8 +199,11 @@ export class TasksComponent implements OnInit {
           return;
         }
 
+        //format Date into string for backend
+        result.completeDate = formatDate(result.completeDate , 'yyyy-MM-dd', 'en-US');
+
         this.backend.editTask(task.id, result).subscribe(res => {
-          console.log('tag ' + task.id + ' udpated');
+          console.log('task ' + task.id + ' udpated');
 
           //three second snackbar pop up notification
           let snackbarRef = this.snackbar.open('Task Updated!', 'Ok', { duration: 3000 });
@@ -292,7 +306,34 @@ export class TasksComponent implements OnInit {
     this.router.navigateByUrl('create/task');
   }
 
-
+  _formatDate(d: Date): string{ //special function to format date for UI
+    return formatDate(d, 'MMMM dd, yyyy', 'en-US');
+  }
 }
 
+interface Task {
+  id: number;
+  title: string,
+  body: string,
+  priority: number,
+  completeDate: Date,
+  workedDuration: number,
+  estimatedMin: number,
+  estimatedHour: number,
+  lastWorkedAt: number,
+  expDuration: number,
+  isFinished: number,
+  tags: Tag[]
+};
 
+interface Tag {
+  id: number,
+  name: string,
+  description: string,
+  tasks_comp: number,
+  average_time: number,
+  average_acc: number,
+  task_overunder: number,
+  color: string,
+  userID: number
+};

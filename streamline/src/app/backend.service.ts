@@ -271,6 +271,20 @@ export class BackendService {
   };
 }
 
+interface Task {
+  id: number;
+  title: string,
+  body: string,
+  priority: number,
+  completeDate: Date,
+  workedDuration: number,
+  estimatedMin: number,
+  estimatedHour: number,
+  lastWorkedAt: number,
+  expDuration: number,
+  isFinished: number,
+  tags: Tag[]
+};
 
 interface Setting {
   theme: string
