@@ -4,7 +4,7 @@
   <button mat-stroked-button style="margin: 0px 0px 5px 10px;" (click)="onCreatePressed()">+ Create Task</button>
   <mat-select style="float: right; width: 160px;" placeholder="Sort By...">
     <mat-option (click)="sortbyPrio()" value="Priority">Priority</mat-option>
-    <mat-option value="Creation Date">Creation Date</mat-option>
+    <mat-option (click)="sortbyCreationDate()" value="Creation Date">Creation Date</mat-option>
   </mat-select>
 </div>
 <div *ngFor="let task of tasks; index as i">

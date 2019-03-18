@@ -292,9 +292,17 @@ export class TasksComponent implements OnInit {
   }
 
   sortbyPrio(){
-     this.tasks.sort(function(a, b){
+     this.tasks.sort(function(a: Task, b: Task){
        return b.priority - a.priority; //sort from highest to lowest
      });
+  }
+
+  sortbyCreationDate(){
+    this.tasks.sort(function(a: Task, b: Task){
+      return new Date(a.created_at).getTime() - new Date(b.created_at).getTime(); //sort from first to last
+      //for some reason we have to instantiate another Date object for getTime() to work
+    });
+
   }
 
   collapse(id) {

@@ -103,5 +103,6 @@ export interface Task {
   isFinished: number,
   priority: number,
   completeDate: Date,
+  created_at: Date, //matches laravel column
   tags: Tag[]
 };
