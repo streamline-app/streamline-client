@@ -1,6 +1,11 @@
 import { NgModule, Component, Inject } from '@angular/core';
 import { CommonModule, formatDate } from '@angular/common';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Observable } from 'rxjs';
+import { FormControl } from '@angular/forms';
+import { Tag } from '../app.module'
+import { BackendService } from '../backend.service';
+import { startWith, map } from 'rxjs/operators';
 
 @NgModule({
   imports: [
@@ -13,6 +18,7 @@ export class DialogsModule { }
 @Component({
   selector: 'create-tag/create-tag-dialog',
   templateUrl: 'create-tag/create-tag-dialog.html',
+  styleUrls: ['create-tag/create-tag-dialog.css']
 })
 export class CreateTagDialog {
 
@@ -35,6 +41,8 @@ export class CreateTagDialog {
 @Component({
   selector: 'delete-confirm/delete-confirm-dialog',
   templateUrl: 'delete-confirm/delete-confirm-dialog.html',
+  styleUrls: ['delete-confirm/delete-confirm-dialog.css']
+
 })
 export class DeleteConfirmDialog {
 
@@ -49,10 +57,11 @@ export class DeleteConfirmDialog {
   }
 }
 
-
 @Component({
   selector: 'edit-tag/edit-tag-dialog',
   templateUrl: 'edit-tag/edit-tag-dialog.html',
+  styleUrls: ['edit-tag/edit-tag-dialog.css']
+
 })
 export class EditTagDialog {
   constructor(public dialogRef: MatDialogRef<EditTagDialog>,
@@ -70,6 +79,7 @@ export class EditTagDialog {
 @Component({
   selector: 'edit-task/edit-task-dialog',
   templateUrl: 'edit-task/edit-task-dialog.html',
+  styleUrls: ['edit-task/edit-task-dialog.css']
 })
 export class EditTaskDialog {
   private oldDate: Date = new Date();
@@ -100,6 +110,58 @@ export class EditTaskDialog {
 }
 
 @Component({
+  selector: 'add-tag/add-tag-dialog',
+  templateUrl: 'add-tag/add-tag-dialog.html',
+  styleUrls: ['add-tag/add-tag-dialog.css']
+})
+export class AddTagDialog {
+  public rawTagsForm: FormControl = new FormControl();
+  public filteredTags: Observable<Tag[]>;
+  public tags: Tag[];
+
+  constructor(
+    public dialogRef: MatDialogRef<AddTagDialog>,
+    private backend: BackendService,
+    @Inject(MAT_DIALOG_DATA) public data: AddTagDialogData) {
+    this.backend.getUserTags(this.data.userID).subscribe(res => {
+      if (res != null) {
+        this.tags = res;
+        //set up autofill for tags
+        this.filteredTags = this.rawTagsForm.valueChanges
+          .pipe(
+            startWith(''),
+            map(tag => tag ? this._filterTags(tag) : this.tags.slice())
+          );
+      }
+      else {
+        console.log('Could not retrieve tags');
+        this.dialogRef.close(-2); //TODO code this to give response to user?
+      }
+    })
+  }
+
+  addTag() {
+    this.dialogRef.close(this.data.tagID);
+  }
+
+  closeDialog() {
+    this.dialogRef.close(-1);
+  }
+
+  public onTagSelect(tagID: number) {
+    this.data.tagID = tagID;
+  }
+
+  private _filterTags(value: string): Tag[] {
+    const filterValue = value.toLowerCase();
+
+    return this.tags.filter(tag => tag.name.toLowerCase().indexOf(filterValue) === 0);
+  }
+
+  
+}
+
+@Component({
   selector: 'unregister-dialog',
   templateUrl: 'unregister/unregister-dialog.html',
 })
@@ -117,6 +179,7 @@ export class UnregisterDialog {
   }
 
 }
+
 export interface CreateTagDialogData {
   name: string,
   desc: string,
@@ -138,4 +201,9 @@ export interface EditTaskDialogData {
   expDuration: number,
   priority: number,
   completeDate: Date
+};
+
+export interface AddTagDialogData {
+  userID: number,
+  tagID: number,
 };

@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { CreateTagDialog } from '../dialogs/dialogs.module'
 import { formatDate } from '@angular/common';
+import { Tag } from '../app.module'
 
 const MINUTES_TO_SECONDS: number = 60;
 const HOURS_TO_SECONDS: number = 3600;
@@ -186,15 +187,3 @@ export class CreateTaskComponent {
     return arr;
   }
 }
-
-interface Tag {
-  id: number,
-  name: string,
-  description: string,
-  tasks_comp: number,
-  average_time: number,
-  average_acc: number,
-  task_overunder: number,
-  color: string,
-  userID: number
-};
