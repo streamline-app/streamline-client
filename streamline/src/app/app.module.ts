@@ -100,6 +100,9 @@ export interface Task {
   estimatedHour: number,
   lastWorkedAt: number,
   expDuration: number,
+  priority: number,
+  created_at: Date,
+  completeDate: Date,
   isFinished: number,
   tags: Tag[]
 };

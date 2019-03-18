@@ -3,11 +3,9 @@ import { BackendService } from '../backend.service';
 import { AuthService } from '../auth.service';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
-import { DeleteConfirmDialog, EditTaskDialog } from '../dialogs/dialogs.module';
-import { format } from 'url';
-import { formatDate } from '@angular/common';
 import { DeleteConfirmDialog, EditTaskDialog, AddTagDialog } from '../dialogs/dialogs.module';
 import { Tag, Task } from '../app.module'
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-tasks',
@@ -293,6 +291,20 @@ export class TasksComponent implements OnInit {
       return 0;
   }
 
+  sortbyPrio(){
+     this.tasks.sort(function(a: Task, b: Task){
+       return b.priority - a.priority; //sort from highest to lowest
+     });
+  }
+
+  sortbyCreationDate(){
+    this.tasks.sort(function(a: Task, b: Task){
+      return new Date(a.created_at).getTime() - new Date(b.created_at).getTime(); //sort from first to last
+      //for some reason we have to instantiate another Date object for getTime() to work
+    });
+
+  }
+
   collapse(id) {
     var content = document.getElementById('content_' + id).style;
     if (content.display == "block") {
@@ -311,29 +323,3 @@ export class TasksComponent implements OnInit {
   }
 }
 
-interface Task {
-  id: number;
-  title: string,
-  body: string,
-  priority: number,
-  completeDate: Date,
-  workedDuration: number,
-  estimatedMin: number,
-  estimatedHour: number,
-  lastWorkedAt: number,
-  expDuration: number,
-  isFinished: number,
-  tags: Tag[]
-};
-
-interface Tag {
-  id: number,
-  name: string,
-  description: string,
-  tasks_comp: number,
-  average_time: number,
-  average_acc: number,
-  task_overunder: number,
-  color: string,
-  userID: number
-};
