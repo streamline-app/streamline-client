@@ -14,7 +14,7 @@
         <input matInput type="color" [(ngModel)]="data.color">
     </mat-form-field>
 </div>
-<div mat-dialog-actions class="button_box">
-    <button mat-button (click)="createTag()">Create</button>
-    <button mat-button (click)="closeDiag()">Cancel</button>
+<div mat-dialog-actions style="float: right;" class="button_box">
+    <button mat-button style="background-color: lightgreen;" (click)="createTag()">Add</button>
+    <button mat-button style="background-color: lightcoral;" (click)="closeDiag()">Cancel</button>
 </div>
