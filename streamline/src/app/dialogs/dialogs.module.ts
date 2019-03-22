@@ -199,6 +199,7 @@ export interface EditTaskDialogData {
   estimatedMin: number,
   estimatedHour: number,
   expDuration: number,
+  priority: number,
   completeDate: Date
 };
 
