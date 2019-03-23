@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { BackendService } from '../backend.service';
-import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { MatSnackBar, MatDialog } from '@angular/material';
 
@@ -10,7 +9,7 @@ import { MatSnackBar, MatDialog } from '@angular/material';
   templateUrl: './create-team.component.html',
   styleUrls: ['./create-team.component.css']
 })
-export class CreateTeamComponent implements OnInit {
+export class CreateTeamComponent{
 
   public team : FormGroup = new FormGroup( {
     title : new FormControl(''),
@@ -18,9 +17,20 @@ export class CreateTeamComponent implements OnInit {
     color: new FormControl('')
   })
 
-  constructor() { }
+  constructor(private backend: BackendService, private router: Router) {}
 
-  ngOnInit() {
+  public submit() {
+    let newTeam: any = {
+      title: this.team.controls['title'].value,
+      description: this.team.controls['description'].value,
+      color: this.team.controls['color'].value,
+    }
+
+    
+  }
+
+  public cancel() {
+    this.router.navigateByUrl('/home');
   }
 
 }

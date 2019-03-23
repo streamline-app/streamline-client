@@ -56,6 +56,9 @@ export class BackendService {
   public setTokenURL: string = 'http://' + this.root + '/api/tokens/create';
   public removeTokenURL: string = 'http://' + this.root + '/api/tokens/delete';
 
+  /* Team's URLs */
+  public createTeamURL: string = 'http://' + this.root + '/api/teams/create';
+
 
 
   constructor(private http: HttpClient, private auth: AuthService) { }
@@ -252,6 +255,13 @@ export class BackendService {
     )
   }
 
+  createTeam(request: CreateTeamRequest) {
+    return this.http.post<CreateTeamRequest>(this.createTeamURL, request, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    )
+  }
+
 
 
   private handleError(error: HttpErrorResponse) {
@@ -331,4 +341,10 @@ interface ChangePasswordRequest {
   email: string,
   password: string,
   token: string
+}
+
+interface CreateTeamRequest {
+  title: string,
+  description: string,
+  color: string
 }
