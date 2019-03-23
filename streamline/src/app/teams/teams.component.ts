@@ -12,6 +12,7 @@ export class TeamsComponent {
 
 
   public teams: Team[] = [];
+  public displayedColumns = ['name', 'description', 'color', 'created_at', 'actions'];
 
   constructor(private backend: BackendService, private auth: AuthService) { 
     this.getUserTeams();
@@ -23,6 +24,14 @@ export class TeamsComponent {
       this.teams = res as Team[];
       console.log(this.teams);
     })
+  }
+
+  public onManage(id) {
+    window.alert(id);
+  }
+
+  public onDelete(id) {
+    window.alert(id);
   }
 
 }
