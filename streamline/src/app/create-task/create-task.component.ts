@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { Component } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { BackendService } from '../backend.service';
 import { AuthService } from '../auth.service';
@@ -7,8 +7,8 @@ import { MatSnackBar, MatDialog } from '@angular/material';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { CreateTagDialog } from '../dialogs/dialogs.module'
-import { formatDate } from '@angular/common';
 import { Tag } from '../app.module'
+import { formatDate } from '@angular/common';
 
 const MINUTES_TO_SECONDS: number = 60;
 const HOURS_TO_SECONDS: number = 3600;

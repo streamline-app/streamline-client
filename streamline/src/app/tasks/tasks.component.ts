@@ -15,12 +15,13 @@ import { formatDate } from '@angular/common';
 export class TasksComponent implements OnInit {
 
   tasks: Task[] = [];
+  sort_by: number = 0;
 
   constructor(private backend: BackendService,
     private auth: AuthService,
     private snackbar: MatSnackBar,
     private router: Router,
-    private create_dialog: MatDialog
+    private create_dialog: MatDialog,
   ) {
     //update tasks display
     this.getUserTasks();
@@ -48,6 +49,19 @@ export class TasksComponent implements OnInit {
         }
       });
 
+      //check sort option
+      switch (this.sort_by) {
+        case 0:   //no sort
+          break;
+        case 1:   //prio
+          this.sortbyPrio();
+          break;
+        case 2:   //creation_date
+          this.sortbyCreationDate();
+          break;
+        default:
+          break;
+      }
 
     }, error => {
       console.log(error.message);
@@ -166,22 +180,23 @@ export class TasksComponent implements OnInit {
   editTask(task: Task) {
     let dialogRef = this.create_dialog.open(EditTaskDialog, {
       width: '400px',
-      data: { 
+      data: {
         title: task.title,
-        body: task.body, 
-        workedDuration: task.workedDuration, 
-        estimatedHour: task.estimatedHour, 
-        estimatedMin: task.estimatedMin, 
-        expDuration: task.expDuration, 
-        priority: task.priority, 
-        completeDate: task.completeDate }
+        body: task.body,
+        workedDuration: task.workedDuration,
+        estimatedHour: task.estimatedHour,
+        estimatedMin: task.estimatedMin,
+        expDuration: task.expDuration,
+        priority: task.priority,
+        completeDate: task.completeDate
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result != null) {
         //check if task already exists under given name
         let exists: boolean = false;
-        if (result.title != task.title) { //if new tag name given is different from the old one
+        if (result.title != task.title) { //if new task name given is different from the old one
           this.tasks.forEach(element => { //check to make sure it doesn't match any other tag names
             if (element.title === result.title) {
               //notify user
@@ -198,10 +213,10 @@ export class TasksComponent implements OnInit {
         }
 
         //format Date into string for backend
-        result.completeDate = formatDate(result.completeDate , 'yyyy-MM-dd', 'en-US');
+        result.completeDate = formatDate(result.completeDate, 'yyyy-MM-dd', 'en-US');
 
         this.backend.editTask(task.id, result).subscribe(res => {
-          console.log('task ' + task.id + ' udpated');
+          console.log('task ' + task.id + ' updated');
 
           //three second snackbar pop up notification
           let snackbarRef = this.snackbar.open('Task Updated!', 'Ok', { duration: 3000 });
@@ -291,14 +306,16 @@ export class TasksComponent implements OnInit {
       return 0;
   }
 
-  sortbyPrio(){
-     this.tasks.sort(function(a: Task, b: Task){
-       return b.priority - a.priority; //sort from highest to lowest
-     });
+  sortbyPrio() {
+    this.sort_by = 1;
+    this.tasks.sort(function (a: Task, b: Task) {
+      return b.priority - a.priority; //sort from highest to lowest
+    });
   }
 
-  sortbyCreationDate(){
-    this.tasks.sort(function(a: Task, b: Task){
+  sortbyCreationDate() {
+    this.sort_by = 2;
+    this.tasks.sort(function (a: Task, b: Task) {
       return new Date(a.created_at).getTime() - new Date(b.created_at).getTime(); //sort from first to last
       //for some reason we have to instantiate another Date object for getTime() to work
     });
@@ -318,7 +335,7 @@ export class TasksComponent implements OnInit {
     this.router.navigateByUrl('create/task');
   }
 
-  _formatDate(d: Date): string{ //special function to format date for UI
+  _formatDate(d: Date): string { //special function to format date for UI
     return formatDate(d, 'MMMM dd, yyyy', 'en-US');
   }
 }
