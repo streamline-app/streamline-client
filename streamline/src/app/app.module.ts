@@ -23,12 +23,14 @@ import { DialogsModule, DeleteConfirmDialog, EditTagDialog, CreateTagDialog, Edi
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { PasswordResetFormComponent } from './password-reset-form/password-reset-form.component';
 import { SettingsComponent } from './settings/settings.component';
+import { CreateTeamComponent } from './create-team/create-team.component';
 
 const appRoutes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthService] },
   { path: 'tags', component: TagsComponent, canActivate: [AuthService] },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthService] },
   { path: 'create/task', component: CreateTaskComponent, canActivate: [AuthService] },
+  { path: 'create/team', component: CreateTeamComponent, canActivate: [AuthService] },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignUpComponent }, 
   { path: 'reset/password', component: PasswordResetComponent},
@@ -56,6 +58,7 @@ const appRoutes: Routes = [
     PasswordResetComponent,
     PasswordResetFormComponent,
     SettingsComponent,
+    CreateTeamComponent,
   ],
   imports: [
     BrowserModule,
