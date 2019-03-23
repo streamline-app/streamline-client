@@ -3,6 +3,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { BackendService } from '../backend.service';
 import { Router } from '@angular/router';
 import { MatSnackBar, MatDialog } from '@angular/material';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-create-team',
@@ -17,16 +18,24 @@ export class CreateTeamComponent{
     color: new FormControl('')
   })
 
-  constructor(private backend: BackendService, private router: Router) {}
+  constructor(private backend: BackendService, private router: Router, private auth: AuthService) {}
 
   public submit() {
     let newTeam: any = {
       title: this.team.controls['title'].value,
       description: this.team.controls['description'].value,
       color: this.team.controls['color'].value,
+      userId: this.auth.getUserId()
     }
 
-    
+    if (this.team.controls['color'].value == '' || this.team.controls['color'].value == null) {
+      newTeam.color = '#ffffff';
+    }
+
+    this.backend.createTeam(newTeam).subscribe((res) => {
+      window.alert('Team Created');
+    })
+
   }
 
   public cancel() {

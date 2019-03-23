@@ -58,6 +58,7 @@ export class BackendService {
 
   /* Team's URLs */
   public createTeamURL: string = 'http://' + this.root + '/api/teams/create';
+  public getTeamsURL: string = 'http://' + this.root + '/api/teams/';
 
 
 
@@ -256,8 +257,15 @@ export class BackendService {
   }
 
   createTeam(request: CreateTeamRequest) {
-    return this.http.post<CreateTeamRequest>(this.createTeamURL, request, httpOptions)
+    return this.http.post<CreateTeamResponse>(this.createTeamURL, request, httpOptions)
     .pipe(
+      catchError(this.handleError)
+    )
+  }
+
+  getTeams(id) {
+    return this.http.get(this.getTeamsURL + id, httpOptions)
+    .pipe (
       catchError(this.handleError)
     )
   }
@@ -347,4 +355,9 @@ interface CreateTeamRequest {
   title: string,
   description: string,
   color: string
+  userId: number,
+}
+
+interface CreateTeamResponse {
+  message: string
 }

@@ -24,6 +24,7 @@ import { PasswordResetComponent } from './password-reset/password-reset.componen
 import { PasswordResetFormComponent } from './password-reset-form/password-reset-form.component';
 import { SettingsComponent } from './settings/settings.component';
 import { CreateTeamComponent } from './create-team/create-team.component';
+import { TeamsComponent } from './teams/teams.component';
 
 const appRoutes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthService] },
@@ -35,7 +36,8 @@ const appRoutes: Routes = [
   { path: 'signup', component: SignUpComponent }, 
   { path: 'reset/password', component: PasswordResetComponent},
   { path: 'reset/password/form', component: PasswordResetFormComponent},
-  { path: 'settings', component: SettingsComponent }
+  { path: 'settings', component: SettingsComponent },
+  { path: 'teams', component: TeamsComponent },
 ];
 
 @NgModule({
@@ -59,6 +61,7 @@ const appRoutes: Routes = [
     PasswordResetFormComponent,
     SettingsComponent,
     CreateTeamComponent,
+    TeamsComponent,
   ],
   imports: [
     BrowserModule,
@@ -109,3 +112,13 @@ export interface Task {
   isFinished: number,
   tags: Tag[]
 };
+
+export interface Team {
+  id: number,
+  owner: number,
+  name: string,
+  description: string,
+  color: string,
+  created_at: string,
+  updated_at: string
+}

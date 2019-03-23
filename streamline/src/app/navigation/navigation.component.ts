@@ -28,6 +28,10 @@ export class NavigationComponent{
     this.router.navigateByUrl('home');
   }
 
+  public onTeams() {
+    this.router.navigateByUrl('teams');
+  }
+
   public onLogout() {
     this.backend.removeAuthToken(this.auth.getToken()).subscribe(res => {
       this.auth.setLoggedOut();
