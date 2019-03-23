@@ -59,6 +59,7 @@ export class BackendService {
   /* Team's URLs */
   public createTeamURL: string = 'http://' + this.root + '/api/teams/create';
   public getTeamsURL: string = 'http://' + this.root + '/api/teams/';
+  public deleteTeamURL: string = 'http://' + this.root + '/api/teams/delete/';
 
 
 
@@ -268,6 +269,13 @@ export class BackendService {
     .pipe (
       catchError(this.handleError)
     )
+  }
+
+  deleteTeam(teamId: number): Observable<any> {
+    return this.http.delete(this.deleteTeamURL + teamId, httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
 
