@@ -6,6 +6,9 @@ import { Router } from '@angular/router';
 import { DeleteConfirmDialog, EditTaskDialog, AddTagDialog } from '../dialogs/dialogs.module';
 import { Tag, Task } from '../app.module'
 import { formatDate } from '@angular/common';
+import { Observable } from 'rxjs';
+import { FormControl } from '@angular/forms';
+import { startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tasks',
@@ -16,6 +19,9 @@ export class TasksComponent implements OnInit {
 
   tasks: Task[] = [];
   sort_by: number = 0;
+  public rawTagsForm: FormControl = new FormControl();
+  public filteredTags: Observable<Tag[]>;
+  public tags: Tag[];
 
   constructor(private backend: BackendService,
     private auth: AuthService,
@@ -25,6 +31,23 @@ export class TasksComponent implements OnInit {
   ) {
     //update tasks display
     this.getUserTasks();
+
+    this.backend.getUserTags(this.auth.getUserId()).subscribe(res => {
+      if (res != null) {
+        this.tags = res;
+        //set up autofill for tags
+        this.filteredTags = this.rawTagsForm.valueChanges
+          .pipe(
+            startWith(''),
+            map(tag => tag ? this._filterTags(tag) : this.tags.slice())
+          );
+      }
+      else {
+        console.log('Could not retrieve tags');
+      }
+    })
+
+
   }
 
   ngOnInit() { }
@@ -320,6 +343,16 @@ export class TasksComponent implements OnInit {
       //for some reason we have to instantiate another Date object for getTime() to work
     });
 
+  }
+
+  public onTagSelect(tagID: number) {
+    console.log('tag selected: ' + tagID);
+  }
+
+  private _filterTags(value: string): Tag[] {
+    const filterValue = value.toLowerCase();
+
+    return this.tags.filter(tag => tag.name.toLowerCase().indexOf(filterValue) === 0);
   }
 
   collapse(id) {
