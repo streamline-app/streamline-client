@@ -353,17 +353,14 @@ export class TasksComponent implements OnInit {
 
   }
 
-  public onTagSelect(tag: Tag) {
-    //make sure to reset list before filtering again
-    this.tasks = this.unfilteredTasks;
-
-    this.rawTagsForm.setValue(tag.name); //set value of autocomplete
+  public onTagSelect(tagName: string) {
+    this.rawTagsForm.setValue(tagName); //set value of autocomplete
 
     //clear list of tasks, add only ones with queried tag
     this.tasks = [];
     this.unfilteredTasks.forEach(t => {
       t.tags.forEach(e => {
-        if(e.name === tag.name){ //if tag is somewhere in the tasks list of tags
+        if(e.name === tagName){ //if tag is somewhere in the tasks list of tags
           this.tasks.push(t);
         }
       });

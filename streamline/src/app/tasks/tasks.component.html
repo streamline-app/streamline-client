@@ -6,7 +6,7 @@
     <mat-form-field style="width: 200px; float:right; margin: 0 0 0px 20px;">
       <input matInput [matAutocomplete]="auto" [formControl]="rawTagsForm" placeholder="Filter by Tag...">
       <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let tag of filteredTags | async" (click)="onTagSelect(tag)">
+        <mat-option *ngFor="let tag of filteredTags | async" (click)="onTagSelect(tag.name)">
           <div class="square" [ngStyle]="{'background-color': tag.color}"></div> |
           <span>{{tag.name}}</span>
         </mat-option>
