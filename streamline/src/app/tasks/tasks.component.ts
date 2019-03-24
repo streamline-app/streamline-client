@@ -21,7 +21,6 @@ export class TasksComponent implements OnInit {
   private unfilteredTasks: Task[]; //used to save list of tasks
   private sort_by: number = 0;
   private rawTagsForm: FormControl = new FormControl();
-  private sortForm: FormControl = new FormControl();
   private filteredTags: Observable<Tag[]>; //used by html with ngFor
   private tags: Tag[];
 
@@ -378,9 +377,6 @@ export class TasksComponent implements OnInit {
 
     //clear tag filter
     this.rawTagsForm.setValue('');
-
-    //clear sort select
-    this.sortForm.setValue('');
   }
 
   private _filterTags(value: string): Tag[] {
