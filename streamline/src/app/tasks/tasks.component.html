@@ -6,13 +6,16 @@
     <mat-form-field style="width: 200px; float:right; margin: 0 0 0px 20px;">
       <input matInput [matAutocomplete]="auto" [formControl]="rawTagsForm" placeholder="Filter by Tag...">
       <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let tag of filteredTags | async" (click)="onTagSelect(tag.id)">
+        <mat-option *ngFor="let tag of filteredTags | async" (click)="onTagSelect(tag)">
           <div class="square" [ngStyle]="{'background-color': tag.color}"></div> |
           <span>{{tag.name}}</span>
         </mat-option>
+        <mat-option (click)="onClearSelect()">
+          <span>None</span>
+        </mat-option>
       </mat-autocomplete>
     </mat-form-field>
-    <mat-form-field style="float:right; width: 150px;">
+    <mat-form-field style="float:right; width: 150px;" [formControl]="sortForm">
       <mat-select id="sort_select" placeholder="Sort By...">
         <mat-option (click)="sortbyPrio()" value="Priority">Priority</mat-option>
         <mat-option (click)="sortbyCreationDate()" value="Creation Date">Creation Date</mat-option>

@@ -17,11 +17,13 @@ import { startWith, map } from 'rxjs/operators';
 })
 export class TasksComponent implements OnInit {
 
-  tasks: Task[] = [];
-  sort_by: number = 0;
-  public rawTagsForm: FormControl = new FormControl();
-  public filteredTags: Observable<Tag[]>;
-  public tags: Tag[];
+  private tasks: Task[] = [];
+  private unfilteredTasks: Task[]; //used to save list of tasks
+  private sort_by: number = 0;
+  private rawTagsForm: FormControl = new FormControl();
+  private sortForm: FormControl = new FormControl();
+  private filteredTags: Observable<Tag[]>; //used by html with ngFor
+  private tags: Tag[];
 
   constructor(private backend: BackendService,
     private auth: AuthService,
@@ -70,6 +72,13 @@ export class TasksComponent implements OnInit {
           this.getTaskTags(e.id);
 
         }
+
+        //clear tag filter
+        this.rawTagsForm.setValue('');
+
+        //save list in case of filtering
+        this.unfilteredTasks = this.tasks;
+
       });
 
       //check sort option
@@ -345,8 +354,33 @@ export class TasksComponent implements OnInit {
 
   }
 
-  public onTagSelect(tagID: number) {
-    console.log('tag selected: ' + tagID);
+  public onTagSelect(tag: Tag) {
+    //make sure to reset list before filtering again
+    this.tasks = this.unfilteredTasks;
+
+    this.rawTagsForm.setValue(tag.name); //set value of autocomplete
+
+    //clear list of tasks, add only ones with queried tag
+    this.tasks = [];
+    this.unfilteredTasks.forEach(t => {
+      t.tags.forEach(e => {
+        if(e.name === tag.name){ //if tag is somewhere in the tasks list of tags
+          this.tasks.push(t);
+        }
+      });
+      
+    });
+  }
+
+  public onClearSelect(){
+    //set list of tasks to equal unfiltered array
+    this.tasks = this.unfilteredTasks;
+
+    //clear tag filter
+    this.rawTagsForm.setValue('');
+
+    //clear sort select
+    this.sortForm.setValue('');
   }
 
   private _filterTags(value: string): Tag[] {
