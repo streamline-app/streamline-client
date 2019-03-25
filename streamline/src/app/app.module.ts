@@ -23,6 +23,12 @@ import { DialogsModule, DeleteConfirmDialog, EditTagDialog, CreateTagDialog, Edi
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { PasswordResetFormComponent } from './password-reset-form/password-reset-form.component';
 import { SettingsComponent } from './settings/settings.component';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { CalendarComponent } from './calendar/calendar.component';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+
+
 
 const appRoutes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthService] },
@@ -30,10 +36,11 @@ const appRoutes: Routes = [
   { path: 'profile', component: ProfileComponent, canActivate: [AuthService] },
   { path: 'create/task', component: CreateTaskComponent, canActivate: [AuthService] },
   { path: 'login', component: LoginComponent },
-  { path: 'signup', component: SignUpComponent }, 
-  { path: 'reset/password', component: PasswordResetComponent},
-  { path: 'reset/password/form', component: PasswordResetFormComponent},
-  { path: 'settings', component: SettingsComponent }
+  { path: 'signup', component: SignUpComponent },
+  { path: 'reset/password', component: PasswordResetComponent },
+  { path: 'reset/password/form', component: PasswordResetFormComponent },
+  { path: 'settings', component: SettingsComponent },
+  { path: 'calendar', component: CalendarComponent }
 ];
 
 @NgModule({
@@ -56,6 +63,7 @@ const appRoutes: Routes = [
     PasswordResetComponent,
     PasswordResetFormComponent,
     SettingsComponent,
+    CalendarComponent,
   ],
   imports: [
     BrowserModule,
@@ -67,12 +75,16 @@ const appRoutes: Routes = [
     DialogsModule,
     RouterModule.forRoot(
       appRoutes,
-      { enableTracing: true } 
+      { enableTracing: true }
     ),
+    CalendarModule.forRoot(
+      { provide: DateAdapter, useFactory: adapterFactory }
+    ),
+    NgbModule,
   ],
-  providers: [ 
-    {provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig},
-    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
+  providers: [
+    { provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig },
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
   ],
   bootstrap: [AppComponent],
   entryComponents: [DeleteConfirmDialog, EditTagDialog, CreateTagDialog, EditTaskDialog, UnregisterDialog, AddTagDialog]
