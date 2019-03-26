@@ -49,4 +49,8 @@ export class TeamsComponent {
     });
   }
 
+  public onInvitationsPressed() {
+    this.router.navigateByUrl('invitations');
+  }
+
 }

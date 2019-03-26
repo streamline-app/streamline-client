@@ -1,5 +1,12 @@
 <mat-card>
-  <h1 class="header">Teams</h1>
+  <div class="row">
+    <div class="col-md-8">
+        <h1 class="header">Teams</h1>
+    </div>
+    <div class="col-md-4">
+        <button id="invitations" mat-button (click)="onInvitationsPressed()">View Team Invitations</button>
+    </div>  
+  </div>
   <hr />
   <p class="header">Manage your teams and invite members to your teams via the manage button.</p>
   <table mat-table [dataSource]="teams" class="mat-elevation-z0" id="teamTable">

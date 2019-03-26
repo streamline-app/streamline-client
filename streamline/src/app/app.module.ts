@@ -26,6 +26,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { CreateTeamComponent } from './create-team/create-team.component';
 import { TeamsComponent } from './teams/teams.component';
 import { ManageTeamComponent } from './manage-team/manage-team.component';
+import { InvitationsComponent } from './invitations/invitations.component';
 
 const appRoutes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthService] },
@@ -37,9 +38,10 @@ const appRoutes: Routes = [
   { path: 'signup', component: SignUpComponent }, 
   { path: 'reset/password', component: PasswordResetComponent},
   { path: 'reset/password/form', component: PasswordResetFormComponent},
-  { path: 'settings', component: SettingsComponent },
-  { path: 'teams', component: TeamsComponent },
-  { path: 'teams/:id', component: ManageTeamComponent}
+  { path: 'settings', component: SettingsComponent, canActivate: [AuthService] },
+  { path: 'teams', component: TeamsComponent, canActivate: [AuthService] },
+  { path: 'teams/:id', component: ManageTeamComponent, canActivate: [AuthService]},
+  { path: 'invitations', component: InvitationsComponent, canActivate: [AuthService]}
 ];
 
 @NgModule({
@@ -65,6 +67,7 @@ const appRoutes: Routes = [
     CreateTeamComponent,
     TeamsComponent,
     ManageTeamComponent,
+    InvitationsComponent,
   ],
   imports: [
     BrowserModule,
