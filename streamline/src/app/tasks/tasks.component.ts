@@ -6,6 +6,9 @@ import { Router } from '@angular/router';
 import { DeleteConfirmDialog, EditTaskDialog, AddTagDialog } from '../dialogs/dialogs.module';
 import { Tag, Task } from '../app.module'
 import { formatDate } from '@angular/common';
+import { Observable } from 'rxjs';
+import { FormControl } from '@angular/forms';
+import { startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tasks',
@@ -14,8 +17,12 @@ import { formatDate } from '@angular/common';
 })
 export class TasksComponent implements OnInit {
 
-  tasks: Task[] = [];
-  sort_by: number = 0;
+  private tasks: Task[] = [];
+  private unfilteredTasks: Task[]; //used to save list of tasks
+  private sort_by: number = 0;
+  private rawTagsForm: FormControl = new FormControl();
+  private filteredTags: Observable<Tag[]>; //used by html with ngFor
+  private tags: Tag[];
 
   constructor(private backend: BackendService,
     private auth: AuthService,
@@ -25,6 +32,23 @@ export class TasksComponent implements OnInit {
   ) {
     //update tasks display
     this.getUserTasks();
+
+    this.backend.getUserTags(this.auth.getUserId()).subscribe(res => {
+      if (res != null) {
+        this.tags = res;
+        //set up autofill for tags
+        this.filteredTags = this.rawTagsForm.valueChanges
+          .pipe(
+            startWith(''),
+            map(tag => tag ? this._filterTags(tag) : this.tags.slice())
+          );
+      }
+      else {
+        console.log('Could not retrieve tags');
+      }
+    })
+
+
   }
 
   ngOnInit() { }
@@ -47,6 +71,13 @@ export class TasksComponent implements OnInit {
           this.getTaskTags(e.id);
 
         }
+
+        //clear tag filter
+        this.rawTagsForm.setValue('');
+
+        //save list in case of filtering
+        this.unfilteredTasks = this.tasks;
+
       });
 
       //check sort option
@@ -320,6 +351,35 @@ export class TasksComponent implements OnInit {
       //for some reason we have to instantiate another Date object for getTime() to work
     });
 
+  }
+
+  public onTagSelect(tagName: string) {
+    this.rawTagsForm.setValue(tagName); //set value of autocomplete
+
+    //clear list of tasks, add only ones with queried tag
+    this.tasks = [];
+    this.unfilteredTasks.forEach(t => {
+      t.tags.forEach(e => {
+        if(e.name === tagName){ //if tag is somewhere in the tasks list of tags
+          this.tasks.push(t);
+        }
+      });
+      
+    });
+  }
+
+  public onClearSelect(){
+    //set list of tasks to equal unfiltered array
+    this.tasks = this.unfilteredTasks;
+
+    //clear tag filter
+    this.rawTagsForm.setValue('');
+  }
+
+  private _filterTags(value: string): Tag[] {
+    const filterValue = value.toLowerCase();
+
+    return this.tags.filter(tag => tag.name.toLowerCase().indexOf(filterValue) === 0);
   }
 
   collapse(id) {
