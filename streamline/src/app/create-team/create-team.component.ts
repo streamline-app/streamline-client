@@ -4,6 +4,7 @@ import { BackendService } from '../backend.service';
 import { Router } from '@angular/router';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { AuthService } from '../auth.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-create-team',
@@ -20,7 +21,7 @@ export class CreateTeamComponent{
 
  
 
-  constructor(private backend: BackendService, private router: Router, private auth: AuthService) {}
+  constructor(private backend: BackendService, private router: Router, private auth: AuthService, private location: Location) {}
 
   public submit() {
     let newTeam: any = {
@@ -41,7 +42,7 @@ export class CreateTeamComponent{
   }
 
   public cancel() {
-    this.router.navigateByUrl('/home');
+    this.location.back();
   }
 
 }

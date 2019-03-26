@@ -49,6 +49,10 @@ export class TeamsComponent {
     });
   }
 
+  onCreatePressed() {
+    this.router.navigateByUrl('create/team')
+  }
+
   public onInvitationsPressed() {
     this.router.navigateByUrl('invitations');
   }

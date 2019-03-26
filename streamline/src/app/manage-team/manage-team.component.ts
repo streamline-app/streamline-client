@@ -12,7 +12,9 @@ import { AuthService } from '../auth.service';
 export class ManageTeamComponent{
   public t : any = null;
   public sentInvitations : any[] = null;
+  public teamMembers : any[] = null;
   public displayedPendingColumns = ['email', 'message', 'created_at'];
+  public displayedMembersColumns = ['name', 'email'];
 
   public team : FormGroup = new FormGroup( {
     title : new FormControl(),
@@ -34,6 +36,10 @@ export class ManageTeamComponent{
         description: this.t.description,
         color: this.t.color
       });
+    });
+
+    this.backend.getTeamMembers(teamId).subscribe((res) =>  {
+      this.teamMembers = res as any[];
     });
 
     this.backend.sentInvitations(this.auth.getUserId()).subscribe((res) => {

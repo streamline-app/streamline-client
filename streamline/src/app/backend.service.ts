@@ -61,13 +61,15 @@ export class BackendService {
   public getTeamsURL: string = 'http://' + this.root + '/api/teams/';
   public deleteTeamURL: string = 'http://' + this.root + '/api/teams/delete/';
   public getTeamUrl: string = 'http://' + this.root + '/api/team/';
+  public getTeamMembersURL: string = 'http://' + this.root + '/api/teams/members/';
 
   public getUserIdURL: string = 'http://' + this.root + '/api/user/';
 
   public sendInvitationURL: string = 'http://' + this.root + '/api/invitations/create';
   public sentInvitationsURL: string = 'http://' + this.root + '/api/sentInvitations/';
   public recievedInvitationsURL: string = 'http://' + this.root + '/api/recievedInvitations/';
-
+  public acceptInvitationURL: string = 'http://' + this.root + '/api/invitations/accept';
+  public declineInvitationURL: string = 'http://' + this.root + '/api/invitations/decline';
 
 
   constructor(private http: HttpClient, private auth: AuthService) { }
@@ -313,6 +315,34 @@ export class BackendService {
     );
   }
 
+  recievedInvitations(id) {
+    return this.http.get(this.recievedInvitationsURL + id, httpOptions)
+    .pipe (
+      catchError(this.handleError)
+    );
+  }
+
+  acceptInvitation(request: InvRequest) {
+    return this.http.post<InvitationResponse>(this.acceptInvitationURL, request, httpOptions)
+    .pipe (
+      catchError(this.handleError)
+    );
+  }
+
+  declineInvitation(request: InvRequest) {
+    return this.http.post<InvitationResponse>(this.declineInvitationURL, request, httpOptions)
+    .pipe (
+      catchError(this.handleError)
+    );
+  }
+
+  getTeamMembers(id) {
+    return this.http.get(this.getTeamMembersURL + id, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
 
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
@@ -406,4 +436,10 @@ interface CreateTeamResponse {
 
 interface InvitationResponse {
   message: string
+}
+
+interface InvRequest {
+  userId : number,
+  teamId : number,
+  invitationId : number
 }
