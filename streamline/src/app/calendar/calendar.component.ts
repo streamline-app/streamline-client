@@ -1,6 +1,5 @@
 import {
   Component,
-  ChangeDetectionStrategy,
   ViewChild,
   TemplateRef
 } from '@angular/core';
@@ -22,6 +21,11 @@ import {
   CalendarEventTimesChangedEvent,
   CalendarView
 } from 'angular-calendar';
+import { AuthService } from '../auth.service';
+import { BackendService } from '../backend.service';
+import { Task, Tag } from '../app.module';
+import { MatSnackBar } from '@angular/material';
+import { EventColor } from 'calendar-utils';
 
 const colors: any = {
   red: {
@@ -37,6 +41,7 @@ const colors: any = {
     secondary: '#FDF1BA'
   }
 };
+
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
@@ -74,7 +79,8 @@ export class CalendarComponent {
   ];
 
   refresh: Subject<any> = new Subject();
-
+  events: CalendarEvent[] = [];
+/*
   events: CalendarEvent[] = [
     {
       start: subDays(startOfDay(new Date()), 1),
@@ -115,10 +121,59 @@ export class CalendarComponent {
       draggable: true
     }
   ];
-
+*/
   activeDayIsOpen: boolean = true;
 
-  constructor(private modal: NgbModal) { }
+  private tasks: Task[] = [];
+
+
+  constructor(
+    private modal: NgbModal,
+    private auth: AuthService,
+    private backend: BackendService,
+    private snackbar: MatSnackBar
+  ) {
+    this.events = [];
+
+    this.getUserTasks();
+  }
+
+
+  getUserTasks() {
+    this.backend.getUserTasks(this.auth.getUserId()).subscribe(res => {
+      console.log('calendar: tasks retreived');
+      //set display to show result
+      res.forEach(e => {
+        if (!e.isFinished) { //only add if not finished
+          this.tasks.push(e);
+
+          //get tags for each task
+          this.getTaskTags(e);
+
+        }
+      });
+    },
+      error => {
+        console.log(error.message);
+        //three second snackbar pop up notification
+        let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
+      });
+  }
+
+  getTaskTags(task: Task) {
+    this.backend.getTaskTags(task.id).subscribe(res => {
+      var count = 0;
+      this.tasks.forEach(t => {
+        if (t.id === task.id) {
+          this.tasks[count].tags = res;
+        }
+        count++;
+      });
+
+      this.addEvent(task);
+
+    });
+  }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
     if (isSameMonth(date, this.viewDate)) {
@@ -157,19 +212,28 @@ export class CalendarComponent {
     this.modal.open(this.modalContent, { size: 'lg' });
   }
 
-  addEvent(): void {
+  addEvent(task: Task): void {
+    let color : EventColor = { primary: '#999999', secondary: '#999999'};
+
+    if(task.tags.length > 0){
+      //set two colors from tags
+      color.primary = task.tags[0].color;
+      color.secondary = task.tags[0].color;
+    }
+
     this.events = [
       ...this.events,
       {
-        title: 'New event',
-        start: startOfDay(new Date()),
-        end: endOfDay(new Date()),
-        color: colors.red,
-        draggable: true,
+        title: task.title,
+        start: startOfDay(task.completeDate),
+     //   end: endOfDay(new Date()),
+        color: color,
+        draggable: false, //false for now, setting to true would require update 
         resizable: {
           beforeStart: true,
           afterEnd: true
-        }
+        },
+        allDay: true
       }
     ];
   }
