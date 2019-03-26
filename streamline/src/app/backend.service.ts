@@ -60,6 +60,13 @@ export class BackendService {
   public createTeamURL: string = 'http://' + this.root + '/api/teams/create';
   public getTeamsURL: string = 'http://' + this.root + '/api/teams/';
   public deleteTeamURL: string = 'http://' + this.root + '/api/teams/delete/';
+  public getTeamUrl: string = 'http://' + this.root + '/api/team/';
+
+  public getUserIdURL: string = 'http://' + this.root + '/api/user/';
+
+  public sendInvitationURL: string = 'http://' + this.root + '/api/invitations/create';
+  public sentInvitationsURL: string = 'http://' + this.root + '/api/sentInvitations/';
+  public recievedInvitationsURL: string = 'http://' + this.root + '/api/recievedInvitations/';
 
 
 
@@ -271,6 +278,13 @@ export class BackendService {
     )
   }
 
+  getTeam(id) {
+    return this.http.get(this.getTeamUrl + id, httpOptions)
+    .pipe (
+      catchError(this.handleError)
+    )
+  }
+
   deleteTeam(teamId: number): Observable<any> {
     return this.http.delete(this.deleteTeamURL + teamId, httpOptions)
       .pipe(
@@ -278,6 +292,26 @@ export class BackendService {
       );
   }
 
+  getUserId(email: string) {
+    return this.http.get(this.getUserIdURL + email, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  sendInvitation(request) {
+    return this.http.post<InvitationResponse>(this.sendInvitationURL, request, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  sentInvitations(id) {
+    return this.http.get(this.sentInvitationsURL + id, httpOptions)
+    .pipe (
+      catchError(this.handleError)
+    );
+  }
 
 
   private handleError(error: HttpErrorResponse) {
@@ -367,5 +401,9 @@ interface CreateTeamRequest {
 }
 
 interface CreateTeamResponse {
+  message: string
+}
+
+interface InvitationResponse {
   message: string
 }

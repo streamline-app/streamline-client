@@ -1,0 +1,76 @@
+<mat-card *ngIf="t">
+  <h1 class="header">{{t.name}}</h1>
+  <hr />
+  <div class="row">
+    <div class="col-md-6">
+        <mat-card id="form">
+            <mat-card-header>
+              <h2>Update team information</h2>
+            </mat-card-header>
+            <mat-card-content>
+              <form [formGroup]="team">
+                <mat-form-field>
+                  <h4>Title</h4>
+                  <input matInput formControlName="title">
+                </mat-form-field>
+                <mat-form-field>
+                  <h4>Description</h4>
+                  <input matInput formControlName="description">
+                </mat-form-field>
+                <mat-form-field style="width: 30%;">
+                  <mat-label>Color</mat-label>
+                  <input matInput type="color" formControlName="color">
+              </mat-form-field>
+              <div mat-dialog-actions class="button_box">
+                <button mat-button style="background-color: lightgreen;" (click)="submit()">Update</button>
+              </div>
+            </form>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="col-md-6">
+      <mat-card>
+        <mat-card-header>
+          <h2>Invite Team Members</h2>
+        </mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="invite">
+            <mat-form-field>
+              <h4>Recipient Email</h4>
+              <input matInput formControlName="email">
+            </mat-form-field>
+            <mat-form-field>
+              <h4>Message</h4>
+              <input matInput formControlName="message">
+            </mat-form-field>
+
+            <div mat-dialog-actions class="button_box">
+                <button mat-button style="background-color: lightgreen;" (click)="inviteUser()">Invite</button>
+              </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card *ngIf="sentInvitations" id="pendingInvitations">
+        <h4>Pending Invitations</h4>
+        <table mat-table [dataSource]="sentInvitations" class="mat-elevations-z0" id="pending">
+            <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef> Email </th>
+                <td mat-cell *matCellDef="let element"> {{element.recipientEmail}} </td>
+              </ng-container>
+            <ng-container matColumnDef="message">
+                <th mat-header-cell *matHeaderCellDef> Message </th>
+                <td mat-cell *matCellDef="let element"> {{element.message}} </td>
+              </ng-container>
+            <ng-container matColumnDef="created_at">
+                <th mat-header-cell *matHeaderCellDef> Created At </th>
+                <td mat-cell *matCellDef="let element"> {{element.created_at}} </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedPendingColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedPendingColumns;"></tr>
+        </table>
+      </mat-card>
+    </div>
+  </div>
+  
+</mat-card>

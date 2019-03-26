@@ -4,6 +4,7 @@ import { BackendService } from '../backend.service';
 import { AuthService } from '../auth.service';
 import { MatDialog } from '@angular/material';
 import { DeleteConfirmDialog } from '../dialogs/dialogs.module';
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-teams',
@@ -17,7 +18,7 @@ export class TeamsComponent {
   public displayedColumns = ['name', 'description', 'color', 'created_at', 'actions'];
   
 
-  constructor(private backend: BackendService, private auth: AuthService, private dialog: MatDialog) { 
+  constructor(private backend: BackendService, private auth: AuthService, private dialog: MatDialog, private router: Router) { 
     this.getUserTeams();
   }
 
@@ -30,7 +31,7 @@ export class TeamsComponent {
   }
 
   public onManage(id) {
-    window.alert(id);
+    this.router.navigateByUrl('/teams/' + id);
   }
 
   public onDelete(id) {

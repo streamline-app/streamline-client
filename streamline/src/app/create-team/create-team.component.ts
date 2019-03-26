@@ -18,6 +18,8 @@ export class CreateTeamComponent{
     color: new FormControl('')
   })
 
+ 
+
   constructor(private backend: BackendService, private router: Router, private auth: AuthService) {}
 
   public submit() {
