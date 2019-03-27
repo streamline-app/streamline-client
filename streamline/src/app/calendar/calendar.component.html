@@ -25,9 +25,10 @@
       <div class="btn btn-primary" (click)="setView(CalendarView.Week)" [class.active]="view === CalendarView.Week">
         Week
       </div>
-      <div class="btn btn-primary" (click)="setView(CalendarView.Day)" [class.active]="view === CalendarView.Day">
+  <!--    <div class="btn btn-primary" (click)="setView(CalendarView.Day)" [class.active]="view === CalendarView.Day">
         Day
       </div>
+    -->
     </div>
   </div>
 </div>
@@ -41,8 +42,9 @@
     (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)"
     [hourSegments]="0" [dayStartHour]="0" [dayEndHour]="0">
   </mwl-calendar-week-view>
-  <!-- Re-Work needed here, maybe mimic home screen with mat-cards?   -->
+  <!-- Re-Work needed here, maybe mimic home screen with mat-cards?   
     <mwl-calendar-day-view *ngSwitchCase="CalendarView.Day" [viewDate]="viewDate" [events]="events" [refresh]="refresh" 
     (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">
   </mwl-calendar-day-view>
+-->
 </div>

@@ -80,7 +80,7 @@ export class CalendarComponent {
 
   refresh: Subject<any> = new Subject();
   events: CalendarEvent[] = [];
-/*
+/* Example Events ---- TODO remove before merge
   events: CalendarEvent[] = [
     {
       start: subDays(startOfDay(new Date()), 1),
