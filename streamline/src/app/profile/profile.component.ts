@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../auth.service';
+import { BackendService } from '../backend.service';
 
 @Component({
   selector: 'app-profile',
@@ -7,7 +9,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProfileComponent implements OnInit {
 
-  constructor() { }
+  private username: string;
+
+  constructor(auth: AuthService, backend: BackendService) { 
+    this.username = auth.getUserName();
+  }
 
   ngOnInit() {
   }
