@@ -197,7 +197,7 @@ export class CalendarComponent {
     }
   }
 
-  
+
   eventTimesChanged({
     event,
     newStart,
@@ -245,7 +245,7 @@ export class CalendarComponent {
         start: startOfDay(task.completeDate),
      //   end: endOfDay(new Date()),
         color: color,
-        draggable: true, //false for now, setting to true would require update 
+        draggable: false, //false for now, setting to true would require update 
         resizable: {
           beforeStart: true,
           afterEnd: true
