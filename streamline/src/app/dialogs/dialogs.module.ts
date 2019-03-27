@@ -59,6 +59,25 @@ export class ConfirmLeaveDialog {
 }
 
 @Component({
+  selector: 'remove-team-member/remove-team-member-dialog',
+  templateUrl: 'remove-team-member/remove-team-member-dialog.html',
+  styleUrls: ['remove-team-member/remove-team-member-dialog.css']
+
+})
+export class RemoveTeamMemberDialog {
+
+  constructor(public dialogRef: MatDialogRef<RemoveTeamMemberDialog>) { }
+
+  yes() {
+    this.dialogRef.close(true); //return true to parent component
+  }
+
+  no() {
+    this.dialogRef.close(false); //return false to parent component
+  }
+}
+
+@Component({
   selector: 'delete-confirm/delete-confirm-dialog',
   templateUrl: 'delete-confirm/delete-confirm-dialog.html',
   styleUrls: ['delete-confirm/delete-confirm-dialog.css']

@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BackendService } from '../backend.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import { AuthService } from '../auth.service';
-import { ConfirmLeaveDialog } from '../dialogs/dialogs.module';
+import { ConfirmLeaveDialog, RemoveTeamMemberDialog } from '../dialogs/dialogs.module';
 import { MatDialog } from '@angular/material';
 import { StateService } from '../state.service';
 
@@ -15,6 +15,7 @@ import { StateService } from '../state.service';
 })
 export class ManageTeamComponent{
   public t : any = null;
+  public owner: boolean = false;
   public sentInvitations : any[] = null;
   public teamMembers : any[] = null;
   public displayedPendingColumns = ['email', 'message', 'created_at'];
@@ -34,17 +35,18 @@ export class ManageTeamComponent{
   constructor(private route: ActivatedRoute, private state: StateService, private router: Router, private backend: BackendService,  private dialog: MatDialog, private auth: AuthService) {
     let teamId = this.route.snapshot.paramMap.get('id');
     this.loadTeamData();
+    this.loadInvitationData();
+    this.loadTeamMemberData(teamId);
+    
 
+    
+  }
+  
+  loadTeamMemberData(teamId) {
     this.backend.getTeamMembers(teamId).subscribe((res) =>  {
       this.teamMembers = res as any[];
     });
-
-    this.backend.sentInvitations(this.auth.getUserId()).subscribe((res) => {
-      this.sentInvitations = res as any[];
-      console.log(this.sentInvitations);
-    });
   }
-
   loadTeamData() {
     let teamId = this.route.snapshot.paramMap.get('id');
     this.backend.getTeam(teamId).subscribe((res) => {
@@ -54,8 +56,21 @@ export class ManageTeamComponent{
         description: this.t.description,
         color: this.t.color
       });
+
+      if (this.t.owner == this.auth.getUserId()) {
+        this.owner = true;
+        this.displayedMembersColumns = ['name', 'email', 'actions'];
+      }
     });
   }
+
+  loadInvitationData() {
+    this.backend.sentInvitations(this.auth.getUserId()).subscribe((res) => {
+      this.sentInvitations = res as any[];
+      console.log(this.sentInvitations);
+    });
+  }
+
   public inviteUser() {
     let email = this.invite.controls['email'].value as string;
     this.backend.getUserId(email).subscribe((res) => {
@@ -81,6 +96,8 @@ export class ManageTeamComponent{
       } else if (res.message == 'member exists'){
         window.alert('Member already on team');
 
+      } else {
+        this.loadInvitationData();
       }
     });
   }
@@ -122,5 +139,25 @@ export class ManageTeamComponent{
     })
   }
 
+  onRemove(id) {
+    window.alert(id);
+    const dialogRef = this.dialog.open(RemoveTeamMemberDialog, {
+      width: '325px',
+    });
+
+    dialogRef.afterClosed().subscribe((res) => {
+      if (res) {
+        let team = this.t.id;
+        let user = id
+        let request : any = {
+          team: team,
+          user: user
+        };
+        this.backend.leaveTeam(request).subscribe((res) => {
+          this.loadTeamMemberData(this.t.id);
+        })
+      }
+    });
+  }
 
 }
