@@ -25,12 +25,13 @@
       <div class="btn btn-primary" (click)="setView(CalendarView.Week)" [class.active]="view === CalendarView.Week">
         Week
       </div>
-  <!--    <div class="btn btn-primary" (click)="setView(CalendarView.Day)" [class.active]="view === CalendarView.Day">
+      <!--    <div class="btn btn-primary" (click)="setView(CalendarView.Day)" [class.active]="view === CalendarView.Day">
         Day
       </div>
     -->
     </div>
   </div>
+
 </div>
 <br />
 <div [ngSwitch]="view">
@@ -47,4 +48,20 @@
     (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">
   </mwl-calendar-day-view>
 -->
+</div>
+<div class="col-md-12">
+  <div class="legend_box">
+    <div class="legend_unit">
+      <div class="square" style="background-color: red;"></div>
+      <p>Paused</p>
+    </div>
+    <div class="legend_unit">
+      <div class="square" style="background-color: green;"></div>
+      <p>In-Progress</p>
+    </div>
+    <div class="legend_unit" style="margin-left: 10px;">
+      <div class="square" style="background-color: blue;"></div>
+      <p>Not Started</p>
+    </div>
+  </div>
 </div>

@@ -29,16 +29,24 @@ import { EventColor } from 'calendar-utils';
 
 const colors: any = {
   red: {
-    primary: '#ad2121',
+    primary: '#AD2121',
     secondary: '#FAE3E3'
   },
   blue: {
-    primary: '#1e90ff',
-    secondary: '#D1E8FF'
+    primary: '#2121AD',
+    secondary: '#E2E2FA'
   },
   yellow: {
-    primary: '#e3bc08',
+    primary: '#E3BC08',
     secondary: '#FDF1BA'
+  },
+  green: {
+    primary: '#21AD21',
+    secondary: '#E3FAE3'
+  },
+  grey: {
+    primary: '#666666',
+    secondary: '#D1D1D1'
   }
 };
 
@@ -189,11 +197,13 @@ export class CalendarComponent {
     }
   }
 
+  
   eventTimesChanged({
     event,
     newStart,
     newEnd
   }: CalendarEventTimesChangedEvent): void {
+    console.log(newStart);
     this.events = this.events.map(iEvent => {
       if (iEvent === event) {
         return {
@@ -215,10 +225,17 @@ export class CalendarComponent {
   addEvent(task: Task): void {
     let color : EventColor = { primary: '#999999', secondary: '#999999'};
 
-    if(task.tags.length > 0){
-      //set two colors from tags
-      color.primary = task.tags[0].color;
-      color.secondary = task.tags[0].color;
+    if(task.lastWorkedAt != null){ //in-progress
+      color = colors.green;
+    }
+    else if(task.lastWorkedAt == null && task.workedDuration === 0){ //not started yet
+      color = colors.blue;
+    }
+    else if(task.lastWorkedAt == null && task.workedDuration > 0){ //paused
+      color = colors.red;
+    }
+    else { //default
+      color = colors.grey;
     }
 
     this.events = [
@@ -228,7 +245,7 @@ export class CalendarComponent {
         start: startOfDay(task.completeDate),
      //   end: endOfDay(new Date()),
         color: color,
-        draggable: false, //false for now, setting to true would require update 
+        draggable: true, //false for now, setting to true would require update 
         resizable: {
           beforeStart: true,
           afterEnd: true
