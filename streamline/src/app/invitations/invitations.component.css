@@ -6,3 +6,11 @@
     margin-left: 8px;
     width: 100%;
 }
+
+#accept {
+    background-color: lightgreen;
+}
+
+#decline {
+    background-color: salmon;
+}

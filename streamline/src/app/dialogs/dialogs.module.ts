@@ -39,6 +39,25 @@ export class CreateTagDialog {
 }
 
 @Component({
+  selector: 'confirm-leave/confirm-leave-dialog',
+  templateUrl: 'confirm-leave/confirm-leave-dialog.html',
+  styleUrls: ['confirm-leave/confirm-leave-dialog.css']
+
+})
+export class ConfirmLeaveDialog {
+
+  constructor(public dialogRef: MatDialogRef<ConfirmLeaveDialog>) { }
+
+  yes() {
+    this.dialogRef.close(true); //return true to parent component
+  }
+
+  no() {
+    this.dialogRef.close(false); //return false to parent component
+  }
+}
+
+@Component({
   selector: 'delete-confirm/delete-confirm-dialog',
   templateUrl: 'delete-confirm/delete-confirm-dialog.html',
   styleUrls: ['delete-confirm/delete-confirm-dialog.css']

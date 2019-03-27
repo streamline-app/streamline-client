@@ -62,6 +62,7 @@ export class BackendService {
   public deleteTeamURL: string = 'http://' + this.root + '/api/teams/delete/';
   public getTeamUrl: string = 'http://' + this.root + '/api/team/';
   public getTeamMembersURL: string = 'http://' + this.root + '/api/teams/members/';
+  public leaveTeamURL: string = 'http://' + this.root + '/api/teams/leave';
 
   public getUserIdURL: string = 'http://' + this.root + '/api/user/';
 
@@ -343,6 +344,13 @@ export class BackendService {
     );
   }
 
+  leaveTeam(request: LeaveTeamRequest) {
+    return this.http.post(this.leaveTeamURL, request, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
 
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
@@ -442,4 +450,9 @@ interface InvRequest {
   userId : number,
   teamId : number,
   invitationId : number
+}
+
+interface LeaveTeamRequest {
+  user: number,
+  team: number
 }

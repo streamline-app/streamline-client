@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BackendService } from '../backend.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import { AuthService } from '../auth.service';
+import { ConfirmLeaveDialog } from '../dialogs/dialogs.module';
+import { MatDialog } from '@angular/material';
+
 
 @Component({
   selector: 'app-manage-team',
@@ -27,7 +30,7 @@ export class ManageTeamComponent{
     message: new FormControl('')
   });
 
-  constructor(private route: ActivatedRoute, private backend: BackendService, private auth: AuthService) {
+  constructor(private route: ActivatedRoute, private router: Router, private backend: BackendService,  private dialog: MatDialog, private auth: AuthService) {
     let teamId = this.route.snapshot.paramMap.get('id');
     this.backend.getTeam(teamId).subscribe((res) => {
       this.t = res;
@@ -70,15 +73,32 @@ export class ManageTeamComponent{
       if (res.message == 'multiple invitations') {
         window.alert('Inviation already exists');
 
-      } else {
-        window.alert('Invitation sent');
+      } else if (res.message == 'member exists'){
+        window.alert('Member already on team');
 
       }
     });
-
-
   }
 
+  public onLeave() {
+    const dialogRef = this.dialog.open(ConfirmLeaveDialog, {
+      width: '325px',
+    });
+
+    dialogRef.afterClosed().subscribe((res) => {
+      if (res) {
+        let team = this.t.id;
+        let user = this.auth.getUserId();
+        let request : any = {
+          team: team,
+          user: user
+        };
+        this.backend.leaveTeam(request).subscribe((res) => {
+          this.router.navigateByUrl('teams');
+        })
+      }
+    });
+  }
 
 
 }

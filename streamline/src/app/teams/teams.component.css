@@ -11,3 +11,11 @@
     margin-top: 40px;
     float: right;
 }
+
+#manage {
+    background-color: lightgreen;
+}
+
+#delete {
+    background-color: salmon;
+}

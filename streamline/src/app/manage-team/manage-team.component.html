@@ -1,5 +1,12 @@
 <mat-card *ngIf="t">
-  <h1 class="header">{{t.name}}</h1>
+  <div class="row">
+    <div class="col-md-9">
+        <h1 class="header">{{t.name}}</h1>
+    </div>
+    <div class="col-md-3">
+      <button mat-button id="leave" (click)="onLeave()">Leave Team</button>
+    </div>
+  </div>
   <hr />
   <div class="row">
     <div class="col-md-6">
