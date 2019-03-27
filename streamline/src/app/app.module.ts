@@ -103,6 +103,7 @@ export interface Tag {
   average_acc: number,
   task_overunder: number,
   color: string,
+  team: number
   userID: number
 };
 
@@ -119,6 +120,7 @@ export interface Task {
   priority: number,
   completeDate: Date,
   created_at: Date, //matches laravel column
+  team: number,
   tags: Tag[]
 };
 

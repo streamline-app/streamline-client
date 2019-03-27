@@ -130,7 +130,8 @@ export class CreateTaskComponent {
           average_acc: 0,
           task_overunder: 0,
           color: result.color,
-          userID: this.auth.getUserId()
+          userID: this.auth.getUserId(),
+          team: this.state.teamId
         }
 
         console.log(newTag);

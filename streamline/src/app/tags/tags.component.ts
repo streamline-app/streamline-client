@@ -3,6 +3,7 @@ import { BackendService } from '../backend.service';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { AuthService } from '../auth.service';
 import { CreateTagDialog, EditTagDialog, DeleteConfirmDialog } from '../dialogs/dialogs.module';
+import { StateService } from '../state.service';
 
 @Component({
   selector: 'app-tags',
@@ -17,7 +18,8 @@ export class TagsComponent implements OnInit {
   constructor(private backend: BackendService,
     public create_dialog: MatDialog,
     private snackbar: MatSnackBar,
-    private auth: AuthService
+    private auth: AuthService,
+    private state: StateService
   ) {
     //make sure sidenav is closed
     this.opened = false;
@@ -62,7 +64,8 @@ export class TagsComponent implements OnInit {
           average_acc: 0,
           task_overunder: 0,
           color: result.color,
-          userID: this.auth.getUserId()
+          userID: this.auth.getUserId(), 
+          team: this.state.teamId
         }
 
         console.log(newTag);
@@ -199,5 +202,6 @@ interface Tag {
   average_acc: number,
   task_overunder: number,
   color: string,
-  userID: number
+  userID: number,
+  team: number
 };
