@@ -21,6 +21,9 @@ export class BackendService {
 
   public root: string = 'localhost:8000';
 
+  /* Profile URLs */
+  public getProfileInfoURL: string = 'http://' + this.root + '/api/profile/'; //TODO update with backend endpoint
+
   /* Task URLs */
   public createTaskURL: string = 'http://' + this.root + '/api/tasks/create';
   public getUserTasksURL: string = 'http://' + this.root + '/api/tasks/';
@@ -59,7 +62,15 @@ export class BackendService {
 
 
   constructor(private http: HttpClient, private auth: AuthService) { }
+  /* ============ Profile Functions ========= */
+  getProfileInfo(userID: number){
+    return this.http.get<any>(this.getProfileInfoURL + userID, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
 
+  /* ======================================= */
   /* ============ Task Functions ========== */
   createTask(task: Task): Observable<Task> {
     return this.http.post<Task>(this.createTaskURL, task, httpOptions)
