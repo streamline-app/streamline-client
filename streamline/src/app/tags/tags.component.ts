@@ -23,12 +23,22 @@ export class TagsComponent implements OnInit {
   ) {
     //make sure sidenav is closed
     this.opened = false;
-
+    this.state.dataViewChange.subscribe((val) => {
+      this.loadData();
+    })
     //fill display
-    this.getUserTags();
+    this.loadData();
   }
 
   ngOnInit() {
+  }
+
+  loadData() {
+    if(this.state.teamId != 0) {
+      this.getTeamTags();
+    } else {
+      this.getUserTags();
+    }
   }
 
   createTag() {
@@ -107,6 +117,18 @@ export class TagsComponent implements OnInit {
       //window.alert('Got Tags');
 
       //set display to show result
+      this.tags = result;
+
+    }, error => {
+      console.log(error.message);
+      //three second snackbar pop up notification
+      let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
+    });
+  }
+
+  getTeamTags() {
+    this.backend.getTeamTags(this.state.teamId).subscribe(result => { 
+      console.log(result);
       this.tags = result;
 
     }, error => {

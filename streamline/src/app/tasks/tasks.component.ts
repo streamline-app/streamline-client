@@ -16,7 +16,7 @@ import { startWith, map } from 'rxjs/operators';
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.css']
 })
-export class TasksComponent implements OnInit {
+export class TasksComponent {
 
   private tasks: Task[] = [];
   private unfilteredTasks: Task[]; //used to save list of tasks
@@ -34,11 +34,43 @@ export class TasksComponent implements OnInit {
   ) {
 
     this.state.dataViewChange.subscribe((val) => {
-      window.alert("REload data here");
+      this.loadData();
     })
     //update tasks display
-    this.getUserTasks();
+    this.loadData();
+    
 
+
+  }
+
+  loadData() {
+    if (this.state.teamId != 0) {
+      this.getTeamTasks();
+      this.getTeamTags();
+    } else {
+      this.getUserTasks();
+      this.getUserTags();
+    }
+  }
+
+  getTeamTags() {
+    this.backend.getTeamTags(this.state.teamId).subscribe(res => {
+      if (res != null) {
+        this.tags = res;
+        //set up autofill for tags
+        this.filteredTags = this.rawTagsForm.valueChanges
+          .pipe(
+            startWith(''),
+            map(tag => tag ? this._filterTags(tag) : this.tags.slice())
+          );
+      }
+      else {
+        console.log('Could not retrieve tags');
+      }
+    })
+  }
+
+  getUserTags() {
     this.backend.getUserTags(this.auth.getUserId()).subscribe(res => {
       if (res != null) {
         this.tags = res;
@@ -53,11 +85,46 @@ export class TasksComponent implements OnInit {
         console.log('Could not retrieve tags');
       }
     })
-
-
   }
 
-  ngOnInit() { }
+  getTeamTasks() {
+    console.log('we are in team tasks');
+    this.tasks = [];
+
+    this.backend.getTeamTasks(this.state.teamId).subscribe((result) => {
+      console.log(result);
+      this.tasks = result as Task[];
+      result.forEach(e => {
+        if (!e.isFinished) { //only add if not finished
+          //this.tasks.push(e);
+          this.getTaskTags(e.id);
+
+        }
+        //clear tag filter
+        this.rawTagsForm.setValue('');
+        //save list in case of filtering
+        this.unfilteredTasks = this.tasks;
+      });
+
+      //check sort option
+      switch (this.sort_by) {
+        case 0:   //no sort
+          break;
+        case 1:   //prio
+          this.sortbyPrio();
+          break;
+        case 2:   //creation_date
+          this.sortbyCreationDate();
+          break;
+        default:
+          break;
+      }
+    }, error => {
+      console.log(error.message);
+      //three second snackbar pop up notification
+      let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
+    });
+  }
 
   getUserTasks() {
     //clear list first
@@ -69,10 +136,9 @@ export class TasksComponent implements OnInit {
       //window.alert('Got Tags');
 
       //set display to show result
+      this.tasks = result as Task[];
       result.forEach(e => {
         if (!e.isFinished) { //only add if not finished
-          this.tasks.push(e);
-
           //get tags for each task
           this.getTaskTags(e.id);
 

@@ -63,6 +63,8 @@ export class BackendService {
   public getTeamUrl: string = 'http://' + this.root + '/api/team/';
   public getTeamMembersURL: string = 'http://' + this.root + '/api/teams/members/';
   public leaveTeamURL: string = 'http://' + this.root + '/api/teams/leave';
+  public getTeamTasksURL: string = 'http://' + this.root + '/api/teamtasks';
+  public getTeamTagsURL: string = 'http://' + this.root + '/api/teamtags';
 
   public getUserIdURL: string = 'http://' + this.root + '/api/user/';
 
@@ -349,6 +351,26 @@ export class BackendService {
     .pipe(
       catchError(this.handleError)
     );
+  }
+
+  getTeamTasks(teamID: number): Observable<(Task[])> {
+    return this.http.get<Task[]>(this.getTeamTasksURL, {
+      params: { teamID: teamID.toString() },
+      headers: {
+        Authorization: 'my-auth-token'
+      }
+    })
+      .pipe(catchError(this.handleError));
+  }
+
+  getTeamTags(teamID: number): Observable<(Tag[])> {
+    return this.http.get<Tag[]>(this.getTeamTagsURL, {
+      params: { teamID: teamID.toString() },
+      headers: {
+        Authorization: 'my-auth-token'
+      }
+    })
+      .pipe(catchError(this.handleError));
   }
 
 
