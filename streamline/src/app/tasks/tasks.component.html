@@ -1,6 +1,28 @@
 <h1 class="header">Tasks</h1>
 <hr class="seperator" />
-<button mat-stroked-button style="margin: 0px 0px 5px 10px;" (click)="onCreatePressed()">+ Create Task</button>
+<div class="row" style="height: 75px;">
+  <div class="col-md-12">
+    <button mat-stroked-button (click)="onCreatePressed()">+ Create Task</button>
+    <mat-form-field style="width: 200px; float:right; margin: 0 0 0px 20px;">
+      <input matInput [matAutocomplete]="auto" [formControl]="rawTagsForm" placeholder="Filter by Tag...">
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let tag of filteredTags | async" (click)="onTagSelect(tag.name)">
+          <div class="square" [ngStyle]="{'background-color': tag.color}"></div> |
+          <span>{{tag.name}}</span>
+        </mat-option>
+        <mat-option (click)="onClearSelect()">
+          <span>None</span>
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field style="float:right; width: 150px;">
+      <mat-select id="sort_select" placeholder="Sort By...">
+        <mat-option (click)="sortbyPrio()" value="Priority">Priority</mat-option>
+        <mat-option (click)="sortbyCreationDate()" value="Creation Date">Creation Date (default)</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
 <div *ngFor="let task of tasks; index as i">
   <div>
     <mat-card class="mat-elevation-z10" id="task-card">
@@ -42,7 +64,8 @@
                 {{tag.name}}
               </li>
               <li (click)="addTag(task)">
-              +<!-- causes weird alignment issues  <mat-icon style="width: 30px;height: 30px;">add</mat-icon> -->
+                +
+                <!-- causes weird alignment issues  <mat-icon style="width: 30px;height: 30px;">add</mat-icon> -->
               </li>
             </ul>
           </div>
@@ -77,29 +100,29 @@
           <div class="col-md-6"
             style="height: 175px; border: solid; width: 100%; border-width: 1px; border-color: lightgrey; margin: 5px 0px 5px 0px;">
             <div class="row" style="margin: 0px 2.5px 0px 2.5px;">
-                <h4 style="float:left;">Estimated Time:</h4>
+              <h4 style="float:left;">Estimated Time:</h4>
               <p style="float: right; margin-top: 10px;">
                 {{task.estimatedHour}} hrs. and {{task.estimatedMin}} min.
               </p>
             </div>
             <div class="row" style="margin: 0px 2.5px 0px 0px;">
-                <h4 style="float:left;">Current Time:</h4>
+              <h4 style="float:left;">Current Time:</h4>
               <p style="float: right; margin-top: 10px;">
                 {{getHours(task.workedDuration)}} hrs. and {{getMinutes(task.workedDuration)}} min.
               </p>
             </div>
             <div class="row" style="margin: 0px 2.5px 0px 0px;">
               <h4 style="float:left;">Priority:</h4>
-            <p style="float: right; margin-top: 10px;">
-              {{task.priority}}
-            </p>
-          </div>
-          <div class="row" style="margin: 0px 2.5px 0px 0px;">
-            <h4 style="float:left;">Set For:</h4>
-          <p style="float: right; margin-top: 10px;">
-            {{_formatDate(task.completeDate)}}
-          </p>
-        </div>
+              <p style="float: right; margin-top: 10px;">
+                {{task.priority}}
+              </p>
+            </div>
+            <div class="row" style="margin: 0px 2.5px 0px 0px;">
+              <h4 style="float:left;">Set For:</h4>
+              <p style="float: right; margin-top: 10px;">
+                {{_formatDate(task.completeDate)}}
+              </p>
+            </div>
           </div>
           <div class="col-md-6" style="float:right;">
             <button mat-stroked-button class="edit_btn" style="background-color: #c90000; color: white"

@@ -7,6 +7,9 @@ import { DeleteConfirmDialog, EditTaskDialog, AddTagDialog } from '../dialogs/di
 import { Tag, Task } from '../app.module'
 import { formatDate } from '@angular/common';
 import { StateService } from '../state.service';
+import { Observable } from 'rxjs';
+import { FormControl } from '@angular/forms';
+import { startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tasks',
@@ -15,7 +18,12 @@ import { StateService } from '../state.service';
 })
 export class TasksComponent implements OnInit {
 
-  tasks: Task[] = [];
+  private tasks: Task[] = [];
+  private unfilteredTasks: Task[]; //used to save list of tasks
+  private sort_by: number = 0;
+  private rawTagsForm: FormControl = new FormControl();
+  private filteredTags: Observable<Tag[]>; //used by html with ngFor
+  private tags: Tag[];
 
   constructor(private backend: BackendService,
     private auth: AuthService,
@@ -30,6 +38,23 @@ export class TasksComponent implements OnInit {
     })
     //update tasks display
     this.getUserTasks();
+
+    this.backend.getUserTags(this.auth.getUserId()).subscribe(res => {
+      if (res != null) {
+        this.tags = res;
+        //set up autofill for tags
+        this.filteredTags = this.rawTagsForm.valueChanges
+          .pipe(
+            startWith(''),
+            map(tag => tag ? this._filterTags(tag) : this.tags.slice())
+          );
+      }
+      else {
+        console.log('Could not retrieve tags');
+      }
+    })
+
+
   }
 
   ngOnInit() { }
@@ -52,8 +77,28 @@ export class TasksComponent implements OnInit {
           this.getTaskTags(e.id);
 
         }
+
+        //clear tag filter
+        this.rawTagsForm.setValue('');
+
+        //save list in case of filtering
+        this.unfilteredTasks = this.tasks;
+
       });
 
+      //check sort option
+      switch (this.sort_by) {
+        case 0:   //no sort
+          break;
+        case 1:   //prio
+          this.sortbyPrio();
+          break;
+        case 2:   //creation_date
+          this.sortbyCreationDate();
+          break;
+        default:
+          break;
+      }
 
     }, error => {
       console.log(error.message);
@@ -172,22 +217,23 @@ export class TasksComponent implements OnInit {
   editTask(task: Task) {
     let dialogRef = this.create_dialog.open(EditTaskDialog, {
       width: '400px',
-      data: { 
+      data: {
         title: task.title,
-        body: task.body, 
-        workedDuration: task.workedDuration, 
-        estimatedHour: task.estimatedHour, 
-        estimatedMin: task.estimatedMin, 
-        expDuration: task.expDuration, 
-        priority: task.priority, 
-        completeDate: task.completeDate }
+        body: task.body,
+        workedDuration: task.workedDuration,
+        estimatedHour: task.estimatedHour,
+        estimatedMin: task.estimatedMin,
+        expDuration: task.expDuration,
+        priority: task.priority,
+        completeDate: task.completeDate
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result != null) {
         //check if task already exists under given name
         let exists: boolean = false;
-        if (result.title != task.title) { //if new tag name given is different from the old one
+        if (result.title != task.title) { //if new task name given is different from the old one
           this.tasks.forEach(element => { //check to make sure it doesn't match any other tag names
             if (element.title === result.title) {
               //notify user
@@ -204,10 +250,10 @@ export class TasksComponent implements OnInit {
         }
 
         //format Date into string for backend
-        result.completeDate = formatDate(result.completeDate , 'yyyy-MM-dd', 'en-US');
+        result.completeDate = formatDate(result.completeDate, 'yyyy-MM-dd', 'en-US');
 
         this.backend.editTask(task.id, result).subscribe(res => {
-          console.log('task ' + task.id + ' udpated');
+          console.log('task ' + task.id + ' updated');
 
           //three second snackbar pop up notification
           let snackbarRef = this.snackbar.open('Task Updated!', 'Ok', { duration: 3000 });
@@ -297,18 +343,49 @@ export class TasksComponent implements OnInit {
       return 0;
   }
 
-  sortbyPrio(){
-     this.tasks.sort(function(a: Task, b: Task){
-       return b.priority - a.priority; //sort from highest to lowest
-     });
+  sortbyPrio() {
+    this.sort_by = 1;
+    this.tasks.sort(function (a: Task, b: Task) {
+      return b.priority - a.priority; //sort from highest to lowest
+    });
   }
 
-  sortbyCreationDate(){
-    this.tasks.sort(function(a: Task, b: Task){
+  sortbyCreationDate() {
+    this.sort_by = 2;
+    this.tasks.sort(function (a: Task, b: Task) {
       return new Date(a.created_at).getTime() - new Date(b.created_at).getTime(); //sort from first to last
       //for some reason we have to instantiate another Date object for getTime() to work
     });
 
+  }
+
+  public onTagSelect(tagName: string) {
+    this.rawTagsForm.setValue(tagName); //set value of autocomplete
+
+    //clear list of tasks, add only ones with queried tag
+    this.tasks = [];
+    this.unfilteredTasks.forEach(t => {
+      t.tags.forEach(e => {
+        if(e.name === tagName){ //if tag is somewhere in the tasks list of tags
+          this.tasks.push(t);
+        }
+      });
+      
+    });
+  }
+
+  public onClearSelect(){
+    //set list of tasks to equal unfiltered array
+    this.tasks = this.unfilteredTasks;
+
+    //clear tag filter
+    this.rawTagsForm.setValue('');
+  }
+
+  private _filterTags(value: string): Tag[] {
+    const filterValue = value.toLowerCase();
+
+    return this.tags.filter(tag => tag.name.toLowerCase().indexOf(filterValue) === 0);
   }
 
   collapse(id) {
@@ -324,7 +401,7 @@ export class TasksComponent implements OnInit {
     this.router.navigateByUrl('create/task');
   }
 
-  _formatDate(d: Date): string{ //special function to format date for UI
+  _formatDate(d: Date): string { //special function to format date for UI
     return formatDate(d, 'MMMM dd, yyyy', 'en-US');
   }
 }

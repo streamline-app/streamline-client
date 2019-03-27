@@ -115,10 +115,10 @@ export interface Task {
   estimatedHour: number,
   lastWorkedAt: number,
   expDuration: number,
-  priority: number,
-  created_at: Date,
-  completeDate: Date,
   isFinished: number,
+  priority: number,
+  completeDate: Date,
+  created_at: Date, //matches laravel column
   tags: Tag[]
 };
 
