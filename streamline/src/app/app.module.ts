@@ -27,6 +27,7 @@ import { CreateTeamComponent } from './create-team/create-team.component';
 import { TeamsComponent } from './teams/teams.component';
 import { ManageTeamComponent } from './manage-team/manage-team.component';
 import { InvitationsComponent } from './invitations/invitations.component';
+import { TeamNavigationComponent } from './team-navigation/team-navigation.component';
 
 const appRoutes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthService] },
@@ -69,6 +70,7 @@ const appRoutes: Routes = [
     TeamsComponent,
     ManageTeamComponent,
     InvitationsComponent,
+    TeamNavigationComponent,
   ],
   imports: [
     BrowserModule,

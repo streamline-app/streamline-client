@@ -11,7 +11,8 @@ export class HomeComponent implements OnInit {
   profile: boolean = false;
   tasks: boolean = true;
 
-  constructor() { }
+  constructor() { 
+  }
 
   ngOnInit() {
   }

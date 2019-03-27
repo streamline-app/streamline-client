@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { DeleteConfirmDialog, EditTaskDialog, AddTagDialog } from '../dialogs/dialogs.module';
 import { Tag, Task } from '../app.module'
 import { formatDate } from '@angular/common';
+import { StateService } from '../state.service';
 
 @Component({
   selector: 'app-tasks',
@@ -20,8 +21,13 @@ export class TasksComponent implements OnInit {
     private auth: AuthService,
     private snackbar: MatSnackBar,
     private router: Router,
-    private create_dialog: MatDialog
+    private create_dialog: MatDialog,
+    private state: StateService
   ) {
+
+    this.state.dataViewChange.subscribe((val) => {
+      window.alert("REload data here");
+    })
     //update tasks display
     this.getUserTasks();
   }
