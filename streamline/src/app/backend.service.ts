@@ -65,6 +65,7 @@ export class BackendService {
   public leaveTeamURL: string = 'http://' + this.root + '/api/teams/leave';
   public getTeamTasksURL: string = 'http://' + this.root + '/api/teamtasks';
   public getTeamTagsURL: string = 'http://' + this.root + '/api/teamtags';
+  public updateTeamURL: string = 'http://' + this.root + '/api/teams/update/';
 
   public getUserIdURL: string = 'http://' + this.root + '/api/user/';
 
@@ -373,6 +374,13 @@ export class BackendService {
       .pipe(catchError(this.handleError));
   }
 
+  updateTeam(teamID: number, edit: TeamEditRequest): Observable<any> {
+    return this.http.put(this.updateTeamURL + teamID, edit, httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
 
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
@@ -477,4 +485,10 @@ interface InvRequest {
 interface LeaveTeamRequest {
   user: number,
   team: number
+}
+
+interface TeamEditRequest {
+  title: string,
+  description: string,
+  color: string
 }

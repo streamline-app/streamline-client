@@ -24,6 +24,7 @@ export class TasksComponent {
   private rawTagsForm: FormControl = new FormControl();
   private filteredTags: Observable<Tag[]>; //used by html with ngFor
   private tags: Tag[];
+  public displayMessage = 'Your Tasks';
 
   constructor(private backend: BackendService,
     private auth: AuthService,
@@ -35,10 +36,18 @@ export class TasksComponent {
 
     this.state.dataViewChange.subscribe((val) => {
       this.loadData();
+      if (this.state.teamId != 0) {
+        this.displayMessage = this.state.teamName+'\'s Tasks';
+      } else {
+        this.displayMessage = 'Your tasks';
+      }
     })
     //update tasks display
     this.loadData();
     
+    if (this.state.teamId != 0) {
+      this.displayMessage = this.state.teamName+'\'s Tasks';
+    }
 
 
   }

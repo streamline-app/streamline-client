@@ -92,7 +92,7 @@ export class TagsComponent implements OnInit {
         });
 
         //update display with new tag
-        this.getUserTags();
+        this.loadData();
       }
       else { /* Do Nothing */ }
     });

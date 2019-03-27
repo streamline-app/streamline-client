@@ -5,6 +5,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { ConfirmLeaveDialog } from '../dialogs/dialogs.module';
 import { MatDialog } from '@angular/material';
+import { StateService } from '../state.service';
 
 
 @Component({
@@ -30,16 +31,9 @@ export class ManageTeamComponent{
     message: new FormControl('')
   });
 
-  constructor(private route: ActivatedRoute, private router: Router, private backend: BackendService,  private dialog: MatDialog, private auth: AuthService) {
+  constructor(private route: ActivatedRoute, private state: StateService, private router: Router, private backend: BackendService,  private dialog: MatDialog, private auth: AuthService) {
     let teamId = this.route.snapshot.paramMap.get('id');
-    this.backend.getTeam(teamId).subscribe((res) => {
-      this.t = res;
-      this.team.patchValue({
-        title: this.t.name,
-        description: this.t.description,
-        color: this.t.color
-      });
-    });
+    this.loadTeamData();
 
     this.backend.getTeamMembers(teamId).subscribe((res) =>  {
       this.teamMembers = res as any[];
@@ -51,6 +45,17 @@ export class ManageTeamComponent{
     });
   }
 
+  loadTeamData() {
+    let teamId = this.route.snapshot.paramMap.get('id');
+    this.backend.getTeam(teamId).subscribe((res) => {
+      this.t = res;
+      this.team.patchValue({
+        title: this.t.name,
+        description: this.t.description,
+        color: this.t.color
+      });
+    });
+  }
   public inviteUser() {
     let email = this.invite.controls['email'].value as string;
     this.backend.getUserId(email).subscribe((res) => {
@@ -98,6 +103,23 @@ export class ManageTeamComponent{
         })
       }
     });
+  }
+
+  submit() {
+    let title = this.team.controls['title'].value;
+    let description = this.team.controls['description'].value;
+    let color = this.team.controls['color'].value;
+
+    let request : any = {
+      title: title,
+      description: description,
+      color: color
+    }
+
+    this.backend.updateTeam(this.t.id, request).subscribe((res) => {
+      this.loadTeamData();
+      this.state.signalTeamDataChange();
+    })
   }
 
 

@@ -25,12 +25,18 @@ export class TeamNavigationComponent {
       }
       
     })
+
+    this.state.teamDataChange.subscribe((val) => {
+      this.backend.getTeams(this.auth.getUserId()).subscribe((res) => {
+        this.teams = res as Team[];
+      });
+    });
   }
 
   onClick(id: number) {
     if (id != 0) {
       let team = this.teams.find(x => x.id == id);
-      this.state.setTeamView(team.id);
+      this.state.setTeamView(team.id, team.name);
     } else {
       this.state.setUserView();
     }
