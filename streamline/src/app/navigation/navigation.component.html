@@ -14,8 +14,9 @@
     <button mat-menu-item *ngIf="!auth.isLoggedIn()" (click)="onLogin()"> Login</button>
     <button mat-menu-item *ngIf="!auth.isLoggedIn()" (click)="onRegister()">Register</button>
     <button mat-menu-item *ngIf="auth.isLoggedIn()" (click)="onSettings()">Settings</button>
-    <button mat-menu-item *ngIf="auth.isLoggedIn()" (click) ="onLogout()">Logout</button>
     <button mat-menu-item *ngIf="auth.isLoggedIn()" (click)="onHome()">Home</button>
+    <button mat-menu-item *ngIf="auth.isLoggedIn()" (click)="onCalendar()">Calendar</button>
+    <button mat-menu-item *ngIf="auth.isLoggedIn()" (click) ="onLogout()">Logout</button>
   </mat-menu>
 </mat-card>
 
