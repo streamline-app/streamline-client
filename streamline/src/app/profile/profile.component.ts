@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
-import { BackendService } from '../backend.service';
+import { BackendService, UserDataResponse } from '../backend.service';
 
 @Component({
   selector: 'app-profile',
@@ -10,44 +10,33 @@ import { BackendService } from '../backend.service';
 export class ProfileComponent implements OnInit {
 
   private username: string;
-  private numCompTasks: number;
-  private numCurrTasks: number;
-  private estAcc: number;
+  private userData: UserDataResponse;
 
-  constructor(private auth: AuthService, private backend: BackendService) { 
+  constructor(private auth: AuthService, private backend: BackendService) {
+    this.userData = {
+      totalTasksCompleted: 0,
+      taskEstFactor: 0,
+      totalUnderTasks: 0,
+      totalOverTasks: 0,
+      avgTaskTime: 0
+    }
     //get user date from backend
-    this.getUserDate(this.auth.getUserId());
+    this.getUserData(this.auth.getUserId());
   }
 
   ngOnInit() {
   }
 
-  getUserDate(userID: number){
-    this.backend.getProfileInfo(userID).subscribe(res => {
-      if(res != null){
-        //TODO change dummy values with actual values
-        this.setUsername(res.user);
-        this.setNumCompTasks(res.compNum);
-        this.setNumCurrTasks(res.currNum);
-        this.setEstAcc(res.estAcc);
-      }
+  getUserData(userID: number) {
+    this.backend.getUUID(userID).subscribe(UUID => {
+      console.log(UUID);
+      this.backend.getProfileInfo(UUID).subscribe(res => {
+        console.log(res);
+         if(res != null){
+           this.userData = res;
+         }
+      });
     });
   }
-
-  setUsername(uname: string){
-    this.username = uname;
-  }
-
-  setNumCompTasks(num: number){
-    this.numCompTasks = num;
-  }
-
-  setNumCurrTasks(num: number){
-    this.numCurrTasks = num;
-  }
-
-  setEstAcc(num: number){
-    this.estAcc = num;
-  }
-
 }
+

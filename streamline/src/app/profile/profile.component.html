@@ -4,27 +4,27 @@
     <div class="row" style="margin-top: 10px;">
         <div class="col-md-4">
             <mat-card class="detail">
-                <mat-card-title style="color: black;"># of Completed Tasks</mat-card-title>
-                <mat-card-content>{{'{'}}value{{'}'}}</mat-card-content>
+                <mat-card-title>Total Completed Tasks</mat-card-title>
+                <mat-card-content>{{userData.totalTasksCompleted}}</mat-card-content>
             </mat-card>
         </div>
         <div class="col-md-4">
             <mat-card class="detail">
-                <mat-card-title style="color: black;"># of Current Tasks</mat-card-title>
-                <mat-card-content>{{'{'}}value{{'}'}}</mat-card-content>
+                <mat-card-title>Average Task Time</mat-card-title>
+                <mat-card-content>{{userData.avgTaskTime}}</mat-card-content>
             </mat-card>
         </div>
     </div>
     <div class="row top-buffer">
             <div class="col-md-4">
                 <mat-card class="detail">
-                    <mat-card-title style="color: black;">Estimation Accuracy</mat-card-title>
-                    <mat-card-content>{{'{'}}value{{'}'}}</mat-card-content>
+                    <mat-card-title>Estimation Accuracy</mat-card-title>
+                    <mat-card-content>{{userData.taskEstFactor}}%</mat-card-content>
                 </mat-card>
             </div>
             <div class="col-md-4">
                 <mat-card class="detail">
-                    <mat-card-title style="color: black;">Something else</mat-card-title>
+                    <mat-card-title>Something else</mat-card-title>
                     <mat-card-content>Maybe a chart?</mat-card-content>
                 </mat-card>
             </div>

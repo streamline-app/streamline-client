@@ -10,7 +10,7 @@ import { Tag, Task } from './app.module'
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type': 'application/json',
-    'Authorization': 'my-auth-token'
+    'Authorization': 'Basic ' + btoa('user1:abc123')
   })
 };
 
@@ -20,9 +20,15 @@ const httpOptions = {
 export class BackendService {
 
   public root: string = 'localhost:8000';
+ // public analRoot: string = 'localhost:8080';
+ public analRoot: string = 'streamline-dev-1.us-east-2.elasticbeanstalk.com'
+  //public analRoot: string = 'streamline-scott.us-east-2.elasticbeanstalk.com';
 
-  /* Profile URLs */
-  public getProfileInfoURL: string = 'http://' + this.root + '/api/profile/'; //TODO update with backend endpoint
+
+  /* User URLs */
+  public getIDfromNameURL: string = 'http://' + this.analRoot + '/api/users/identity/'
+  public getProfileInfoURL: string = 'http://' + this.analRoot + '/api/users/';
+  public getTagDataURL: string = 'http://' + this.analRoot + '/api/users/';
 
   /* Task URLs */
   public createTaskURL: string = 'http://' + this.root + '/api/tasks/create';
@@ -63,8 +69,28 @@ export class BackendService {
 
   constructor(private http: HttpClient, private auth: AuthService) { }
   /* ============ Profile Functions ========= */
-  getProfileInfo(userID: number){
-    return this.http.get<any>(this.getProfileInfoURL + userID, httpOptions)
+  getUUID(userID: number){    
+    return this.http.get<string>(this.getIDfromNameURL + userID, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getProfileInfo(userID: string){ //MUST USE UUID OF ANALYTICS
+      return this.http.get<UserDataResponse>(this.getProfileInfoURL + userID, httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  getTagData(userID: number, tagName: string){
+    return this.http.get<JSON>(this.getTagDataURL + userID, {
+      params: { tags: tagName },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Basic ' + btoa('user1:abc123')
+      }
+    })
     .pipe(
       catchError(this.handleError)
     );
@@ -268,7 +294,7 @@ export class BackendService {
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
-      console.error('An error occurred:', error.error.message);
+      console.error('An error occurred:', error.error);
     } else {
       // The backend returned an unsuccessful response code.
       // The response body may contain clues as to what went wrong,
@@ -342,4 +368,12 @@ interface ChangePasswordRequest {
   email: string,
   password: string,
   token: string
+}
+
+export interface UserDataResponse {
+  avgTaskTime: number,
+  taskEstFactor: number,
+  totalOverTasks: number,
+  totalTasksCompleted: number,
+  totalUnderTasks: 0
 }
