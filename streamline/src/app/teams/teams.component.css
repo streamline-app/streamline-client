@@ -1,0 +1,26 @@
+#teamTable {
+    width: 100%;
+}
+
+#invitations {
+    margin-top: 40px;
+    float: right;
+}
+
+#create {
+    margin-top: 40px;
+    float: right;
+}
+
+#manage {
+    background-color: lightgreen;
+}
+
+#delete {
+    background-color: salmon;
+}
+
+#home {
+    margin-top: 40px;
+    float: right;
+}

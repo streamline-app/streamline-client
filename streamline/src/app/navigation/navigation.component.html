@@ -1,7 +1,7 @@
 <mat-card id="navigation">
   <div class="row">
     <div class="col-md-1">
-        <img src="https://avatars0.githubusercontent.com/u/46693979?s=200&v=4"  width="70px" height="70px"/>
+        <img src="https://avatars0.githubusercontent.com/u/46693979?s=200&v=4"  width="70px" height="70px" (click)="onHome()"/>
     </div>
     <div class="col-md-5">
       <h3>Streamline</h3>
@@ -14,8 +14,7 @@
     <button mat-menu-item *ngIf="!auth.isLoggedIn()" (click)="onLogin()"> Login</button>
     <button mat-menu-item *ngIf="!auth.isLoggedIn()" (click)="onRegister()">Register</button>
     <button mat-menu-item *ngIf="auth.isLoggedIn()" (click)="onSettings()">Settings</button>
-    <button mat-menu-item *ngIf="auth.isLoggedIn()" (click)="onHome()">Home</button>
-    <button mat-menu-item *ngIf="auth.isLoggedIn()" (click)="onCalendar()">Calendar</button>
+    <button mat-menu-item *ngIf="auth.isLoggedIn()" (click)="onTeams()">Teams</button>
     <button mat-menu-item *ngIf="auth.isLoggedIn()" (click) ="onLogout()">Logout</button>
   </mat-menu>
 </mat-card>

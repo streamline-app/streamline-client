@@ -9,6 +9,7 @@ import { map, startWith } from 'rxjs/operators';
 import { CreateTagDialog } from '../dialogs/dialogs.module'
 import { Tag } from '../app.module'
 import { formatDate } from '@angular/common';
+import { StateService } from '../state.service';
 
 const MINUTES_TO_SECONDS: number = 60;
 const HOURS_TO_SECONDS: number = 3600;
@@ -41,6 +42,7 @@ export class CreateTaskComponent {
     private router: Router,
     private snackbar: MatSnackBar,
     public create_dialog: MatDialog,
+    private state: StateService
   ) {
 
     /* used to set a min date for datepicker, for some reason sets min 
@@ -63,7 +65,8 @@ export class CreateTaskComponent {
       completeDate:  formatDate(this.task.controls['completeDate'].value , 'yyyy-MM-dd', 'en-US'), //format Date for backend
       expDuration: (this.task.controls['estimatedMin'].value * MINUTES_TO_SECONDS) + (this.task.controls['estimatedHour'].value * HOURS_TO_SECONDS), //convert sum of estimations to seconds
       tags: this.parseTagArray(this.selectedTags),//list of tagIDs
-      userID: this.auth.getUserId()
+      userID: this.auth.getUserId(), 
+      team: this.state.teamId
     }
 
     this.backend.createTask(task).subscribe(res => {
@@ -127,7 +130,8 @@ export class CreateTaskComponent {
           average_acc: 0,
           task_overunder: 0,
           color: result.color,
-          userID: this.auth.getUserId()
+          userID: this.auth.getUserId(),
+          team: this.state.teamId
         }
 
         console.log(newTag);

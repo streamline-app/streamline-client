@@ -1,0 +1,27 @@
+<mat-card id="form">
+  <mat-card-header>
+    <h1>Create new team</h1>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="team">
+      <mat-form-field>
+        <h4>Title</h4>
+        <input matInput formControlName="title">
+      </mat-form-field>
+      <mat-form-field>
+        <h4>Description</h4>
+        <input matInput formControlName="description">
+      </mat-form-field>
+      <mat-form-field style="width: 30%;">
+        <mat-label>Color</mat-label>
+        <input matInput type="color" formControlName="color">
+    </mat-form-field>
+    <div mat-dialog-actions class="button_box">
+      <button mat-button style="background-color: lightgreen;" (click)="submit()">Create</button>
+      <button mat-button style="background-color: lightcoral;" (click)="cancel()">Cancel</button>
+  </div>
+    </form>
+
+    
+  </mat-card-content>
+</mat-card>

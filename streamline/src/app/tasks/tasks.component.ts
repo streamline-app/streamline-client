@@ -6,47 +6,160 @@ import { Router } from '@angular/router';
 import { DeleteConfirmDialog, EditTaskDialog, AddTagDialog } from '../dialogs/dialogs.module';
 import { Tag, Task } from '../app.module'
 import { formatDate } from '@angular/common';
+import { StateService } from '../state.service';
+import { Observable } from 'rxjs';
+import { FormControl } from '@angular/forms';
+import { startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tasks',
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.css']
 })
-export class TasksComponent implements OnInit {
+export class TasksComponent {
 
-  tasks: Task[] = [];
-  sort_by: number = 0;
+  private tasks: Task[] = null;
+  private unfilteredTasks: Task[]; //used to save list of tasks
+  private sort_by: number = 0;
+  private rawTagsForm: FormControl = new FormControl();
+  private filteredTags: Observable<Tag[]>; //used by html with ngFor
+  private tags: Tag[];
+  public displayMessage = 'Your Tasks';
 
   constructor(private backend: BackendService,
     private auth: AuthService,
     private snackbar: MatSnackBar,
     private router: Router,
     private create_dialog: MatDialog,
+    private state: StateService
   ) {
+
+    this.state.dataViewChange.subscribe((val) => {
+      this.tasks = null;
+      this.loadData();
+      if (this.state.teamId != 0) {
+        this.displayMessage = this.state.teamName+'\'s Tasks';
+      } else {
+        this.displayMessage = 'Your tasks';
+      }
+    })
     //update tasks display
-    this.getUserTasks();
+    this.loadData();
+    
+    if (this.state.teamId != 0) {
+      this.displayMessage = this.state.teamName+'\'s Tasks';
+    }
+
+
   }
 
-  ngOnInit() { }
+  loadData() {
+    if (this.state.teamId != 0) {
+      this.getTeamTasks();
+      this.getTeamTags();
+    } else {
+      this.getUserTasks();
+      this.getUserTags();
+    }
+  }
+
+  getTeamTags() {
+    this.backend.getTeamTags(this.state.teamId).subscribe(res => {
+      if (res != null) {
+        this.tags = res;
+        //set up autofill for tags
+        this.filteredTags = this.rawTagsForm.valueChanges
+          .pipe(
+            startWith(''),
+            map(tag => tag ? this._filterTags(tag) : this.tags.slice())
+          );
+      }
+      else {
+        console.log('Could not retrieve tags');
+      }
+    })
+  }
+
+  getUserTags() {
+    this.backend.getUserTags(this.auth.getUserId()).subscribe(res => {
+      if (res != null) {
+        this.tags = res;
+        //set up autofill for tags
+        this.filteredTags = this.rawTagsForm.valueChanges
+          .pipe(
+            startWith(''),
+            map(tag => tag ? this._filterTags(tag) : this.tags.slice())
+          );
+      }
+      else {
+        console.log('Could not retrieve tags');
+      }
+    })
+  }
+
+  getTeamTasks() {
+    console.log('we are in team tasks');
+
+    this.backend.getTeamTasks(this.state.teamId).subscribe((result) => {
+      console.log(result);
+      this.tasks = [];
+      this.tasks = result as Task[];
+      result.forEach(e => {
+        if (!e.isFinished) { //only add if not finished
+          //this.tasks.push(e);
+          this.getTaskTags(e.id);
+
+        }
+        //clear tag filter
+        this.rawTagsForm.setValue('');
+        //save list in case of filtering
+        this.unfilteredTasks = this.tasks;
+      });
+
+      //check sort option
+      switch (this.sort_by) {
+        case 0:   //no sort
+          break;
+        case 1:   //prio
+          this.sortbyPrio();
+          break;
+        case 2:   //creation_date
+          this.sortbyCreationDate();
+          break;
+        default:
+          break;
+      }
+    }, error => {
+      console.log(error.message);
+      //three second snackbar pop up notification
+      let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
+    });
+  }
 
   getUserTasks() {
     //clear list first
-    this.tasks = [];
 
     this.backend.getUserTasks(this.auth.getUserId()).subscribe(result => {
       console.log('retrieved tasks:');
       console.log(result);
       //window.alert('Got Tags');
 
+      this.tasks = [];
       //set display to show result
+      this.tasks = result as Task[];
       result.forEach(e => {
         if (!e.isFinished) { //only add if not finished
-          this.tasks.push(e);
-
           //get tags for each task
           this.getTaskTags(e.id);
 
         }
+
+        //clear tag filter
+        this.rawTagsForm.setValue('');
+
+        //save list in case of filtering
+        this.unfilteredTasks = this.tasks;
+
       });
 
       //check sort option
@@ -323,6 +436,35 @@ export class TasksComponent implements OnInit {
       //for some reason we have to instantiate another Date object for getTime() to work
     });
 
+  }
+
+  public onTagSelect(tagName: string) {
+    this.rawTagsForm.setValue(tagName); //set value of autocomplete
+
+    //clear list of tasks, add only ones with queried tag
+    this.tasks = [];
+    this.unfilteredTasks.forEach(t => {
+      t.tags.forEach(e => {
+        if(e.name === tagName){ //if tag is somewhere in the tasks list of tags
+          this.tasks.push(t);
+        }
+      });
+      
+    });
+  }
+
+  public onClearSelect(){
+    //set list of tasks to equal unfiltered array
+    this.tasks = this.unfilteredTasks;
+
+    //clear tag filter
+    this.rawTagsForm.setValue('');
+  }
+
+  private _filterTags(value: string): Tag[] {
+    const filterValue = value.toLowerCase();
+
+    return this.tags.filter(tag => tag.name.toLowerCase().indexOf(filterValue) === 0);
   }
 
   collapse(id) {
