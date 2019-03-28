@@ -33,6 +33,10 @@ export class NavigationComponent{
     this.router.navigateByUrl('teams');
   }
 
+  public onCalendar(){
+    this.router.navigateByUrl('calendar');
+  }
+
   public onLogout() {
     this.backend.removeAuthToken(this.auth.getToken()).subscribe(res => {
       this.auth.setLoggedOut();

@@ -45,7 +45,8 @@ export class TeamNavigationComponent {
     } else {
       this.state.setUserView();
     }
-    
+    this.state.signalTeamDataChange();
+
 
   }
 

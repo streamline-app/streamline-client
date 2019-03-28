@@ -93,7 +93,7 @@
             <span class="tooltiptext">Stop</span>
           </button>
           <button mat-stroked-button id="finish_{{i}}" class="ctrl_btn" (click)="finishTask(task.id, i)"
-            [disabled]="task.lastWorkedAt != null">
+            [disabled]="task.lastWorkedAt != null || task.workedDuration === 0">
             <mat-icon>check</mat-icon>
             <span class="tooltiptext">Finished</span>
           </button>

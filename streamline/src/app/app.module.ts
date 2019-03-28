@@ -28,6 +28,12 @@ import { TeamsComponent } from './teams/teams.component';
 import { ManageTeamComponent } from './manage-team/manage-team.component';
 import { InvitationsComponent } from './invitations/invitations.component';
 import { TeamNavigationComponent } from './team-navigation/team-navigation.component';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { CalendarComponent } from './calendar/calendar.component';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+
+
 
 const appRoutes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthService] },
@@ -42,7 +48,9 @@ const appRoutes: Routes = [
   { path: 'settings', component: SettingsComponent, canActivate: [AuthService] },
   { path: 'teams', component: TeamsComponent, canActivate: [AuthService] },
   { path: 'teams/:id', component: ManageTeamComponent, canActivate: [AuthService]},
-  { path: 'invitations', component: InvitationsComponent, canActivate: [AuthService]}
+  { path: 'invitations', component: InvitationsComponent, canActivate: [AuthService]},
+  { path: 'calendar', component: CalendarComponent },
+  { path: 'celandar', component: CalendarComponent }
 ];
 
 @NgModule({
@@ -72,6 +80,7 @@ const appRoutes: Routes = [
     ManageTeamComponent,
     InvitationsComponent,
     TeamNavigationComponent,
+    CalendarComponent,
   ],
   imports: [
     BrowserModule,
@@ -83,12 +92,16 @@ const appRoutes: Routes = [
     DialogsModule,
     RouterModule.forRoot(
       appRoutes,
-      { enableTracing: true } 
+      { enableTracing: true }
     ),
+    CalendarModule.forRoot(
+      { provide: DateAdapter, useFactory: adapterFactory }
+    ),
+    NgbModule,
   ],
-  providers: [ 
-    {provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig},
-    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
+  providers: [
+    { provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig },
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
   ],
   bootstrap: [AppComponent],
   entryComponents: [DeleteConfirmDialog, RemoveTeamMemberDialog, ConfirmLeaveDialog, EditTagDialog, CreateTagDialog, EditTaskDialog, UnregisterDialog, AddTagDialog]
