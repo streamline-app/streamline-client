@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BackendService } from '../backend.service';
+import { BackendService, UserDataResponse } from '../backend.service';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { AuthService } from '../auth.service';
 import { CreateTagDialog, EditTagDialog, DeleteConfirmDialog } from '../dialogs/dialogs.module';
@@ -13,6 +13,7 @@ import { StateService } from '../state.service';
 export class TagsComponent implements OnInit {
   opened: boolean;
   tags: Tag[];
+  tagData: UserDataResponse;
   selectedTag: Tag;
 
   constructor(private backend: BackendService,
@@ -34,7 +35,7 @@ export class TagsComponent implements OnInit {
   }
 
   loadData() {
-    if(this.state.teamId != 0) {
+    if (this.state.teamId != 0) {
       this.getTeamTags();
     } else {
       this.getUserTags();
@@ -74,7 +75,7 @@ export class TagsComponent implements OnInit {
           average_acc: 0,
           task_overunder: 0,
           color: result.color,
-          userID: this.auth.getUserId(), 
+          userID: this.auth.getUserId(),
           team: this.state.teamId
         }
 
@@ -119,15 +120,27 @@ export class TagsComponent implements OnInit {
       //set display to show result
       this.tags = result;
 
+      this.tags.forEach(t => {
+        this.backend.getUUID(this.auth.getUserId()).subscribe(UUID => {
+          this.backend.getTagData(UUID, t.name).subscribe(res => {
+            console.log(res);
+            t.tagData = res;
+          })
+        })
+      });
+
+
     }, error => {
       console.log(error.message);
       //three second snackbar pop up notification
       let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
     });
+
+
   }
 
   getTeamTags() {
-    this.backend.getTeamTags(this.state.teamId).subscribe(result => { 
+    this.backend.getTeamTags(this.state.teamId).subscribe(result => {
       console.log(result);
       this.tags = result;
 
@@ -226,4 +239,5 @@ interface Tag {
   color: string,
   userID: number,
   team: number
+  tagData?: UserDataResponse
 };
