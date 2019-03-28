@@ -240,6 +240,8 @@ export class TasksComponent implements OnInit {
       //update that task only
       this.backend.getTask(taskID).subscribe(r => {
         this.tasks[index] = r;
+        this.getTaskTags(taskID);
+
       },
         error => {
 
@@ -260,6 +262,7 @@ export class TasksComponent implements OnInit {
       //update that task only
       this.backend.getTask(taskID).subscribe(r => {
         this.tasks[index] = r;
+        this.getTaskTags(taskID);
       },
         error => {
 
