@@ -3,6 +3,7 @@ import { BackendService } from '../backend.service';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { AuthService } from '../auth.service';
 import { CreateTagDialog, EditTagDialog, DeleteConfirmDialog } from '../dialogs/dialogs.module';
+import { StateService } from '../state.service';
 
 @Component({
   selector: 'app-tags',
@@ -17,16 +18,27 @@ export class TagsComponent implements OnInit {
   constructor(private backend: BackendService,
     public create_dialog: MatDialog,
     private snackbar: MatSnackBar,
-    private auth: AuthService
+    private auth: AuthService,
+    private state: StateService
   ) {
     //make sure sidenav is closed
     this.opened = false;
-
+    this.state.dataViewChange.subscribe((val) => {
+      this.loadData();
+    })
     //fill display
-    this.getUserTags();
+    this.loadData();
   }
 
   ngOnInit() {
+  }
+
+  loadData() {
+    if(this.state.teamId != 0) {
+      this.getTeamTags();
+    } else {
+      this.getUserTags();
+    }
   }
 
   createTag() {
@@ -62,7 +74,8 @@ export class TagsComponent implements OnInit {
           average_acc: 0,
           task_overunder: 0,
           color: result.color,
-          userID: this.auth.getUserId()
+          userID: this.auth.getUserId(), 
+          team: this.state.teamId
         }
 
         console.log(newTag);
@@ -79,7 +92,7 @@ export class TagsComponent implements OnInit {
         });
 
         //update display with new tag
-        this.getUserTags();
+        this.loadData();
       }
       else { /* Do Nothing */ }
     });
@@ -104,6 +117,18 @@ export class TagsComponent implements OnInit {
       //window.alert('Got Tags');
 
       //set display to show result
+      this.tags = result;
+
+    }, error => {
+      console.log(error.message);
+      //three second snackbar pop up notification
+      let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
+    });
+  }
+
+  getTeamTags() {
+    this.backend.getTeamTags(this.state.teamId).subscribe(result => { 
+      console.log(result);
       this.tags = result;
 
     }, error => {
@@ -199,5 +224,6 @@ interface Tag {
   average_acc: number,
   task_overunder: number,
   color: string,
-  userID: number
+  userID: number,
+  team: number
 };

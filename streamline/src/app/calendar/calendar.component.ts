@@ -26,6 +26,8 @@ import { BackendService } from '../backend.service';
 import { Task, Tag } from '../app.module';
 import { MatSnackBar } from '@angular/material';
 import { EventColor } from 'calendar-utils';
+import { Router } from '@angular/router';
+import { StateService } from '../state.service';
 
 const colors: any = {
   red: {
@@ -134,18 +136,58 @@ export class CalendarComponent {
 
   private tasks: Task[] = [];
 
-
+  private header: string = 'Your Calendar';
   constructor(
     private modal: NgbModal,
     private auth: AuthService,
     private backend: BackendService,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private router: Router,
+    private state: StateService
   ) {
     this.events = [];
 
-    this.getUserTasks();
+    this.loadData();
+    this.state.teamDataChange.subscribe((val) => {
+      this.events = [];
+      this.loadData();
+    });
   }
 
+  onHome() {
+    this.router.navigateByUrl('home');
+  }
+
+  loadData() {
+    if (this.state.teamId != 0) {
+      this.getTeamTasks();
+      this.header = this.state.teamName + '\'s Calendar';
+    } else {
+      this.header = 'Your Calendar';
+      this.getUserTasks();
+    }
+  }
+
+  getTeamTasks() {
+    this.backend.getTeamTasks(this.state.teamId).subscribe(res => {
+      console.log('calendar: tasks retreived');
+      //set display to show result
+      res.forEach(e => {
+        if (!e.isFinished) { //only add if not finished
+          this.tasks.push(e);
+
+          //get tags for each task
+          this.getTaskTags(e);
+
+        }
+      });
+    },
+      error => {
+        console.log(error.message);
+        //three second snackbar pop up notification
+        let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
+      });
+  }
 
   getUserTasks() {
     this.backend.getUserTasks(this.auth.getUserId()).subscribe(res => {

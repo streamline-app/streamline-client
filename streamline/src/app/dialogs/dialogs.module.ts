@@ -6,6 +6,7 @@ import { FormControl } from '@angular/forms';
 import { Tag } from '../app.module'
 import { BackendService } from '../backend.service';
 import { startWith, map } from 'rxjs/operators';
+import { StateService } from '../state.service';
 
 @NgModule({
   imports: [
@@ -35,6 +36,44 @@ export class CreateTagDialog {
   closeDiag() {
     //return to parent component, result will be undefined
     this.dialogRef.close();
+  }
+}
+
+@Component({
+  selector: 'confirm-leave/confirm-leave-dialog',
+  templateUrl: 'confirm-leave/confirm-leave-dialog.html',
+  styleUrls: ['confirm-leave/confirm-leave-dialog.css']
+
+})
+export class ConfirmLeaveDialog {
+
+  constructor(public dialogRef: MatDialogRef<ConfirmLeaveDialog>) { }
+
+  yes() {
+    this.dialogRef.close(true); //return true to parent component
+  }
+
+  no() {
+    this.dialogRef.close(false); //return false to parent component
+  }
+}
+
+@Component({
+  selector: 'remove-team-member/remove-team-member-dialog',
+  templateUrl: 'remove-team-member/remove-team-member-dialog.html',
+  styleUrls: ['remove-team-member/remove-team-member-dialog.css']
+
+})
+export class RemoveTeamMemberDialog {
+
+  constructor(public dialogRef: MatDialogRef<RemoveTeamMemberDialog>) { }
+
+  yes() {
+    this.dialogRef.close(true); //return true to parent component
+  }
+
+  no() {
+    this.dialogRef.close(false); //return false to parent component
   }
 }
 
@@ -122,22 +161,42 @@ export class AddTagDialog {
   constructor(
     public dialogRef: MatDialogRef<AddTagDialog>,
     private backend: BackendService,
+    private state: StateService,
     @Inject(MAT_DIALOG_DATA) public data: AddTagDialogData) {
-    this.backend.getUserTags(this.data.userID).subscribe(res => {
-      if (res != null) {
-        this.tags = res;
-        //set up autofill for tags
-        this.filteredTags = this.rawTagsForm.valueChanges
-          .pipe(
-            startWith(''),
-            map(tag => tag ? this._filterTags(tag) : this.tags.slice())
-          );
+      if (state.teamId != 0) {
+        this.backend.getTeamTags(this.state.teamId).subscribe(res => {
+          if (res != null) {
+            this.tags = res;
+            //set up autofill for tags
+            this.filteredTags = this.rawTagsForm.valueChanges
+              .pipe(
+                startWith(''),
+                map(tag => tag ? this._filterTags(tag) : this.tags.slice())
+              );
+          }
+          else {
+            console.log('Could not retrieve tags');
+            this.dialogRef.close(-2); //TODO code this to give response to user?
+          }
+        })
+      } else {
+        this.backend.getUserTags(this.data.userID).subscribe(res => {
+          if (res != null) {
+            this.tags = res;
+            //set up autofill for tags
+            this.filteredTags = this.rawTagsForm.valueChanges
+              .pipe(
+                startWith(''),
+                map(tag => tag ? this._filterTags(tag) : this.tags.slice())
+              );
+          }
+          else {
+            console.log('Could not retrieve tags');
+            this.dialogRef.close(-2); //TODO code this to give response to user?
+          }
+        })
       }
-      else {
-        console.log('Could not retrieve tags');
-        this.dialogRef.close(-2); //TODO code this to give response to user?
-      }
-    })
+    
   }
 
   addTag() {

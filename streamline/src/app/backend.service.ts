@@ -56,6 +56,24 @@ export class BackendService {
   public setTokenURL: string = 'http://' + this.root + '/api/tokens/create';
   public removeTokenURL: string = 'http://' + this.root + '/api/tokens/delete';
 
+  /* Team's URLs */
+  public createTeamURL: string = 'http://' + this.root + '/api/teams/create';
+  public getTeamsURL: string = 'http://' + this.root + '/api/teams/';
+  public deleteTeamURL: string = 'http://' + this.root + '/api/teams/delete/';
+  public getTeamUrl: string = 'http://' + this.root + '/api/team/';
+  public getTeamMembersURL: string = 'http://' + this.root + '/api/teams/members/';
+  public leaveTeamURL: string = 'http://' + this.root + '/api/teams/leave';
+  public getTeamTasksURL: string = 'http://' + this.root + '/api/teamtasks';
+  public getTeamTagsURL: string = 'http://' + this.root + '/api/teamtags';
+  public updateTeamURL: string = 'http://' + this.root + '/api/teams/update/';
+
+  public getUserIdURL: string = 'http://' + this.root + '/api/user/';
+
+  public sendInvitationURL: string = 'http://' + this.root + '/api/invitations/create';
+  public sentInvitationsURL: string = 'http://' + this.root + '/api/sentInvitations/';
+  public recievedInvitationsURL: string = 'http://' + this.root + '/api/recievedInvitations/';
+  public acceptInvitationURL: string = 'http://' + this.root + '/api/invitations/accept';
+  public declineInvitationURL: string = 'http://' + this.root + '/api/invitations/decline';
 
 
   constructor(private http: HttpClient, private auth: AuthService) { }
@@ -252,6 +270,116 @@ export class BackendService {
     )
   }
 
+  createTeam(request: CreateTeamRequest) {
+    return this.http.post<CreateTeamResponse>(this.createTeamURL, request, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    )
+  }
+
+  getTeams(id) {
+    return this.http.get(this.getTeamsURL + id, httpOptions)
+    .pipe (
+      catchError(this.handleError)
+    )
+  }
+
+  getTeam(id) {
+    return this.http.get(this.getTeamUrl + id, httpOptions)
+    .pipe (
+      catchError(this.handleError)
+    )
+  }
+
+  deleteTeam(teamId: number): Observable<any> {
+    return this.http.delete(this.deleteTeamURL + teamId, httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  getUserId(email: string) {
+    return this.http.get(this.getUserIdURL + email, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  sendInvitation(request) {
+    return this.http.post<InvitationResponse>(this.sendInvitationURL, request, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  sentInvitations(id) {
+    return this.http.get(this.sentInvitationsURL + id, httpOptions)
+    .pipe (
+      catchError(this.handleError)
+    );
+  }
+
+  recievedInvitations(id) {
+    return this.http.get(this.recievedInvitationsURL + id, httpOptions)
+    .pipe (
+      catchError(this.handleError)
+    );
+  }
+
+  acceptInvitation(request: InvRequest) {
+    return this.http.post<InvitationResponse>(this.acceptInvitationURL, request, httpOptions)
+    .pipe (
+      catchError(this.handleError)
+    );
+  }
+
+  declineInvitation(request: InvRequest) {
+    return this.http.post<InvitationResponse>(this.declineInvitationURL, request, httpOptions)
+    .pipe (
+      catchError(this.handleError)
+    );
+  }
+
+  getTeamMembers(id) {
+    return this.http.get(this.getTeamMembersURL + id, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  leaveTeam(request: LeaveTeamRequest) {
+    return this.http.post(this.leaveTeamURL, request, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getTeamTasks(teamID: number): Observable<(Task[])> {
+    return this.http.get<Task[]>(this.getTeamTasksURL, {
+      params: { teamID: teamID.toString() },
+      headers: {
+        Authorization: 'my-auth-token'
+      }
+    })
+      .pipe(catchError(this.handleError));
+  }
+
+  getTeamTags(teamID: number): Observable<(Tag[])> {
+    return this.http.get<Tag[]>(this.getTeamTagsURL, {
+      params: { teamID: teamID.toString() },
+      headers: {
+        Authorization: 'my-auth-token'
+      }
+    })
+      .pipe(catchError(this.handleError));
+  }
+
+  updateTeam(teamID: number, edit: TeamEditRequest): Observable<any> {
+    return this.http.put(this.updateTeamURL + teamID, edit, httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
 
 
   private handleError(error: HttpErrorResponse) {
@@ -331,4 +459,36 @@ interface ChangePasswordRequest {
   email: string,
   password: string,
   token: string
+}
+
+interface CreateTeamRequest {
+  title: string,
+  description: string,
+  color: string
+  userId: number,
+}
+
+interface CreateTeamResponse {
+  message: string
+}
+
+interface InvitationResponse {
+  message: string
+}
+
+interface InvRequest {
+  userId : number,
+  teamId : number,
+  invitationId : number
+}
+
+interface LeaveTeamRequest {
+  user: number,
+  team: number
+}
+
+interface TeamEditRequest {
+  title: string,
+  description: string,
+  color: string
 }

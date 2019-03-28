@@ -1,0 +1,21 @@
+#info {
+    margin-left: 8px;
+}
+
+#invitationTable {
+    margin-left: 8px;
+    width: 100%;
+}
+
+#accept {
+    background-color: lightgreen;
+}
+
+#decline {
+    background-color: salmon;
+}
+
+#back {
+    margin-top: 40px;
+    float: right;
+}
