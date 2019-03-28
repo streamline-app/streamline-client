@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { BackendService } from '../backend.service';
 import { AuthService } from '../auth.service';
+import { StateService } from '../state.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-invitations',
@@ -12,7 +14,7 @@ export class InvitationsComponent {
   public invitations: any[] = [];
   public displayedColumns = ['team', 'message', 'senderEmail', 'actions'];
 
-  constructor(private backend: BackendService, private auth: AuthService) { 
+  constructor(private backend: BackendService, private auth: AuthService, private state: StateService, private router: Router) { 
     this.loadInvitations();
   }
 
@@ -34,6 +36,7 @@ export class InvitationsComponent {
     console.log(request);
     this.backend.acceptInvitation(request).subscribe((res) => {
       this.loadInvitations();
+      this.state.signalTeamDataChange();
     });
 
   }
@@ -49,6 +52,10 @@ export class InvitationsComponent {
     this.backend.declineInvitation(request).subscribe((res) => {
       this.loadInvitations();
     });
+  }
+
+  public onBack() {
+  this.router.navigateByUrl('teams');
   }
 
 }

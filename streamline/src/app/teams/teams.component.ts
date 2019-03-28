@@ -5,6 +5,7 @@ import { AuthService } from '../auth.service';
 import { MatDialog } from '@angular/material';
 import { DeleteConfirmDialog } from '../dialogs/dialogs.module';
 import { Router } from '@angular/router'
+import { StateService } from '../state.service';
 
 @Component({
   selector: 'app-teams',
@@ -18,7 +19,7 @@ export class TeamsComponent {
   public displayedColumns = ['name', 'description', 'color', 'created_at', 'actions'];
   
 
-  constructor(private backend: BackendService, private auth: AuthService, private dialog: MatDialog, private router: Router) { 
+  constructor(private backend: BackendService, private auth: AuthService, private dialog: MatDialog, private router: Router, private state: StateService) { 
     this.getUserTeams();
   }
 
@@ -44,6 +45,7 @@ export class TeamsComponent {
         this.backend.deleteTeam(id).subscribe((res) => {
             this.teams = [];
             this.getUserTeams();
+            this.state.signalTeamDataChange();
         })
       }
     });
@@ -55,6 +57,10 @@ export class TeamsComponent {
 
   public onInvitationsPressed() {
     this.router.navigateByUrl('invitations');
+  }
+
+  onHome() {
+    this.router.navigateByUrl('home');
   }
 
 }

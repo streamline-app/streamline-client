@@ -14,3 +14,8 @@
 #decline {
     background-color: salmon;
 }
+
+#back {
+    margin-top: 40px;
+    float: right;
+}

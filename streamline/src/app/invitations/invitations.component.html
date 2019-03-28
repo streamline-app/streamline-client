@@ -1,7 +1,12 @@
 <mat-card>
-  <mat-card-header>
-    <h1>Team Invitations</h1>
-  </mat-card-header>
+      <div class="row">
+          <div class="col-md-8">
+              <h1 class="header">Team Invitations</h1>
+          </div>
+          <div class="col-md-4">
+              <button id="back" mat-button (click)="onBack()">Go Back</button>
+          </div>  
+        </div>
   <hr />
   <mat-card-content>
     <p id="info">Accept or decline pending team invitations here.</p>

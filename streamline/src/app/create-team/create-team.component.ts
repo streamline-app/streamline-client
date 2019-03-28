@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { AuthService } from '../auth.service';
 import { Location } from '@angular/common';
+import { StateService } from '../state.service';
 
 @Component({
   selector: 'app-create-team',
@@ -21,7 +22,7 @@ export class CreateTeamComponent{
 
  
 
-  constructor(private backend: BackendService, private router: Router, private auth: AuthService, private location: Location) {}
+  constructor(private backend: BackendService, private router: Router, private auth: AuthService, private location: Location, private state: StateService, private snackbar: MatSnackBar) {}
 
   public submit() {
     let newTeam: any = {
@@ -36,7 +37,11 @@ export class CreateTeamComponent{
     }
 
     this.backend.createTeam(newTeam).subscribe((res) => {
-      window.alert('Team Created');
+      this.state.signalTeamDataChange();
+      let ref = this.snackbar.open('Team Created', 'Okay');
+      ref.afterDismissed().subscribe(() => {
+        this.router.navigateByUrl('teams');
+      });
     })
 
   }

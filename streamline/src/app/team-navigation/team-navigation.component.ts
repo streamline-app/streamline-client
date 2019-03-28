@@ -27,9 +27,14 @@ export class TeamNavigationComponent {
     })
 
     this.state.teamDataChange.subscribe((val) => {
-      this.backend.getTeams(this.auth.getUserId()).subscribe((res) => {
-        this.teams = res as Team[];
-      });
+      if (this.auth.getUserId() == 0) {
+        this.teams = [];
+      } else {
+        this.backend.getTeams(this.auth.getUserId()).subscribe((res) => {
+          this.teams = res as Team[];
+        });
+      }
+      
     });
   }
 

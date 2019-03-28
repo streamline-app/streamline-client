@@ -18,7 +18,7 @@ import { startWith, map } from 'rxjs/operators';
 })
 export class TasksComponent {
 
-  private tasks: Task[] = [];
+  private tasks: Task[] = null;
   private unfilteredTasks: Task[]; //used to save list of tasks
   private sort_by: number = 0;
   private rawTagsForm: FormControl = new FormControl();
@@ -35,6 +35,7 @@ export class TasksComponent {
   ) {
 
     this.state.dataViewChange.subscribe((val) => {
+      this.tasks = null;
       this.loadData();
       if (this.state.teamId != 0) {
         this.displayMessage = this.state.teamName+'\'s Tasks';
@@ -98,10 +99,10 @@ export class TasksComponent {
 
   getTeamTasks() {
     console.log('we are in team tasks');
-    this.tasks = [];
 
     this.backend.getTeamTasks(this.state.teamId).subscribe((result) => {
       console.log(result);
+      this.tasks = [];
       this.tasks = result as Task[];
       result.forEach(e => {
         if (!e.isFinished) { //only add if not finished
@@ -137,13 +138,13 @@ export class TasksComponent {
 
   getUserTasks() {
     //clear list first
-    this.tasks = [];
 
     this.backend.getUserTasks(this.auth.getUserId()).subscribe(result => {
       console.log('retrieved tasks:');
       console.log(result);
       //window.alert('Got Tags');
 
+      this.tasks = [];
       //set display to show result
       this.tasks = result as Task[];
       result.forEach(e => {

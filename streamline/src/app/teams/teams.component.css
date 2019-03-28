@@ -19,3 +19,8 @@
 #delete {
     background-color: salmon;
 }
+
+#home {
+    margin-top: 40px;
+    float: right;
+}

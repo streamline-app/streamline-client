@@ -37,6 +37,7 @@ export class NavigationComponent{
     this.backend.removeAuthToken(this.auth.getToken()).subscribe(res => {
       this.auth.setLoggedOut();
       this.state.setUserView();
+      this.state.signalTeamDataChange();
       this.router.navigateByUrl('login');
     });
   }

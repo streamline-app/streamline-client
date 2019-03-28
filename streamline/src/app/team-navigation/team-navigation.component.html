@@ -3,6 +3,6 @@
         <button mat-button [ngStyle]="{'color': 'salmon'}" matTooltip="Myself" (click)="onClick(0)"><mat-icon>face</mat-icon></button>
     </div>
     <div class="row" *ngFor="let team of teams">
-        <button mat-button [ngStyle]="{'color': team.color}" [matTooltip]="team.name" (click)="onClick(team.id)"><mat-icon>face</mat-icon></button>
+        <button mat-button [ngStyle]="{'color': team.color}" [matTooltip]="team.name" (click)="onClick(team.id)"><mat-icon>group</mat-icon></button>
     </div>
 </div>
