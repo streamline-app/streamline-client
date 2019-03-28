@@ -21,7 +21,7 @@ export class BackendService {
 
   public root: string = 'localhost:8000';
   // public analRoot: string = 'localhost:8080';
-  public analRoot: string = 'streamline-dev-1.us-east-2.elasticbeanstalk.com'
+  public analRoot: string = 'localhost:8080'
   //public analRoot: string = 'streamline-scott.us-east-2.elasticbeanstalk.com';
 
 

@@ -11,6 +11,14 @@ export class JwtInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     
+    if (request.url.toString().includes('localhost:8080/')) {
+      request = request.clone({
+        setHeaders: {
+          Authorization: 'Basic ' + btoa('user1:abc123'), 
+        }
+      });
+      return next.handle(request);
+    }
     if (this.auth.getToken()) {
         request = request.clone({
             setHeaders: {
