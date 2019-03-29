@@ -1,0 +1,63 @@
+.container {
+    width: 100%;
+    height: calc(100vh - 20px);
+    margin: 2px;
+    margin-top: 5px;
+    background-color: rgb(7, 10, 7);
+  }
+  .background-dark {
+    background-color: darkslategray
+  }
+  .sidebar {
+      width: 400px;
+      padding: 8px;
+      display: block;
+  }
+  
+  .main_box { 
+      padding: 5px;
+  }
+
+  .main_box button {
+      margin-left: 10px;
+  }
+  .tag_box{
+      margin: 10px;
+      height: 80%;
+      border: solid;
+      border-width: 2px;
+      border-color: lightgrey;
+      padding: 5px;
+  }
+  .background-light {
+    background-color: lightgrey;
+  }  
+  .background-dark {
+    background-color: green;
+  }
+
+
+div.color{
+  margin-left: 10px;
+  padding-left: 10px;
+  padding-top: 10px;
+  height: 50px;
+  border: solid;
+  border-width: 2px;
+  border-color: rgb(77, 54, 54);
+}
+.blooo {
+  width: 100%;
+  height: calc(100vh - 20px);
+  margin: 2px;
+  margin-top: 5px;
+  background-color: green;
+}
+
+div.square {
+  height: 25px;
+  width: 20%;
+}
+span {
+  color: black;
+}

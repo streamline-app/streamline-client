@@ -1,0 +1,9 @@
+div.square {
+    margin-top: 12px;
+    margin-left: 8px;
+    margin-right: 8px;
+    height: 1.5em;
+    width: 3em;
+    float: left;
+  }
+ 

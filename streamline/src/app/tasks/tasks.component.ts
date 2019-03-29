@@ -1,51 +1,180 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BackendService } from '../backend.service';
 import { AuthService } from '../auth.service';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
-import { DeleteConfirmDialog, EditTaskDialog } from '../dialogs/dialogs.module';
+import { DeleteConfirmDialog, EditTaskDialog, AddTagDialog } from '../dialogs/dialogs.module';
+import { Tag, Task } from '../app.module'
+import { formatDate } from '@angular/common';
+import { StateService } from '../state.service';
+import { Observable } from 'rxjs';
+import { FormControl } from '@angular/forms';
+import { startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tasks',
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.css']
 })
-export class TasksComponent implements OnInit {
+export class TasksComponent {
 
-  tasks: Task[] = [];
+  private tasks: Task[] = null;
+  private unfilteredTasks: Task[]; //used to save list of tasks
+  private sort_by: number = 0;
+  private rawTagsForm: FormControl = new FormControl();
+  private filteredTags: Observable<Tag[]>; //used by html with ngFor
+  private tags: Tag[];
+  public displayMessage = 'Your Tasks';
 
   constructor(private backend: BackendService,
     private auth: AuthService,
     private snackbar: MatSnackBar,
     private router: Router,
-    private create_dialog: MatDialog
+    private create_dialog: MatDialog,
+    private state: StateService
   ) {
+
+    this.state.dataViewChange.subscribe((val) => {
+      this.tasks = null;
+      this.loadData();
+      if (this.state.teamId != 0) {
+        this.displayMessage = this.state.teamName+'\'s Tasks';
+      } else {
+        this.displayMessage = 'Your tasks';
+      }
+    })
     //update tasks display
-    this.getUserTasks();
+    this.loadData();
+    
+    if (this.state.teamId != 0) {
+      this.displayMessage = this.state.teamName+'\'s Tasks';
+    }
+
+
   }
 
-  ngOnInit() { }
+  loadData() {
+    if (this.state.teamId != 0) {
+      this.getTeamTasks();
+      this.getTeamTags();
+    } else {
+      this.getUserTasks();
+      this.getUserTags();
+    }
+  }
+
+  getTeamTags() {
+    this.backend.getTeamTags(this.state.teamId).subscribe(res => {
+      if (res != null) {
+        this.tags = res;
+        //set up autofill for tags
+        this.filteredTags = this.rawTagsForm.valueChanges
+          .pipe(
+            startWith(''),
+            map(tag => tag ? this._filterTags(tag) : this.tags.slice())
+          );
+      }
+      else {
+        console.log('Could not retrieve tags');
+      }
+    })
+  }
+
+  getUserTags() {
+    this.backend.getUserTags(this.auth.getUserId()).subscribe(res => {
+      if (res != null) {
+        this.tags = res;
+        //set up autofill for tags
+        this.filteredTags = this.rawTagsForm.valueChanges
+          .pipe(
+            startWith(''),
+            map(tag => tag ? this._filterTags(tag) : this.tags.slice())
+          );
+      }
+      else {
+        console.log('Could not retrieve tags');
+      }
+    })
+  }
+
+  getTeamTasks() {
+    console.log('we are in team tasks');
+
+    this.backend.getTeamTasks(this.state.teamId).subscribe((result) => {
+      console.log(result);
+      this.tasks = [];
+      this.tasks = result as Task[];
+      result.forEach(e => {
+        if (!e.isFinished) { //only add if not finished
+          //this.tasks.push(e);
+          this.getTaskTags(e.id);
+
+        }
+        //clear tag filter
+        this.rawTagsForm.setValue('');
+        //save list in case of filtering
+        this.unfilteredTasks = this.tasks;
+      });
+
+      //check sort option
+      switch (this.sort_by) {
+        case 0:   //no sort
+          break;
+        case 1:   //prio
+          this.sortbyPrio();
+          break;
+        case 2:   //creation_date
+          this.sortbyCreationDate();
+          break;
+        default:
+          break;
+      }
+    }, error => {
+      console.log(error.message);
+      //three second snackbar pop up notification
+      let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
+    });
+  }
 
   getUserTasks() {
     //clear list first
-    this.tasks = [];
 
     this.backend.getUserTasks(this.auth.getUserId()).subscribe(result => {
       console.log('retrieved tasks:');
       console.log(result);
       //window.alert('Got Tags');
 
+      this.tasks = [];
       //set display to show result
+      this.tasks = result as Task[];
       result.forEach(e => {
         if (!e.isFinished) { //only add if not finished
-          this.tasks.push(e);
-
           //get tags for each task
           this.getTaskTags(e.id);
 
         }
+
+        //clear tag filter
+        this.rawTagsForm.setValue('');
+
+        //save list in case of filtering
+        this.unfilteredTasks = this.tasks;
+
       });
 
+      //check sort option
+      switch (this.sort_by) {
+        case 0:   //no sort
+          break;
+        case 1:   //prio
+          this.sortbyPrio();
+          break;
+        case 2:   //creation_date
+          this.sortbyCreationDate();
+          break;
+        default:
+          break;
+      }
 
     }, error => {
       console.log(error.message);
@@ -60,45 +189,79 @@ export class TasksComponent implements OnInit {
       console.log(res);
 
       var count = 0;
-      this.tasks.forEach(t =>{
-        if(t.id === taskID){
+      this.tasks.forEach(t => {
+        if (t.id === taskID) {
           this.tasks[count].tags = res;
         }
         count++;
       });
-      
-    });
-    /*
-    var count = 0;
-    this.tasks.forEach(task => {
-      this.backend.getTaskTags(task.id).subscribe(res => {
-        console.log('tags retrieved for task ' + task.id + ':');
-        console.log(res);
 
-        this.tasks[count].tags = res;
-        console.log(this.tasks[count].tags);
-
-        count++;
-      });
     });
-    */
   }
 
   removeTag(taskID: number, tagID: number) {
-    this.backend.removeTag(taskID, tagID).subscribe(res => {
-      console.log('TagID ' + tagID + ' removed From TaskID' + taskID);
+    const dialogRef = this.create_dialog.open(DeleteConfirmDialog, {
+      width: '325px',
+    });
 
-      //three second snackbar pop up notification
-      let snackbarRef = this.snackbar.open('Tag removed from that task!', 'Ok', { duration: 3000 });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) { //if confirmed, delete
+        this.backend.removeTag(taskID, tagID).subscribe(res => {
+          console.log('TagID ' + tagID + ' removed From TaskID' + taskID);
 
-      //reload tags
-      this.getTaskTags(taskID);
-    },
-      error => {
-        console.log(error.message);
-        //three second snackbar pop up notification
-        let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
-      });
+          //three second snackbar pop up notification
+          let snackbarRef = this.snackbar.open('Tag removed from that task!', 'Ok', { duration: 3000 });
+
+          //reload tags
+          this.getTaskTags(taskID);
+        },
+          error => {
+            console.log(error.message);
+            //three second snackbar pop up notification
+            let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
+          });
+      }
+      else { /* do nothing */ }
+    });
+  }
+
+  addTag(task: Task) {
+    const dialogRef = this.create_dialog.open(AddTagDialog, {
+      width: '325px',
+      data: { tagID: -1, userID: this.auth.getUserId() }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result >= 0) {
+        var tagID = result;
+        let exists: boolean = false;
+        console.log(task.tags);
+
+        task.tags.forEach(t => {
+          if (t.id === tagID) { //if this task already has that tag, don't add it
+            //three second snackbar pop up notification
+            let snackbarRef = this.snackbar.open('That Task already has that Tag!', 'Ok', { duration: 3000 });
+            exists = true;
+          }
+        });
+
+        if (!exists) {
+          this.backend.addTag(task.id, tagID).subscribe(res => {
+            //three second snackbar pop up notification
+            let snackbarRef = this.snackbar.open('Tag added to that Task!', 'Ok', { duration: 3000 });
+
+            this.getTaskTags(task.id);
+          },
+            error => {
+              console.log(error.message);
+              //three second snackbar pop up notification
+              let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
+            }
+          );
+        }
+      }
+      else { /* do nothing for now */ }
+    });
   }
 
   deleteTask(task: Task) {
@@ -130,14 +293,23 @@ export class TasksComponent implements OnInit {
   editTask(task: Task) {
     let dialogRef = this.create_dialog.open(EditTaskDialog, {
       width: '400px',
-      data: { title: task.title, body: task.body, workedDuration: task.workedDuration, estimatedHour: task.estimatedHour, estimatedMin: task.estimatedMin, expDuration: task.expDuration }
+      data: {
+        title: task.title,
+        body: task.body,
+        workedDuration: task.workedDuration,
+        estimatedHour: task.estimatedHour,
+        estimatedMin: task.estimatedMin,
+        expDuration: task.expDuration,
+        priority: task.priority,
+        completeDate: task.completeDate
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result != null) {
         //check if task already exists under given name
         let exists: boolean = false;
-        if (result.title != task.title) { //if new tag name given is different from the old one
+        if (result.title != task.title) { //if new task name given is different from the old one
           this.tasks.forEach(element => { //check to make sure it doesn't match any other tag names
             if (element.title === result.title) {
               //notify user
@@ -153,8 +325,11 @@ export class TasksComponent implements OnInit {
           return;
         }
 
+        //format Date into string for backend
+        result.completeDate = formatDate(result.completeDate, 'yyyy-MM-dd', 'en-US');
+
         this.backend.editTask(task.id, result).subscribe(res => {
-          console.log('tag ' + task.id + ' udpated');
+          console.log('task ' + task.id + ' updated');
 
           //three second snackbar pop up notification
           let snackbarRef = this.snackbar.open('Task Updated!', 'Ok', { duration: 3000 });
@@ -178,6 +353,8 @@ export class TasksComponent implements OnInit {
       //update that task only
       this.backend.getTask(taskID).subscribe(r => {
         this.tasks[index] = r;
+        this.getTaskTags(taskID);
+
       },
         error => {
 
@@ -198,6 +375,7 @@ export class TasksComponent implements OnInit {
       //update that task only
       this.backend.getTask(taskID).subscribe(r => {
         this.tasks[index] = r;
+        this.getTaskTags(taskID);
       },
         error => {
 
@@ -214,12 +392,13 @@ export class TasksComponent implements OnInit {
 
   finishTask(taskID: number, index: number) {
     this.backend.finishTask(taskID).subscribe(res => {
-
+      window.alert(res.actualDuration);
+      let val = ((+res.actualDuration / +res.expDuration) * 10).toFixed(2);
       //remove task from list
       this.tasks.splice(index, 1);
 
       //three second snackbar pop up notification
-      let snackbarRef = this.snackbar.open('Task Finished!', 'Ok', { duration: 3000 });
+      let snackbarRef = this.snackbar.open('This task\'s Estimation Accuracy: ' + val + '%', 'Ok', { duration: 3000 });
 
     }, error => {
       console.log(error.message);
@@ -228,20 +407,65 @@ export class TasksComponent implements OnInit {
     });
   }
 
-  getMinutes(seconds: number): number{
+  getMinutes(seconds: number): number {
     var hrs = 0;
-    if(seconds > 3600)
+    if (seconds > 3600)
       hrs = Math.floor(seconds / 3600);
-    
+
     var min = (seconds - (hrs * 3600)) / 60;
     return Math.floor(min);
   }
 
-  getHours(seconds: number) : number{
-    if(seconds > 3600)
+  getHours(seconds: number): number {
+    if (seconds > 3600)
       return Math.floor(seconds / 3600);
-    else 
+    else
       return 0;
+  }
+
+  sortbyPrio() {
+    this.sort_by = 1;
+    this.tasks.sort(function (a: Task, b: Task) {
+      return b.priority - a.priority; //sort from highest to lowest
+    });
+  }
+
+  sortbyCreationDate() {
+    this.sort_by = 2;
+    this.tasks.sort(function (a: Task, b: Task) {
+      return new Date(a.created_at).getTime() - new Date(b.created_at).getTime(); //sort from first to last
+      //for some reason we have to instantiate another Date object for getTime() to work
+    });
+
+  }
+
+  public onTagSelect(tagName: string) {
+    this.rawTagsForm.setValue(tagName); //set value of autocomplete
+
+    //clear list of tasks, add only ones with queried tag
+    this.tasks = [];
+    this.unfilteredTasks.forEach(t => {
+      t.tags.forEach(e => {
+        if(e.name === tagName){ //if tag is somewhere in the tasks list of tags
+          this.tasks.push(t);
+        }
+      });
+      
+    });
+  }
+
+  public onClearSelect(){
+    //set list of tasks to equal unfiltered array
+    this.tasks = this.unfilteredTasks;
+
+    //clear tag filter
+    this.rawTagsForm.setValue('');
+  }
+
+  private _filterTags(value: string): Tag[] {
+    const filterValue = value.toLowerCase();
+
+    return this.tags.filter(tag => tag.name.toLowerCase().indexOf(filterValue) === 0);
   }
 
   collapse(id) {
@@ -257,30 +481,8 @@ export class TasksComponent implements OnInit {
     this.router.navigateByUrl('create/task');
   }
 
-
+  _formatDate(d: Date): string { //special function to format date for UI
+    return formatDate(d, 'MMMM dd, yyyy', 'en-US');
+  }
 }
 
-interface Task {
-  id: number;
-  title: string,
-  body: string,
-  workedDuration: number,
-  estimatedMin: number,
-  estimatedHour: number,
-  lastWorkedAt: number,
-  expDuration: number,
-  isFinished: number,
-  tags: Tag[]
-};
-
-interface Tag {
-  id: number,
-  name: string,
-  description: string,
-  tasks_comp: number,
-  average_time: number,
-  average_acc: number,
-  task_overunder: number,
-  color: string,
-  userID: number
-};

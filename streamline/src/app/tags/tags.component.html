@@ -1,3 +1,5 @@
+<mat-card-title>Tags</mat-card-title>
+<hr class="seperator" />
 <mat-sidenav-container class="container">
   <mat-sidenav-content class="main_box">
     <button mat-stroked-button (click)="createTag()">Create Tag</button>
@@ -23,20 +25,22 @@
     </div>
     <h4 class="detail_H4">Number of Tasks Completed</h4>
     <div class="details">
-      <p>{{selectedTag.tasks_completed}}</p>
+      <p>{{selectedTag.tagData.totalTasksCompleted}}</p>
     </div>
     <h4 class="detail_H4">Average Time per Task</h4>
     <div class="details">
-      <p>{{selectedTag.average_time}}</p>
+      <p>{{selectedTag.tagData.avgTaskTime}}</p>
     </div>
     <h4 class="detail_H4">Estimation Accuracy</h4>
     <div class="details">
-      <p>{{selectedTag.average_accuracy}}</p>
+      <p>{{selectedTag.tagData.taskEstFactor}}</p>
     </div>
+    <!--
     <h4 class="detail_H4">Task Over/Under</h4>
     <div class="details">
       <p>{{selectedTag.task_over_to_under}}</p>
     </div>
+  -->
     <h4 class="detail_H4">Color</h4>
     <div class="color">
       <div class="square" [ngStyle]="{'background-color': selectedTag.color}"></div>

@@ -1,4 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -11,7 +12,8 @@ export class HomeComponent implements OnInit {
   profile: boolean = false;
   tasks: boolean = true;
 
-  constructor() { }
+  constructor(private router: Router) { 
+  }
 
   ngOnInit() {
   }
@@ -32,6 +34,10 @@ export class HomeComponent implements OnInit {
     this.tags = false;
     this.profile = true;
     this.tasks = false;
+  }
+
+  onCalendarPressed() {
+    this.router.navigateByUrl('calendar');
   }
 
 }

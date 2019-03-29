@@ -1,39 +1,34 @@
 import { async, ComponentFixture, TestBed, getTestBed } from '@angular/core/testing';
-import { MaterialModule } from '../material/material.module';
-import { SettingsComponent } from './settings.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { BackendService } from '../backend.service';
-import { APP_BASE_HREF } from '@angular/common';
+import { MaterialModule } from '../material/material.module';
 import { Routes, RouterModule } from '@angular/router';
+import { BackendService } from '../backend.service';
 import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
+import { APP_BASE_HREF } from '@angular/common';
+
+import { InvitationsComponent } from './invitations.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HomeComponent } from '../home/home.component';
 
-
-describe('SettingsComponent', () => {
-  let component: SettingsComponent;
-  let fixture: ComponentFixture<SettingsComponent>;
+describe('InvitationsComponent', () => {
+  let component: InvitationsComponent;
+  let fixture: ComponentFixture<InvitationsComponent>;
   let injector : TestBed;
   let service: BackendService;
   let httpMock : HttpTestingController;
 
-  const appRoutes: Routes = [
-    { path: 'login', component: HomeComponent },
-  ];
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SettingsComponent, HomeComponent ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+      declarations: [ InvitationsComponent ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [BackendService, {provide: APP_BASE_HREF, useValue: '/'}],
       imports: [
         MaterialModule,
+        BrowserAnimationsModule,
         HttpClientTestingModule, 
-        BrowserAnimationsModule, 
         RouterModule.forRoot(
-          appRoutes,
-          {enableTracing: true}
-        )
+          [],
+          { enableTracing: true } 
+        ),
       ]
     })
     .compileComponents();
@@ -42,8 +37,9 @@ describe('SettingsComponent', () => {
     httpMock = injector.get(HttpTestingController);
   }));
 
+
   beforeEach(() => {
-    fixture = TestBed.createComponent(SettingsComponent);
+    fixture = TestBed.createComponent(InvitationsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

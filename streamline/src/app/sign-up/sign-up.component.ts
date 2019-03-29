@@ -38,7 +38,7 @@ export class SignUpComponent {
 
 
   constructor(private snackbar: MatSnackBar, private backend: BackendService) { }
-
+  defaultSetting = 'light';
   onSubmit() {
     
     if (this.confirmPasswordFormControl.value != this.passwordFormControl.value) {
@@ -50,6 +50,7 @@ export class SignUpComponent {
       name : this.nameFormControl.value,
       email : this.emailFormControl.value,
       password : this.passwordFormControl.value,
+      settings : this.defaultSetting,
     }
 
     // backend interaction
