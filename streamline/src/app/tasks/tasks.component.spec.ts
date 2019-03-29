@@ -8,6 +8,8 @@ import { HomeComponent } from '../home/home.component';
 import { BackendService } from '../backend.service';
 import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
 import { APP_BASE_HREF } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const appRoutes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -29,6 +31,9 @@ describe('TasksComponent', () => {
       imports: [
         MaterialModule,
         HttpClientTestingModule, 
+        FormsModule,
+        BrowserAnimationsModule,
+        ReactiveFormsModule,
         RouterModule.forRoot(
           appRoutes,
           { enableTracing: true } 
