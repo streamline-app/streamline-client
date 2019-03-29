@@ -102,13 +102,17 @@ describe('BackendService', () => {
     let request : any = {
       id: 0,
       title: 'title',
-      body: 'body',
+       body: 'body',
       workedDuration: 0,
+      estimatedMin: 0,
+      estimatedHour: 0,
       lastWorkedAt: 0,
-      estimatedMin: 20,
-      estimatedHour: 20,
       expDuration: 0,
       isFinished: 0,
+      priority: 0,
+      completeDate: '',
+      created_at: '', //matches laravel column
+      team: 0,
       tags: []
     }
 
@@ -116,14 +120,18 @@ describe('BackendService', () => {
       expect(response).toEqual( {
         id: 0,
         title: 'title',
-        body: 'body',
+         body: 'body',
         workedDuration: 0,
+        estimatedMin: 0,
+        estimatedHour: 0,
         lastWorkedAt: 0,
-        estimatedMin: 20,
-        estimatedHour: 20,
         expDuration: 0,
         isFinished: 0,
-        tags: [],
+        priority: 0,
+        completeDate: '',
+        created_at: '', //matches laravel column
+        team: 0,
+        tags: []
       }
       );
     })
@@ -137,15 +145,19 @@ describe('BackendService', () => {
     service.getTask(1).subscribe(response => {
       expect(response).toEqual( {
         id: 0,
-        title: 'title',
-        body: 'body',
-        workedDuration: 0,
-        lastWorkedAt: 0,
-        estimatedMin: 20,
-        estimatedHour: 20,
-        expDuration: 0,
-        isFinished: 0,
-        tags: [],
+      title: 'title',
+       body: 'body',
+      workedDuration: 0,
+      estimatedMin: 0,
+      estimatedHour: 0,
+      lastWorkedAt: 0,
+      expDuration: 0,
+      isFinished: 0,
+      priority: 0,
+      completeDate: '',
+      created_at: '', //matches laravel column
+      team: 0,
+      tags: []
       });
     })
 
@@ -153,15 +165,19 @@ describe('BackendService', () => {
     expect(req.request.method).toBe("GET");
     req.flush( {
       id: 0,
-        title: 'title',
-        body: 'body',
-        workedDuration: 0,
-        lastWorkedAt: 0,
-        estimatedMin: 20,
-        estimatedHour: 20,
-        expDuration: 0,
-        isFinished: 0,
-        tags: [],
+      title: 'title',
+       body: 'body',
+      workedDuration: 0,
+      estimatedMin: 0,
+      estimatedHour: 0,
+      lastWorkedAt: 0,
+      expDuration: 0,
+      isFinished: 0,
+      priority: 0,
+      completeDate: '',
+      created_at: '', //matches laravel column
+      team: 0,
+      tags: []
     });    
   })
 
@@ -169,15 +185,19 @@ describe('BackendService', () => {
     service.getTask(1).subscribe(response => {
       expect(response).toEqual( {
         id: 0,
-        title: 'title',
-        body: 'body',
-        workedDuration: 0,
-        lastWorkedAt: 0,
-        estimatedMin: 20,
-        estimatedHour: 20,
-        expDuration: 0,
-        isFinished: 0,
-        tags: [],
+      title: 'title',
+       body: 'body',
+      workedDuration: 0,
+      estimatedMin: 0,
+      estimatedHour: 0,
+      lastWorkedAt: 0,
+      expDuration: 0,
+      isFinished: 0,
+      priority: 0,
+      completeDate: '',
+      created_at: '', //matches laravel column
+      team: 0,
+      tags: []
       });
     })
 
@@ -185,15 +205,19 @@ describe('BackendService', () => {
     expect(req.request.method).toBe("GET");
     req.flush( {
       id: 0,
-        title: 'title',
-        body: 'body',
-        workedDuration: 0,
-        lastWorkedAt: 0,
-        estimatedMin: 20,
-        estimatedHour: 20,
-        expDuration: 0,
-        isFinished: 0,
-        tags: [],
+      title: 'title',
+       body: 'body',
+      workedDuration: 0,
+      estimatedMin: 0,
+      estimatedHour: 0,
+      lastWorkedAt: 0,
+      expDuration: 0,
+      isFinished: 0,
+      priority: 0,
+      completeDate: '',
+      created_at: '', //matches laravel column
+      team: 0,
+      tags: []
     });    
   })
 
