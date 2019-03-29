@@ -10,7 +10,7 @@ import { Tag, Task } from './app.module'
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type': 'application/json',
-    'Authorization': 'my-auth-token'
+    'Authorization': 'Basic ' + btoa('user1:abc123')
   })
 };
 
@@ -20,6 +20,16 @@ const httpOptions = {
 export class BackendService {
 
   public root: string = 'localhost:8000';
+  // public analRoot: string = 'localhost:8080';
+  public analRoot: string = 'localhost:8080'
+  //public analRoot: string = 'streamline-scott.us-east-2.elasticbeanstalk.com';
+
+
+  /* User URLs */
+  public getIDfromNameURL: string = 'http://' + this.analRoot + '/api/users/identity/'
+  public getProfileInfoURL: string = 'http://' + this.analRoot + '/api/users/';
+  public getTagDataURL: string = 'http://' + this.analRoot + '/api/users/';
+  public estimationDataURL: string = 'http://' + this.analRoot + '/api/users/'
 
   /* Task URLs */
   public createTaskURL: string = 'http://' + this.root + '/api/tasks/create';
@@ -50,7 +60,7 @@ export class BackendService {
   public signupURL: string = 'http://' + this.root + '/api/auth/signup';
   public passwordResetURL: string = 'http://' + this.root + '/api/auth/reset/password';
   public changePasswordURL: string = 'http://' + this.root + '/api/auth/change/password';
-  public deleteUserURL : string = 'http://' + this.root + '/api/auth/user/delete';
+  public deleteUserURL: string = 'http://' + this.root + '/api/auth/user/delete';
 
   /* Auth Token URLs */
   public setTokenURL: string = 'http://' + this.root + '/api/tokens/create';
@@ -77,7 +87,41 @@ export class BackendService {
 
 
   constructor(private http: HttpClient, private auth: AuthService) { }
+  /* ============ Profile Functions ========= */
+  getUUID(userID: number) {
+    return this.http.get<string>(this.getIDfromNameURL + userID, httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
 
+  getProfileInfo(UUID: string) { //MUST USE UUID OF ANALYTICS
+    return this.http.get<UserDataResponse>(this.getProfileInfoURL + UUID, httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  getTagData(UUID: string, tagName: string) { //MUST USE UUID OF ANALYTICS
+    return this.http.get<UserDataResponse>(this.getTagDataURL + UUID, {
+      params: { tags: tagName },
+      headers: {
+        Authorization: 'my-auth-token'
+      }
+    })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  getEstimationData(UUID: string) {
+    return this.http.get<any>(this.estimationDataURL + UUID + '/tasks/timeseries', httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  /* ======================================= */
   /* ============ Task Functions ========== */
   createTask(task: Task): Observable<Task> {
     return this.http.post<Task>(this.createTaskURL, task, httpOptions)
@@ -88,9 +132,9 @@ export class BackendService {
 
   getTask(taskID: number): Observable<Task> {
     return this.http.get<Task>(this.getUserTasksURL + taskID, httpOptions)
-    .pipe(
-      catchError(this.handleError)
-    );
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
   getUserTasks(userID: number): Observable<(Task[])> {
@@ -112,9 +156,9 @@ export class BackendService {
 
   addTag(taskID: number, tagID: number): Observable<any> {
     return this.http.put(this.addTagtoTaskURL + '/' + taskID + '/' + tagID, httpOptions)
-    .pipe(
-      catchError(this.handleError)
-    );
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
   getTaskTags(taskID: number): Observable<Tag[]> {
@@ -146,23 +190,23 @@ export class BackendService {
 
   startTask(taskID: number): Observable<any> {
     return this.http.post(this.startTaskURL + taskID + '/start', '', httpOptions) //empty post
-    .pipe(
-      catchError(this.handleError)
-    );
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
   stopTask(taskID: number): Observable<any> {
     return this.http.post(this.startTaskURL + taskID + '/stop', '', httpOptions) //empty post
-    .pipe(
-      catchError(this.handleError)
-    );
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
-  finishTask(taskID: number): Observable<any> {
-    return this.http.post(this.startTaskURL + taskID + '/finish', '', httpOptions) //empty post
-    .pipe(
-      catchError(this.handleError)
-    );
+  finishTask(taskID: number): Observable<FinishResponse> {
+    return this.http.post<FinishResponse>(this.startTaskURL + taskID + '/finish', '', httpOptions) //empty post
+      .pipe(
+        catchError(this.handleError)
+      );
   }
   /* ==================================== */
 
@@ -219,7 +263,7 @@ export class BackendService {
       .pipe(catchError(this.handleError));
   }
   /* ============================== */
- 
+
   login(login: LoginRequest) {
     return this.http.post<LoginResponse>(this.loginURL, login, httpOptions)
       .pipe(
@@ -250,7 +294,7 @@ export class BackendService {
 
   sendPasswordResetLink(request: PasswordResetRequest) {
     console.log(request);
-    return this.http.post<PasswordResetResponse>(this.passwordResetURL, request, httpOptions) 
+    return this.http.post<PasswordResetResponse>(this.passwordResetURL, request, httpOptions)
       .pipe(
         catchError(this.handleError)
       )
@@ -265,30 +309,30 @@ export class BackendService {
 
   deleteUser(id) {
     return this.http.get(this.deleteUserURL + '/' + id, httpOptions)
-    .pipe (
-      catchError(this.handleError)
-    )
+      .pipe(
+        catchError(this.handleError)
+      )
   }
 
   createTeam(request: CreateTeamRequest) {
     return this.http.post<CreateTeamResponse>(this.createTeamURL, request, httpOptions)
-    .pipe(
-      catchError(this.handleError)
-    )
+      .pipe(
+        catchError(this.handleError)
+      )
   }
 
   getTeams(id) {
     return this.http.get(this.getTeamsURL + id, httpOptions)
-    .pipe (
-      catchError(this.handleError)
-    )
+      .pipe(
+        catchError(this.handleError)
+      )
   }
 
   getTeam(id) {
     return this.http.get(this.getTeamUrl + id, httpOptions)
-    .pipe (
-      catchError(this.handleError)
-    )
+      .pipe(
+        catchError(this.handleError)
+      )
   }
 
   deleteTeam(teamId: number): Observable<any> {
@@ -300,58 +344,58 @@ export class BackendService {
 
   getUserId(email: string) {
     return this.http.get(this.getUserIdURL + email, httpOptions)
-    .pipe(
-      catchError(this.handleError)
-    );
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
   sendInvitation(request) {
     return this.http.post<InvitationResponse>(this.sendInvitationURL, request, httpOptions)
-    .pipe(
-      catchError(this.handleError)
-    );
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
   sentInvitations(id) {
     return this.http.get(this.sentInvitationsURL + id, httpOptions)
-    .pipe (
-      catchError(this.handleError)
-    );
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
   recievedInvitations(id) {
     return this.http.get(this.recievedInvitationsURL + id, httpOptions)
-    .pipe (
-      catchError(this.handleError)
-    );
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
   acceptInvitation(request: InvRequest) {
     return this.http.post<InvitationResponse>(this.acceptInvitationURL, request, httpOptions)
-    .pipe (
-      catchError(this.handleError)
-    );
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
   declineInvitation(request: InvRequest) {
     return this.http.post<InvitationResponse>(this.declineInvitationURL, request, httpOptions)
-    .pipe (
-      catchError(this.handleError)
-    );
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
   getTeamMembers(id) {
     return this.http.get(this.getTeamMembersURL + id, httpOptions)
-    .pipe(
-      catchError(this.handleError)
-    );
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
   leaveTeam(request: LeaveTeamRequest) {
     return this.http.post(this.leaveTeamURL, request, httpOptions)
-    .pipe(
-      catchError(this.handleError)
-    );
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
   getTeamTasks(teamID: number): Observable<(Task[])> {
@@ -385,7 +429,7 @@ export class BackendService {
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
-      console.error('An error occurred:', error.error.message);
+      console.error('An error occurred:', error.error);
     } else {
       // The backend returned an unsuccessful response code.
       // The response body may contain clues as to what went wrong,
@@ -461,6 +505,14 @@ interface ChangePasswordRequest {
   token: string
 }
 
+export interface UserDataResponse {
+  avgTaskTime: number,
+  taskEstFactor: number,
+  totalOverTasks: number,
+  totalTasksCompleted: number,
+  totalUnderTasks: 0
+}
+
 interface CreateTeamRequest {
   title: string,
   description: string,
@@ -477,9 +529,9 @@ interface InvitationResponse {
 }
 
 interface InvRequest {
-  userId : number,
-  teamId : number,
-  invitationId : number
+  userId: number,
+  teamId: number,
+  invitationId: number
 }
 
 interface LeaveTeamRequest {
@@ -491,4 +543,9 @@ interface TeamEditRequest {
   title: string,
   description: string,
   color: string
+}
+
+interface FinishResponse {
+  expDuration: number,
+  actualDuration: number
 }

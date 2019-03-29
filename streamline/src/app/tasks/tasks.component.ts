@@ -353,6 +353,8 @@ export class TasksComponent {
       //update that task only
       this.backend.getTask(taskID).subscribe(r => {
         this.tasks[index] = r;
+        this.getTaskTags(taskID);
+
       },
         error => {
 
@@ -373,6 +375,7 @@ export class TasksComponent {
       //update that task only
       this.backend.getTask(taskID).subscribe(r => {
         this.tasks[index] = r;
+        this.getTaskTags(taskID);
       },
         error => {
 
@@ -389,12 +392,13 @@ export class TasksComponent {
 
   finishTask(taskID: number, index: number) {
     this.backend.finishTask(taskID).subscribe(res => {
-
+      window.alert(res.actualDuration);
+      let val = ((+res.actualDuration / +res.expDuration) * 10).toFixed(2);
       //remove task from list
       this.tasks.splice(index, 1);
 
       //three second snackbar pop up notification
-      let snackbarRef = this.snackbar.open('Task Finished!', 'Ok', { duration: 3000 });
+      let snackbarRef = this.snackbar.open('This task\'s Estimation Accuracy: ' + val + '%', 'Ok', { duration: 3000 });
 
     }, error => {
       console.log(error.message);

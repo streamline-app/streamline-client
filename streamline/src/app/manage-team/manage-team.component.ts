@@ -4,7 +4,7 @@ import { BackendService } from '../backend.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { ConfirmLeaveDialog, RemoveTeamMemberDialog } from '../dialogs/dialogs.module';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { StateService } from '../state.service';
 
 
@@ -32,7 +32,7 @@ export class ManageTeamComponent{
     message: new FormControl('')
   });
 
-  constructor(private route: ActivatedRoute, private state: StateService, private router: Router, private backend: BackendService,  private dialog: MatDialog, private auth: AuthService) {
+  constructor(private route: ActivatedRoute, private state: StateService, private router: Router, private backend: BackendService, private snackbar: MatSnackBar, private dialog: MatDialog, private auth: AuthService) {
     let teamId = this.route.snapshot.paramMap.get('id');
     this.loadTeamData();
     this.loadInvitationData();
@@ -74,6 +74,10 @@ export class ManageTeamComponent{
   public inviteUser() {
     let email = this.invite.controls['email'].value as string;
     this.backend.getUserId(email).subscribe((res) => {
+      if (res == 'not found') {
+        this.snackbar.open('No user of that email foud!', 'Ok', { duration: 3000 });
+        return;
+      }
       var recipientId = res as number;
       this.sendInvite(recipientId);
 
@@ -136,6 +140,7 @@ export class ManageTeamComponent{
     this.backend.updateTeam(this.t.id, request).subscribe((res) => {
       this.loadTeamData();
       this.state.signalTeamDataChange();
+      this.snackbar.open('Team updated!', 'Ok', { duration: 3000 });
     })
   }
 

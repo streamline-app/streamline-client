@@ -1,3 +1,43 @@
-<p>
-    profile works!
- </p>
+ <mat-card class="mat-elevation-z0">
+ <mat-card-title style="text-align:left; background-color: transparent">Profile</mat-card-title>
+<hr class="seperator" />
+<mat-card-content class="main_content">
+    <div class="row" style="margin-top: 10px;">
+        <div class="col-md-4">
+            <mat-card class="detail">
+                <mat-card-title>Total Completed Tasks</mat-card-title>
+                <mat-card-content>{{userData.totalTasksCompleted}}</mat-card-content>
+            </mat-card>
+        </div>
+        <div class="col-md-4">
+            <mat-card class="detail">
+                <mat-card-title>Average Task Time</mat-card-title>
+                <mat-card-content>{{userData.avgTaskTime}}</mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+    <div class="row top-buffer">
+            <div class="col-md-4">
+                <mat-card class="detail">
+                    <mat-card-title>Estimation Accuracy</mat-card-title>
+                    <mat-card-content>{{userData.taskEstFactor}}%</mat-card-content>
+                </mat-card>
+            </div>
+            <!--
+            <div class="col-md-4">
+                <mat-card class="detail">
+                    <mat-card-title>Something else</mat-card-title>
+                    <mat-card-content>Maybe a chart?</mat-card-content>
+                </mat-card>
+            </div>
+        -->
+        </div>
+</mat-card-content>
+</mat-card>
+<h4>Estimation Accuracy</h4>
+<app-accuracy-graph></app-accuracy-graph>
+<hr />
+
+
+
+

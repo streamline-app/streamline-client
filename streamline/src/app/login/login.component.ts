@@ -50,7 +50,7 @@ export class LoginComponent {
   }
 
   postLogin(result) {
-    this.auth.setLoggedIn(result.name, result.id);
+    this.auth.setLoggedIn(result.user, result.id);
     this.auth.handleToken(result.access_token);
 
     var tokenRequest = {

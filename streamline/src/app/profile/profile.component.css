@@ -1,0 +1,11 @@
+mat-card-title {
+    text-align: center;
+}
+
+mat-card-content {
+    text-align: center;
+}
+
+.top-buffer {
+    margin-top:20px; 
+}
