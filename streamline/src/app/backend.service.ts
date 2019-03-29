@@ -29,6 +29,7 @@ export class BackendService {
   public getIDfromNameURL: string = 'http://' + this.analRoot + '/api/users/identity/'
   public getProfileInfoURL: string = 'http://' + this.analRoot + '/api/users/';
   public getTagDataURL: string = 'http://' + this.analRoot + '/api/users/';
+  public estimationDataURL: string = 'http://' + this.analRoot + '/api/users/'
 
   /* Task URLs */
   public createTaskURL: string = 'http://' + this.root + '/api/tasks/create';
@@ -113,6 +114,13 @@ export class BackendService {
       );
   }
 
+  getEstimationData(UUID: string) {
+    return this.http.get<any>(this.estimationDataURL + UUID + '/tasks/timeseries', httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
   /* ======================================= */
   /* ============ Task Functions ========== */
   createTask(task: Task): Observable<Task> {
@@ -194,8 +202,8 @@ export class BackendService {
       );
   }
 
-  finishTask(taskID: number): Observable<any> {
-    return this.http.post(this.startTaskURL + taskID + '/finish', '', httpOptions) //empty post
+  finishTask(taskID: number): Observable<FinishResponse> {
+    return this.http.post<FinishResponse>(this.startTaskURL + taskID + '/finish', '', httpOptions) //empty post
       .pipe(
         catchError(this.handleError)
       );
@@ -535,4 +543,9 @@ interface TeamEditRequest {
   title: string,
   description: string,
   color: string
+}
+
+interface FinishResponse {
+  expDuration: number,
+  actualDuration: number
 }

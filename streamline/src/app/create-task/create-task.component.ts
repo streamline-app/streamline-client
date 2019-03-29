@@ -69,6 +69,12 @@ export class CreateTaskComponent {
       team: this.state.teamId
     }
 
+    if (task.estimatedMin == 0 && task.estimatedHour == 0) {
+      let snackbarRef = this.snackbar.open('Must have non zero time estimation.', 'Ok', { duration: 3000 });
+      return;
+
+    }
+
     this.backend.createTask(task).subscribe(res => {
       //three second snackbar pop up notification
       let snackbarRef = this.snackbar.open('Task Created!', 'Ok', { duration: 3000 });

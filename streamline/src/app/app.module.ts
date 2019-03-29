@@ -32,6 +32,8 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { CalendarComponent } from './calendar/calendar.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { AccuracyGraphComponent } from './accuracy-graph/accuracy-graph.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 
 
@@ -50,7 +52,8 @@ const appRoutes: Routes = [
   { path: 'teams/:id', component: ManageTeamComponent, canActivate: [AuthService]},
   { path: 'invitations', component: InvitationsComponent, canActivate: [AuthService]},
   { path: 'calendar', component: CalendarComponent },
-  { path: 'celandar', component: CalendarComponent }
+  { path: 'celandar', component: CalendarComponent },
+  { path: 'graph', component: AccuracyGraphComponent }
 ];
 
 @NgModule({
@@ -81,6 +84,7 @@ const appRoutes: Routes = [
     InvitationsComponent,
     TeamNavigationComponent,
     CalendarComponent,
+    AccuracyGraphComponent,
   ],
   imports: [
     BrowserModule,
@@ -88,6 +92,7 @@ const appRoutes: Routes = [
     MaterialModule,
     ReactiveFormsModule,
     HttpClientModule,
+    NgxChartsModule,
     FormsModule,
     DialogsModule,
     RouterModule.forRoot(
