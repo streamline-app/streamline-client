@@ -63,6 +63,21 @@ export class TasksComponent {
     }
   }
 
+  checkSort() {
+    switch (this.sort_by) {
+      case 0:   //no sort
+        break;
+      case 1:   //prio
+        //   this.sortbyPrio();
+        break;
+      case 2:   //creation_date
+        this.sortbyCreationDate();
+        break;
+      default:
+        break;
+    }
+  }
+
   getTeamTags() {
     this.backend.getTeamTags(this.state.teamId).subscribe(res => {
       if (res != null) {
@@ -117,18 +132,8 @@ export class TasksComponent {
       });
 
       //check sort option
-      switch (this.sort_by) {
-        case 0:   //no sort
-          break;
-        case 1:   //prio
-          //   this.sortbyPrio();
-          break;
-        case 2:   //creation_date
-          this.sortbyCreationDate();
-          break;
-        default:
-          break;
-      }
+      this.checkSort();
+
     }, error => {
       console.log(error.message);
       //three second snackbar pop up notification
@@ -163,18 +168,7 @@ export class TasksComponent {
       });
 
       //check sort option
-      switch (this.sort_by) {
-        case 0:   //no sort
-          break;
-        case 1:   //prio
-          //       this.sortbyPrio();
-          break;
-        case 2:   //creation_date
-          this.sortbyCreationDate();
-          break;
-        default:
-          break;
-      }
+      this.checkSort();
 
     }, error => {
       console.log(error.message);
@@ -207,13 +201,16 @@ export class TasksComponent {
     dialogRef.afterClosed().subscribe(result => {
       if (result) { //if confirmed, delete
         this.backend.removeTag(taskID, tagID).subscribe(res => {
-          console.log('TagID ' + tagID + ' removed From TaskID' + taskID);
+          console.log('TagID ' + tagID + ' removed From TaskID ' + taskID);
 
           //three second snackbar pop up notification
           let snackbarRef = this.snackbar.open('Tag removed from that task!', 'Ok', { duration: 3000 });
 
           //reload tags
           this.getTaskTags(taskID);
+
+           //maintain sort option
+           this.checkSort();
         },
           error => {
             console.log(error.message);
@@ -249,6 +246,9 @@ export class TasksComponent {
             let snackbarRef = this.snackbar.open('Tag added to that Task!', 'Ok', { duration: 3000 });
 
             this.getTaskTags(task.id);
+
+            //maintain sort option
+            this.checkSort();
           },
             error => {
               console.log(error.message);
@@ -298,7 +298,6 @@ export class TasksComponent {
         estimatedHour: task.estimatedHour,
         estimatedMin: task.estimatedMin,
         expDuration: task.expDuration,
-        //  priority: task.priority,
         completeDate: task.completeDate
       }
     });
@@ -420,14 +419,27 @@ export class TasksComponent {
     else
       return 0;
   }
-  /*
-    sortbyPrio() {
-      this.sort_by = 1;
-      this.tasks.sort(function (a: Task, b: Task) {
-        return b.priority - a.priority; //sort from highest to lowest
+
+  sortbyPrio() {
+    this.sort_by = 1;
+    this.tasks.sort(function (a: Task, b: Task) {
+      var aprio = '';
+      var bprio = '';
+
+      a.tags.forEach(atag => {
+        if (atag.name.includes('priority'))
+          aprio = atag.name;
       });
-    }
-  */
+
+      b.tags.forEach(btag => {
+        if (btag.name.includes('priority'))
+          bprio = btag.name;
+      });
+
+      return bprio.localeCompare(aprio);
+    });
+  }
+
   sortbyCreationDate() {
     this.sort_by = 2;
     this.tasks.sort(function (a: Task, b: Task) {
