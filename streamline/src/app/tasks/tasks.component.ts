@@ -121,7 +121,7 @@ export class TasksComponent {
         case 0:   //no sort
           break;
         case 1:   //prio
-          this.sortbyPrio();
+       //   this.sortbyPrio();
           break;
         case 2:   //creation_date
           this.sortbyCreationDate();
@@ -167,7 +167,7 @@ export class TasksComponent {
         case 0:   //no sort
           break;
         case 1:   //prio
-          this.sortbyPrio();
+   //       this.sortbyPrio();
           break;
         case 2:   //creation_date
           this.sortbyCreationDate();
@@ -300,7 +300,7 @@ export class TasksComponent {
         estimatedHour: task.estimatedHour,
         estimatedMin: task.estimatedMin,
         expDuration: task.expDuration,
-        priority: task.priority,
+      //  priority: task.priority,
         completeDate: task.completeDate
       }
     });
@@ -422,14 +422,14 @@ export class TasksComponent {
     else
       return 0;
   }
-
+/*
   sortbyPrio() {
     this.sort_by = 1;
     this.tasks.sort(function (a: Task, b: Task) {
       return b.priority - a.priority; //sort from highest to lowest
     });
   }
-
+*/
   sortbyCreationDate() {
     this.sort_by = 2;
     this.tasks.sort(function (a: Task, b: Task) {
