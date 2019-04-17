@@ -121,3 +121,12 @@ button.del_button {
   background-color: #c90000;
   color: white;
 }
+
+mat-sidenav {
+  min-width: 250px !important;
+  width: 30% !important;
+}
+
+mat-sidenav-content {
+  min-width: 400px;
+}

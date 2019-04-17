@@ -1,12 +1,14 @@
 <mat-card-title>Tags</mat-card-title>
 <hr class="seperator" />
-<mat-sidenav-container class="container">
-  <mat-sidenav-content class="main_box">
-    <button mat-stroked-button (click)="createTag()">Create Tag</button>
+<mat-sidenav-container class="container" stlye="min-width: 300px;">
+  <mat-sidenav-content class="main_box" >
+    <button mat-stroked-button (click)="createTag()">+ Create Tag</button>
+    <button mat-stroked-button style="float: right;" (click)="showTags(2)" >Priority Tags</button>
+    <button mat-stroked-button style="float: right;" (click)="showTags(1)">Created Tags</button>
 
     <div class="tag_box">
       <ol class="tags">
-        <li *ngFor="let tag of tags; index as i" [class.selected]="tag === selectedTag" (click)="onSelect(tag)">
+        <li *ngFor="let tag of displayed_tags; index as i" [class.selected]="tag === selectedTag" (click)="onSelect(tag)">
           <span class="badge" [ngStyle]="{'background-color': tag.color}">{{i+1}}</span> {{tag.name}}
         </li>
       </ol>
@@ -46,6 +48,6 @@
       <div class="square" [ngStyle]="{'background-color': selectedTag.color}"></div>
     </div>
     <button mat-stroked-button class="edit_button" (click)="editTag(selectedTag)">Edit Tag</button>
-    <button mat-stroked-button class="del_button" (click)="deleteTag(selectedTag.id)">Delete Tag</button>
+    <button mat-stroked-button class="del_button" (click)="deleteTag(selectedTag.id)" [disabled]="displayed_tags === prio_tags">Delete Tag</button>
   </mat-sidenav>
 </mat-sidenav-container>

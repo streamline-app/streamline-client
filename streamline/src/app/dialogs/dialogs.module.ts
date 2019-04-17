@@ -249,6 +249,7 @@ export interface EditTagDialogData {
   name: string,
   desc: string,
   color: string
+  isPrio: boolean,
 };
 
 export interface EditTaskDialogData {
