@@ -38,16 +38,16 @@ export class TasksComponent {
       this.tasks = null;
       this.loadData();
       if (this.state.teamId != 0) {
-        this.displayMessage = this.state.teamName+'\'s Tasks';
+        this.displayMessage = this.state.teamName + '\'s Tasks';
       } else {
         this.displayMessage = 'Your tasks';
       }
     })
     //update tasks display
     this.loadData();
-    
+
     if (this.state.teamId != 0) {
-      this.displayMessage = this.state.teamName+'\'s Tasks';
+      this.displayMessage = this.state.teamName + '\'s Tasks';
     }
 
 
@@ -121,7 +121,7 @@ export class TasksComponent {
         case 0:   //no sort
           break;
         case 1:   //prio
-       //   this.sortbyPrio();
+          //   this.sortbyPrio();
           break;
         case 2:   //creation_date
           this.sortbyCreationDate();
@@ -167,7 +167,7 @@ export class TasksComponent {
         case 0:   //no sort
           break;
         case 1:   //prio
-   //       this.sortbyPrio();
+          //       this.sortbyPrio();
           break;
         case 2:   //creation_date
           this.sortbyCreationDate();
@@ -232,21 +232,19 @@ export class TasksComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result >= 0) {
-        var tagID = result;
+      if (result != null) {
         let exists: boolean = false;
-        console.log(task.tags);
 
         task.tags.forEach(t => {
-          if (t.id === tagID) { //if this task already has that tag, don't add it
+          if (t.id === result.tagID || (result.isPrio && t.name.includes('priority'))) { //if this task already has that tag, or if they are trying to add another priority to the task, stop
             //three second snackbar pop up notification
-            let snackbarRef = this.snackbar.open('That Task already has that Tag!', 'Ok', { duration: 3000 });
+            let snackbarRef = this.snackbar.open('Invalid Tag to add to that Task', 'Ok', { duration: 3000 });
             exists = true;
           }
         });
 
         if (!exists) {
-          this.backend.addTag(task.id, tagID).subscribe(res => {
+          this.backend.addTag(task.id, result.tagID).subscribe(res => {
             //three second snackbar pop up notification
             let snackbarRef = this.snackbar.open('Tag added to that Task!', 'Ok', { duration: 3000 });
 
@@ -300,7 +298,7 @@ export class TasksComponent {
         estimatedHour: task.estimatedHour,
         estimatedMin: task.estimatedMin,
         expDuration: task.expDuration,
-      //  priority: task.priority,
+        //  priority: task.priority,
         completeDate: task.completeDate
       }
     });
@@ -422,14 +420,14 @@ export class TasksComponent {
     else
       return 0;
   }
-/*
-  sortbyPrio() {
-    this.sort_by = 1;
-    this.tasks.sort(function (a: Task, b: Task) {
-      return b.priority - a.priority; //sort from highest to lowest
-    });
-  }
-*/
+  /*
+    sortbyPrio() {
+      this.sort_by = 1;
+      this.tasks.sort(function (a: Task, b: Task) {
+        return b.priority - a.priority; //sort from highest to lowest
+      });
+    }
+  */
   sortbyCreationDate() {
     this.sort_by = 2;
     this.tasks.sort(function (a: Task, b: Task) {
@@ -446,15 +444,15 @@ export class TasksComponent {
     this.tasks = [];
     this.unfilteredTasks.forEach(t => {
       t.tags.forEach(e => {
-        if(e.name === tagName){ //if tag is somewhere in the tasks list of tags
+        if (e.name === tagName) { //if tag is somewhere in the tasks list of tags
           this.tasks.push(t);
         }
       });
-      
+
     });
   }
 
-  public onClearSelect(){
+  public onClearSelect() {
     //set list of tasks to equal unfiltered array
     this.tasks = this.unfilteredTasks;
 

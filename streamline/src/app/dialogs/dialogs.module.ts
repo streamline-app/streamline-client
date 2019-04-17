@@ -157,6 +157,7 @@ export class AddTagDialog {
   public rawTagsForm: FormControl = new FormControl();
   public filteredTags: Observable<Tag[]>;
   public tags: Tag[];
+  private response: AddTagDialogResponse;
 
   constructor(
     public dialogRef: MatDialogRef<AddTagDialog>,
@@ -176,7 +177,7 @@ export class AddTagDialog {
           }
           else {
             console.log('Could not retrieve tags');
-            this.dialogRef.close(-2); //TODO code this to give response to user?
+            this.dialogRef.close(null);
           }
         })
       } else {
@@ -192,7 +193,7 @@ export class AddTagDialog {
           }
           else {
             console.log('Could not retrieve tags');
-            this.dialogRef.close(-2); //TODO code this to give response to user?
+            this.dialogRef.close(null); //TODO code this to give response to user?
           }
         })
       }
@@ -200,15 +201,15 @@ export class AddTagDialog {
   }
 
   addTag() {
-    this.dialogRef.close(this.data.tagID);
+    this.dialogRef.close(this.response);
   }
 
   closeDialog() {
-    this.dialogRef.close(-1);
+    this.dialogRef.close(null);
   }
 
-  public onTagSelect(tagID: number) {
-    this.data.tagID = tagID;
+  public onTagSelect(tag: Tag) {
+    this.response = { tagID: tag.id, isPrio: tag.name.includes('priority') }
   }
 
   private _filterTags(value: string): Tag[] {
@@ -267,3 +268,8 @@ export interface AddTagDialogData {
   userID: number,
   tagID: number,
 };
+
+export interface AddTagDialogResponse {
+  tagID: number,
+  isPrio: boolean
+}
