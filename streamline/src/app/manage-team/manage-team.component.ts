@@ -20,6 +20,7 @@ export class ManageTeamComponent{
   public teamMembers : any[] = null;
   public displayedPendingColumns = ['email', 'message', 'created_at'];
   public displayedMembersColumns = ['name', 'email'];
+  public docs: any[] = [];
 
   public team : FormGroup = new FormGroup( {
     title : new FormControl(),
@@ -163,6 +164,11 @@ export class ManageTeamComponent{
         })
       }
     });
+  }
+
+  fileChange(event){
+    console.log(event);
+    alert('hello world!');
   }
 
 }
