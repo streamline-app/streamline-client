@@ -13,22 +13,22 @@ import { StateService } from '../state.service';
   templateUrl: './manage-team.component.html',
   styleUrls: ['./manage-team.component.css']
 })
-export class ManageTeamComponent{
-  public t : any = null;
+export class ManageTeamComponent {
+  public t: any = null;
   public owner: boolean = false;
-  public sentInvitations : any[] = null;
-  public teamMembers : any[] = null;
+  public sentInvitations: any[] = null;
+  public teamMembers: any[] = null;
   public displayedPendingColumns = ['email', 'message', 'created_at'];
   public displayedMembersColumns = ['name', 'email'];
   public docs: any[] = [];
 
-  public team : FormGroup = new FormGroup( {
-    title : new FormControl(),
-    description : new FormControl(''),
+  public team: FormGroup = new FormGroup({
+    title: new FormControl(),
+    description: new FormControl(''),
     color: new FormControl('')
   });
 
-  public invite : FormGroup = new FormGroup ( {
+  public invite: FormGroup = new FormGroup({
     email: new FormControl(''),
     message: new FormControl('')
   });
@@ -38,13 +38,13 @@ export class ManageTeamComponent{
     this.loadTeamData();
     this.loadInvitationData();
     this.loadTeamMemberData(teamId);
-    
 
-    
+
+
   }
-  
+
   loadTeamMemberData(teamId) {
-    this.backend.getTeamMembers(teamId).subscribe((res) =>  {
+    this.backend.getTeamMembers(teamId).subscribe((res) => {
       this.teamMembers = res as any[];
     });
   }
@@ -87,10 +87,10 @@ export class ManageTeamComponent{
 
   public sendInvite(recipientId) {
     let message = this.invite.controls['message'].value as string;
-    let request : any = {
-      senderId : this.auth.getUserId(),
-      recipientId : recipientId,
-      inviteMessage : message,
+    let request: any = {
+      senderId: this.auth.getUserId(),
+      recipientId: recipientId,
+      inviteMessage: message,
       team: this.route.snapshot.paramMap.get('id')
     };
 
@@ -98,7 +98,7 @@ export class ManageTeamComponent{
       if (res.message == 'multiple invitations') {
         window.alert('Inviation already exists');
 
-      } else if (res.message == 'member exists'){
+      } else if (res.message == 'member exists') {
         window.alert('Member already on team');
 
       } else {
@@ -116,7 +116,7 @@ export class ManageTeamComponent{
       if (res) {
         let team = this.t.id;
         let user = this.auth.getUserId();
-        let request : any = {
+        let request: any = {
           team: team,
           user: user
         };
@@ -132,7 +132,7 @@ export class ManageTeamComponent{
     let description = this.team.controls['description'].value;
     let color = this.team.controls['color'].value;
 
-    let request : any = {
+    let request: any = {
       title: title,
       description: description,
       color: color
@@ -155,7 +155,7 @@ export class ManageTeamComponent{
       if (res) {
         let team = this.t.id;
         let user = id
-        let request : any = {
+        let request: any = {
           team: team,
           user: user
         };
@@ -166,9 +166,13 @@ export class ManageTeamComponent{
     });
   }
 
-  fileChange(event){
-    console.log(event);
-    alert('hello world!');
+  fileChange(files: FileList) {
+    console.log(files.item(0).name);
+    this.backend.uploadFile(files.item(0), this.state.teamId).subscribe(res => {
+      console.log(res);
+
+
+    });
   }
 
 }

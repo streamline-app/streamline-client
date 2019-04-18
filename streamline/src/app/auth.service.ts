@@ -36,7 +36,7 @@ export class AuthService implements CanActivate {
   }
 
   getUserId() {
-    console.log('Current User Id: ' + this.id);
+  //  console.log('Current User Id: ' + this.id);
     return this.id;
   }
 

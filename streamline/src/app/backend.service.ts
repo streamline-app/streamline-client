@@ -76,6 +76,7 @@ export class BackendService {
   public getTeamTasksURL: string = 'http://' + this.root + '/api/teamtasks';
   public getTeamTagsURL: string = 'http://' + this.root + '/api/teamtags';
   public updateTeamURL: string = 'http://' + this.root + '/api/teams/update/';
+  public uploadFileURL: string = 'http://' + this.root + '/api/teams/upload/';
 
   public getUserIdURL: string = 'http://' + this.root + '/api/user/';
 
@@ -116,9 +117,9 @@ export class BackendService {
 
   getEstimationData(UUID: string) {
     return this.http.get<any>(this.estimationDataURL + UUID + '/tasks/timeseries', httpOptions)
-    .pipe(
-      catchError(this.handleError)
-    );
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
   /* ======================================= */
@@ -393,6 +394,22 @@ export class BackendService {
 
   leaveTeam(request: LeaveTeamRequest) {
     return this.http.post(this.leaveTeamURL, request, httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  uploadFile(file: File, teamID: number) {
+    let header = new HttpHeaders();
+    header.append('Authorization', 'Basic ' + btoa('user1:abc123'));
+
+    let formData = new FormData();
+    formData.append('teamID', '' + teamID);
+    formData.append('upload', file);
+
+    console.log(formData.get('teamID'));
+
+    return this.http.post(this.uploadFileURL, formData, { headers: header })
       .pipe(
         catchError(this.handleError)
       );
