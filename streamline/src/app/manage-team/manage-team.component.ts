@@ -146,6 +146,19 @@ export class ManageTeamComponent{
     })
   }
 
+  favoriteTeamMember(id) {
+    let userid = this.auth.getUserId();
+    let favoriteId = id;
+    let request : any = {
+      user: userid,
+      favorite: favoriteId
+    }
+
+    this.backend.favoriteTeamMember(request).subscribe((res) => {
+      this.snackbar.open(res.message, 'Ok', { duration: 3000 });
+    })
+  }
+
   onRemove(id) {
     window.alert(id);
     const dialogRef = this.dialog.open(RemoveTeamMemberDialog, {

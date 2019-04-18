@@ -76,7 +76,7 @@ export class BackendService {
   public getTeamTasksURL: string = 'http://' + this.root + '/api/teamtasks';
   public getTeamTagsURL: string = 'http://' + this.root + '/api/teamtags';
   public updateTeamURL: string = 'http://' + this.root + '/api/teams/update/';
-
+ 
   public getUserIdURL: string = 'http://' + this.root + '/api/user/';
 
   public sendInvitationURL: string = 'http://' + this.root + '/api/invitations/create';
@@ -84,6 +84,8 @@ export class BackendService {
   public recievedInvitationsURL: string = 'http://' + this.root + '/api/recievedInvitations/';
   public acceptInvitationURL: string = 'http://' + this.root + '/api/invitations/accept';
   public declineInvitationURL: string = 'http://' + this.root + '/api/invitations/decline';
+
+  public favoriteTeamMemberURL: string = 'http://' + this.root + '/api/favorite/favoriteTeamMembers';
 
 
   constructor(private http: HttpClient, private auth: AuthService) { }
@@ -342,6 +344,13 @@ export class BackendService {
       );
   }
 
+  favoriteTeamMember(request: FavoriteRequest) {
+    return this.http.post<FavoriteResponse>(this.favoriteTeamMemberURL, request, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    )
+  }
+
   getUserId(email: string) {
     return this.http.get(this.getUserIdURL + email, httpOptions)
       .pipe(
@@ -548,4 +557,13 @@ interface TeamEditRequest {
 interface FinishResponse {
   expDuration: number,
   actualDuration: number
+}
+
+interface FavoriteRequest {
+  user: number,
+  favorite: number
+}
+
+interface FavoriteResponse {
+  message: string
 }
