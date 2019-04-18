@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BackendService } from '../backend.service';
+import { BackendService, FileHandle } from '../backend.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { ConfirmLeaveDialog, RemoveTeamMemberDialog } from '../dialogs/dialogs.module';
@@ -20,7 +20,7 @@ export class ManageTeamComponent {
   public teamMembers: any[] = null;
   public displayedPendingColumns = ['email', 'message', 'created_at'];
   public displayedMembersColumns = ['name', 'email'];
-  public docs: any[] = [];
+  public fileHandles: FileHandle[] = [];
 
   public team: FormGroup = new FormGroup({
     title: new FormControl(),
@@ -39,7 +39,7 @@ export class ManageTeamComponent {
     this.loadInvitationData();
     this.loadTeamMemberData(teamId);
 
-
+    this.getTeamFiles();
 
   }
 
@@ -175,4 +175,19 @@ export class ManageTeamComponent {
     });
   }
 
+  getTeamFiles() {
+    this.backend.getTeamFiles(this.state.teamId).subscribe(res => {
+      console.log(res);
+      this.fileHandles = res;
+    });
+  }
+
+  downloadFile(fileID: number){
+    console.log('downloading...');
+
+    this.backend.downloadFile(fileID).subscribe(res =>{
+
+    });
+
+  }
 }
