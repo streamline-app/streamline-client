@@ -15,11 +15,12 @@ import { StateService } from '../state.service';
 })
 export class ManageTeamComponent{
   public t : any = null;
+  public ownerId : number = -1;
   public owner: boolean = false;
   public sentInvitations : any[] = null;
   public teamMembers : any[] = null;
   public displayedPendingColumns = ['email', 'message', 'created_at'];
-  public displayedMembersColumns = ['name', 'email'];
+  public displayedMembersColumns = ['name', 'email', 'actions'];
 
   public team : FormGroup = new FormGroup( {
     title : new FormControl(),
@@ -51,6 +52,7 @@ export class ManageTeamComponent{
     let teamId = this.route.snapshot.paramMap.get('id');
     this.backend.getTeam(teamId).subscribe((res) => {
       this.t = res;
+      this.ownerId = this.t.owner;
       this.team.patchValue({
         title: this.t.name,
         description: this.t.description,

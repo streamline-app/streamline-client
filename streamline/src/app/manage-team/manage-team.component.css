@@ -19,5 +19,6 @@
 }
 
 #remove {
-    color: salmon;
+    background-color: salmon;
+    padding-bottom: 5px;
 }
