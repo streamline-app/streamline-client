@@ -26,7 +26,8 @@ export class BackendService {
 
 
   /* User URLs */
-  public getIDfromNameURL: string = 'http://' + this.analRoot + '/api/users/identity/'
+  public getUserIDfromNameURL: string = 'http://' + this.analRoot + '/api/users/identity/'
+  public getTeamIDfromNameURL: string = 'http://' + this.analRoot + '/api/teams/identity/'
   public getProfileInfoURL: string = 'http://' + this.analRoot + '/api/users/';
   public getTagDataURL: string = 'http://' + this.analRoot + '/api/users/';
   public estimationDataURL: string = 'http://' + this.analRoot + '/api/users/'
@@ -88,11 +89,19 @@ export class BackendService {
 
   constructor(private http: HttpClient, private auth: AuthService) { }
   /* ============ Profile Functions ========= */
-  getUUID(userID: number) {
-    return this.http.get<string>(this.getIDfromNameURL + userID, httpOptions)
-      .pipe(
-        catchError(this.handleError)
-      );
+  getUUID(ID: number, isUser: boolean) {
+    if (isUser) {
+      return this.http.get<string>(this.getUserIDfromNameURL + ID, httpOptions)
+        .pipe(
+          catchError(this.handleError)
+        );
+    }
+    else { //is team
+      return this.http.get<string>(this.getTeamIDfromNameURL + ID, httpOptions)
+        .pipe(
+          catchError(this.handleError)
+        );
+    }
   }
 
   getProfileInfo(UUID: string) { //MUST USE UUID OF ANALYTICS
@@ -116,9 +125,9 @@ export class BackendService {
 
   getEstimationData(UUID: string) {
     return this.http.get<any>(this.estimationDataURL + UUID + '/tasks/timeseries', httpOptions)
-    .pipe(
-      catchError(this.handleError)
-    );
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
   /* ======================================= */

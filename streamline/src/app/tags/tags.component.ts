@@ -126,7 +126,7 @@ export class TagsComponent implements OnInit {
 
       //get analytics data for regular tags
       this.tags.forEach(t => {
-        this.backend.getUUID(this.auth.getUserId()).subscribe(UUID => {
+        this.backend.getUUID(this.auth.getUserId(), true).subscribe(UUID => {
           this.backend.getTagData(UUID, t.name).subscribe(res => {
             //     console.log(res);
             t.tagData = res;
@@ -136,7 +136,7 @@ export class TagsComponent implements OnInit {
 
       //get analytics data for prio tags
       this.prio_tags.forEach(t => {
-        this.backend.getUUID(this.auth.getUserId()).subscribe(UUID => {
+        this.backend.getUUID(this.auth.getUserId(), true).subscribe(UUID => {
           this.backend.getTagData(UUID, t.name).subscribe(res => {
             //    console.log(res);
             t.tagData = res;
@@ -158,6 +158,27 @@ export class TagsComponent implements OnInit {
     this.backend.getTeamTags(this.state.teamId).subscribe(result => {
       console.log(result);
       this.sortTagsIntoLists(result);
+
+      //get analytics data for regular tags
+      this.tags.forEach(t => {
+        this.backend.getUUID(this.state.teamId, false).subscribe(UUID => {
+          this.backend.getTagData(UUID, t.name).subscribe(res => {
+            //     console.log(res);
+            t.tagData = res;
+          })
+        })
+      });
+
+      //get analytics data for prio tags
+      this.prio_tags.forEach(t => {
+        this.backend.getUUID(this.state.teamId, false).subscribe(UUID => {
+          this.backend.getTagData(UUID, t.name).subscribe(res => {
+            //    console.log(res);
+            t.tagData = res;
+          })
+        })
+      });
+
 
     }, error => {
       console.log(error.message);
