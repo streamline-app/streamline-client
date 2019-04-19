@@ -19,6 +19,7 @@ export class ManageTeamComponent{
   public owner: boolean = false;
   public sentInvitations : any[] = null;
   public teamMembers : any[] = null;
+  public favoriteTeamMemberIds: number[] = null;
   public displayedPendingColumns = ['email', 'message', 'created_at'];
   public displayedMembersColumns = ['name', 'email', 'actions'];
 
@@ -38,14 +39,19 @@ export class ManageTeamComponent{
     this.loadTeamData();
     this.loadInvitationData();
     this.loadTeamMemberData(teamId);
-    
+  }
 
-    
+  loadFavoritesData() {
+    this.backend.getFavoriteTeamMembers(this.auth.getUserId()).subscribe((res) => {
+      this.favoriteTeamMemberIds = res as number[];
+      console.log(this.favoriteTeamMemberIds);
+    });
   }
   
   loadTeamMemberData(teamId) {
     this.backend.getTeamMembers(teamId).subscribe((res) =>  {
       this.teamMembers = res as any[];
+      this.loadFavoritesData();
     });
   }
   loadTeamData() {
@@ -156,6 +162,25 @@ export class ManageTeamComponent{
 
     this.backend.favoriteTeamMember(request).subscribe((res) => {
       this.snackbar.open(res.message, 'Ok', { duration: 3000 });
+    //  this.teamMembers = [];
+      this.favoriteTeamMemberIds = [];
+      this.loadTeamMemberData(this.route.snapshot.paramMap.get('id'));
+    })
+  }
+
+  unFavoriteTeamMember(id) {
+    let userid = this.auth.getUserId();
+    let favoriteId = id;
+    let request : any = {
+      user: userid,
+      favorite: favoriteId
+    }
+
+    this.backend.unFavoriteTeamMember(request).subscribe((res) => {
+      this.snackbar.open(res.message, 'Ok', { duration: 3000 });
+    //  this.teamMembers = [];
+      this.favoriteTeamMemberIds = [];
+      this.loadTeamMemberData(this.route.snapshot.paramMap.get('id'));
     })
   }
 

@@ -85,7 +85,9 @@ export class BackendService {
   public acceptInvitationURL: string = 'http://' + this.root + '/api/invitations/accept';
   public declineInvitationURL: string = 'http://' + this.root + '/api/invitations/decline';
 
-  public favoriteTeamMemberURL: string = 'http://' + this.root + '/api/favorite/favoriteTeamMembers';
+  public favoriteTeamMemberURL: string = 'http://' + this.root + '/api/favorite/favoriteTeamMember';
+  public unFavoriteTeamMemberURL: string = 'http://' + this.root + '/api/favorite/unFavoriteTeamMember';
+  public getFavoritesURL: string = 'http://' + this.root + '/api/favorite/getFavorites/';
 
 
   constructor(private http: HttpClient, private auth: AuthService) { }
@@ -346,6 +348,20 @@ export class BackendService {
 
   favoriteTeamMember(request: FavoriteRequest) {
     return this.http.post<FavoriteResponse>(this.favoriteTeamMemberURL, request, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    )
+  }
+
+  unFavoriteTeamMember(request: FavoriteRequest) {
+    return this.http.post<FavoriteResponse>(this.unFavoriteTeamMemberURL, request, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    )
+  }
+
+  getFavoriteTeamMembers(id: number) {
+    return this.http.get(this.getFavoritesURL + id, httpOptions)
     .pipe(
       catchError(this.handleError)
     )
