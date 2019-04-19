@@ -245,8 +245,22 @@ export class UnregisterDialog {
   templateUrl: 'upload-doc/upload-doc-dialog.html'
 })
 export class UploadDocDialog {
+  private fileList : FileList = null;
+
   constructor(
     public dialogRef: MatDialogRef<UploadDocDialog>) { }
+
+  uploadFile(fileList: FileList){
+    this.fileList = fileList;
+  }
+
+  upload(){
+    this.dialogRef.close(this.fileList);
+  }
+
+  cancel(){
+    this.dialogRef.close();
+  }
 }
 
 export interface CreateTagDialogData {

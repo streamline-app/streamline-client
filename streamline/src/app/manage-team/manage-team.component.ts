@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BackendService, FileHandle } from '../backend.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import { AuthService } from '../auth.service';
-import { ConfirmLeaveDialog, RemoveTeamMemberDialog } from '../dialogs/dialogs.module';
+import { ConfirmLeaveDialog, RemoveTeamMemberDialog, UploadDocDialog } from '../dialogs/dialogs.module';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { StateService } from '../state.service';
 
@@ -146,7 +146,7 @@ export class ManageTeamComponent {
   }
 
   onRemove(id) {
-    window.alert(id);
+    // window.alert(id);
     const dialogRef = this.dialog.open(RemoveTeamMemberDialog, {
       width: '325px',
     });
@@ -166,10 +166,28 @@ export class ManageTeamComponent {
     });
   }
 
+  openUploadDialog() {
+    const dialogRef = this.dialog.open(UploadDocDialog, {
+      width: '325px',
+    });
+
+    dialogRef.afterClosed().subscribe(res =>{
+      if(res){
+        this.uploadFile(res);
+      }
+    })
+  }
+
   uploadFile(files: FileList) {
-    console.log(files.item(0).name);
+    //console.log(files.item(0).name);
+
+
+
     this.backend.uploadFile(files.item(0), this.state.teamId).subscribe(res => {
+
+      //refresh team files list
       this.getTeamFiles();
+
     });
   }
 
@@ -180,11 +198,7 @@ export class ManageTeamComponent {
   }
 
   downloadFile(fileID: number, fileName: string) {
-    console.log('downloading...');
-
     this.backend.downloadFile(fileID).subscribe(res => {
-      console.log(res);
-      console.log(res.type);
       var newBlob = new Blob([res.body], { type: 'application/pdf' });
 
       // IE doesn't allow using a blob object directly as link href
