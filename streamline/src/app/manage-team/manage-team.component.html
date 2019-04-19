@@ -111,12 +111,13 @@
         </mat-card-header>
         <mat-card-content>
           <button mat-stroked-button (click)="openUploadDialog()">Upload</button>
+          <button mat-stroked-button (click)="getTeamFiles()">Refresh</button>
           <div *ngFor="let handle of fileHandles; index as i">
             <a (click)="downloadFile(handle[1], handle[0])">
               <h6>{{handle[0]}}</h6>
             </a>
           </div>
-          <button mat-stroked-button (click)="getTeamFiles()">get files</button>
+         
         </mat-card-content>
       </mat-card>
     </div>
