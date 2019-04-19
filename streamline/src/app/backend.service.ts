@@ -427,10 +427,11 @@ export class BackendService {
 
   downloadFile(docID: number) {
     return this.http.options(this.downloadFileURL + docID, {
+      observe: 'response',
+      responseType: 'blob',
       headers: {
         'Content-Type': 'application/pdf',
         'Authorization': 'Basic ' + btoa('user1:abc123'),
-        'Access-Control-Allow-Origin': '*',
       }
     })
       .pipe(

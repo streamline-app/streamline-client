@@ -240,6 +240,15 @@ export class UnregisterDialog {
 
 }
 
+@Component({
+  selector: 'upload-doc-dialog',
+  templateUrl: 'upload-doc/upload-doc-dialog.html'
+})
+export class UploadDocDialog {
+  constructor(
+    public dialogRef: MatDialogRef<UploadDocDialog>) { }
+}
+
 export interface CreateTagDialogData {
   name: string,
   desc: string,
