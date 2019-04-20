@@ -136,7 +136,7 @@ export interface Task {
   lastWorkedAt: number,
   expDuration: number,
   isFinished: number,
-  priority: number,
+//  priority: number,
   completeDate: Date,
   created_at: Date, //matches laravel column
   team: number,

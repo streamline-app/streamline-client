@@ -12,7 +12,10 @@ import { StateService } from '../state.service';
 })
 export class TagsComponent implements OnInit {
   opened: boolean;
-  tags: Tag[];
+  displayed_tags: Tag[] = [];
+  currDisp: number; //1 is regular tags, 2 is prio
+  tags: Tag[] = [];
+  prio_tags: Tag[] = [];
   tagData: UserDataResponse;
   selectedTag: Tag;
 
@@ -106,6 +109,7 @@ export class TagsComponent implements OnInit {
       this.opened = false;
     }
 
+
     //load data for that tag ------
     this.selectedTag = tag;
     //open tab again
@@ -118,12 +122,23 @@ export class TagsComponent implements OnInit {
       //window.alert('Got Tags');
 
       //set display to show result
-      this.tags = result;
+      this.sortTagsIntoLists(result);
 
+      //get analytics data for regular tags
       this.tags.forEach(t => {
-        this.backend.getUUID(this.auth.getUserId()).subscribe(UUID => {
+        this.backend.getUUID(this.auth.getUserId(), true).subscribe(UUID => {
           this.backend.getTagData(UUID, t.name).subscribe(res => {
-            console.log(res);
+            //     console.log(res);
+            t.tagData = res;
+          })
+        })
+      });
+
+      //get analytics data for prio tags
+      this.prio_tags.forEach(t => {
+        this.backend.getUUID(this.auth.getUserId(), true).subscribe(UUID => {
+          this.backend.getTagData(UUID, t.name).subscribe(res => {
+            //    console.log(res);
             t.tagData = res;
           })
         })
@@ -142,13 +157,75 @@ export class TagsComponent implements OnInit {
   getTeamTags() {
     this.backend.getTeamTags(this.state.teamId).subscribe(result => {
       console.log(result);
-      this.tags = result;
+      this.sortTagsIntoLists(result);
+
+      //get analytics data for regular tags
+      this.tags.forEach(t => {
+        this.backend.getUUID(this.state.teamId, false).subscribe(UUID => {
+          this.backend.getTagData(UUID, t.name).subscribe(res => {
+            //     console.log(res);
+            t.tagData = res;
+          })
+        })
+      });
+
+      //get analytics data for prio tags
+      this.prio_tags.forEach(t => {
+        this.backend.getUUID(this.state.teamId, false).subscribe(UUID => {
+          this.backend.getTagData(UUID, t.name).subscribe(res => {
+            //    console.log(res);
+            t.tagData = res;
+          })
+        })
+      });
+
 
     }, error => {
       console.log(error.message);
       //three second snackbar pop up notification
       let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
     });
+  }
+
+  public sortTagsIntoLists(rawList: Tag[]) {
+    //clear lists
+    this.tags = [];
+    this.prio_tags = [];
+
+    //sort out tags into their respective lists
+    rawList.forEach(tag => {
+      if (tag.name.includes('priority')) {
+        //add to prio list
+        this.prio_tags.push(tag);
+      } else {
+        //add to regular tag list
+        this.tags.push(tag);
+      }
+    });
+
+    if (this.currDisp === 1)
+      this.displayed_tags = this.tags;
+    else if (this.currDisp === 2)
+      this.displayed_tags = this.prio_tags;
+    else
+      this.displayed_tags = this.tags;
+
+  }
+
+  public showTags(val: number) {
+    switch (val) {
+      case 1:
+        this.displayed_tags = this.tags;
+        this.currDisp = 1;
+        break;
+      case 2:
+        this.displayed_tags = this.prio_tags;
+        this.currDisp = 2;
+        break;
+      default:
+        this.displayed_tags = this.tags;
+        this.currDisp = 1;
+    }
   }
 
   deleteTag(id: number) {
@@ -165,7 +242,7 @@ export class TagsComponent implements OnInit {
           let snackbarRef = this.snackbar.open('Tag Deleted!', 'Ok', { duration: 3000 });
 
           //update display
-          this.getUserTags();
+          this.loadData();
 
           //close sidebar showing deleted tags details
           this.opened = false;
@@ -182,7 +259,7 @@ export class TagsComponent implements OnInit {
   editTag(tag: Tag) {
     const dialogRef = this.create_dialog.open(EditTagDialog, {
       width: '325px',
-      data: { name: this.selectedTag.name, desc: this.selectedTag.description, color: this.selectedTag.color } /* Make sure to set fields to details of selected tag*/
+      data: { name: this.selectedTag.name, desc: this.selectedTag.description, color: this.selectedTag.color, isPrio: this.selectedTag.name.includes('priority') } /* Make sure to set fields to details of selected tag*/
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -214,7 +291,7 @@ export class TagsComponent implements OnInit {
           let snackbarRef = this.snackbar.open('Tag Updated!', 'Ok', { duration: 3000 });
 
           //update display
-          this.getUserTags();
+          this.loadData();
         }, error => {
           console.log(error.message);
           //three second snackbar pop up notification

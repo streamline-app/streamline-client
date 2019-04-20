@@ -20,7 +20,7 @@
   }
   .tag_box{
       margin: 10px;
-      height: 80%;
+    /*  height: 80%;*/
       border: solid;
       border-width: 2px;
       border-color: lightgrey;
@@ -120,4 +120,13 @@ button.del_button {
   margin-top: 20px;
   background-color: #c90000;
   color: white;
+}
+
+mat-sidenav {
+  min-width: 250px !important;
+  width: 30% !important;
+}
+
+mat-sidenav-content {
+  min-width: 400px;
 }

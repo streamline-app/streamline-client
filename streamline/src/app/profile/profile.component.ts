@@ -28,7 +28,7 @@ export class ProfileComponent implements OnInit {
   }
 
   getUserData(userID: number) {
-    this.backend.getUUID(userID).subscribe(UUID => {
+    this.backend.getUUID(userID, true).subscribe(UUID => {
       console.log(UUID);
       this.backend.getProfileInfo(UUID).subscribe(res => {
         console.log(res);

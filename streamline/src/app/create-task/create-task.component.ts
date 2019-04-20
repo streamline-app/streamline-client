@@ -21,6 +21,7 @@ const HOURS_TO_SECONDS: number = 3600;
 })
 export class CreateTaskComponent {
   tags: Tag[] = [];
+  prio_tags: Tag[] = [];
   selectedTags: Tag[] = [];
 
   public rawTagsForm: FormControl = new FormControl();
@@ -31,7 +32,7 @@ export class CreateTaskComponent {
     title: new FormControl(''),
     body: new FormControl(''),
     priority: new FormControl(0),
-    completeDate: new FormControl( {value: new Date(), disabled: 'true'}),
+    completeDate: new FormControl({ value: new Date(), disabled: 'true' }),
     estimatedMin: new FormControl(0),
     estimatedHour: new FormControl(0),
     tags: new FormControl({ value: '', disabled: 'true' })
@@ -46,26 +47,28 @@ export class CreateTaskComponent {
   ) {
 
     /* used to set a min date for datepicker, for some reason sets min 
-    *  to previous day so have to add one to the current date.
-    */
+     * to previous day so have to add one to the current date.
+     */
     this.currDate.setDate(this.currDate.getDate() + 1);
 
     //retrieve tags for display
     this.getTags();
   }
 
-
   public onSubmit() {
+    //handle priority
+    this.getPrioTag(this.task.controls['priority'].value);
+
     let task: any = {
       title: this.task.controls['title'].value,
       body: this.task.controls['body'].value,
       estimatedMin: this.task.controls['estimatedMin'].value,
       estimatedHour: this.task.controls['estimatedHour'].value,
-      priority: this.task.controls['priority'].value,
-      completeDate:  formatDate(this.task.controls['completeDate'].value , 'yyyy-MM-dd', 'en-US'), //format Date for backend
+      //   priority: this.task.controls['priority'].value,
+      completeDate: formatDate(this.task.controls['completeDate'].value, 'yyyy-MM-dd', 'en-US'), //format Date for backend
       expDuration: (this.task.controls['estimatedMin'].value * MINUTES_TO_SECONDS) + (this.task.controls['estimatedHour'].value * HOURS_TO_SECONDS), //convert sum of estimations to seconds
       tags: this.parseTagArray(this.selectedTags),//list of tagIDs
-      userID: this.auth.getUserId(), 
+      userID: this.auth.getUserId(),
       team: this.state.teamId
     }
 
@@ -85,12 +88,12 @@ export class CreateTaskComponent {
       //three second snackbar pop up notification
       let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
     });
-
   }
 
   public getTags() {
     this.backend.getUserTags(this.auth.getUserId()).subscribe(result => {
-      this.tags = result;
+      //result is list of all tags, need to separate out prio tags
+      this.sortTagsIntoLists(result);
 
       //set up autofill for tags
       this.filteredTags = this.rawTagsForm.valueChanges
@@ -100,6 +103,31 @@ export class CreateTaskComponent {
         );
 
     });
+  }
+
+  public sortTagsIntoLists(rawList: Tag[]) {
+    rawList.forEach(tag => {
+      if (tag.name.includes('priority')) {
+        //add to prio list
+        this.prio_tags.push(tag);
+      } else {
+        //add to regular tag list
+        this.tags.push(tag);
+      }
+    });
+  }
+
+  public getPrioTag(prio_num: number) {
+    //if no prio was selected, return;
+    if(prio_num === 0) return;
+
+    //else find prio with the given number, then add it to the list of selected tags
+    this.prio_tags.some(function(pt) {
+      if(pt.name.includes('' + prio_num)){
+        this.selectedTags.push(pt);
+        return true;
+      }
+    }, this);
   }
 
   public createNewTag() {
@@ -112,9 +140,9 @@ export class CreateTaskComponent {
     dialogRef.afterClosed().subscribe(result => {
       if (result != null) {
         //check if tag already exists under given name
-        let exists : boolean = false;
+        let exists: boolean = false;
         this.tags.forEach(element => {
-          if(element.name === result.name){
+          if (element.name === result.name) {
             //notify user
             let snackbarRef = this.snackbar.open('You already have a tag with that name!', 'Ok', { duration: 3000 });
 
@@ -123,7 +151,7 @@ export class CreateTaskComponent {
           }
         });
 
-        if(exists) //if tag already exists, don't create a new one
+        if (exists) //if tag already exists, don't create a new one
           return;
 
         //construct Tag object with input values
@@ -140,7 +168,6 @@ export class CreateTaskComponent {
           team: this.state.teamId
         }
 
-        console.log(newTag);
         //send data to backend
         this.backend.createTag(newTag).subscribe(result => {
 

@@ -4,7 +4,7 @@
         <mat-label>Tag Name</mat-label>
         <input matInput [matAutocomplete]="auto" [formControl]="rawTagsForm">
         <mat-autocomplete #auto="matAutocomplete">
-            <mat-option *ngFor="let tag of filteredTags | async" (click)="onTagSelect(tag.id)" [value]="tag.name">
+            <mat-option *ngFor="let tag of filteredTags | async" (click)="onTagSelect(tag)" [value]="tag.name">
                 <div class="square" [ngStyle]="{'background-color': tag.color}"></div> |
                 <span>{{tag.name}}</span>
             </mat-option>
