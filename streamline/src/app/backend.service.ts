@@ -26,7 +26,8 @@ export class BackendService {
 
 
   /* User URLs */
-  public getIDfromNameURL: string = 'http://' + this.analRoot + '/api/users/identity/'
+  public getUserIDfromNameURL: string = 'http://' + this.analRoot + '/api/users/identity/'
+  public getTeamIDfromNameURL: string = 'http://' + this.analRoot + '/api/teams/identity/'
   public getProfileInfoURL: string = 'http://' + this.analRoot + '/api/users/';
   public getTagDataURL: string = 'http://' + this.analRoot + '/api/users/';
   public estimationDataURL: string = 'http://' + this.analRoot + '/api/users/'
@@ -81,6 +82,7 @@ export class BackendService {
   public getTeamFilesURL: string = 'http://' + this.root + '/api/team/fetchDocs/'
   public downloadFileURL: string = 'http://' + this.root + '/api/team/downloadDoc/'
 
+ 
   public getUserIdURL: string = 'http://' + this.root + '/api/user/';
 
   public sendInvitationURL: string = 'http://' + this.root + '/api/invitations/create';
@@ -89,14 +91,26 @@ export class BackendService {
   public acceptInvitationURL: string = 'http://' + this.root + '/api/invitations/accept';
   public declineInvitationURL: string = 'http://' + this.root + '/api/invitations/decline';
 
+  public favoriteTeamMemberURL: string = 'http://' + this.root + '/api/favorite/favoriteTeamMember';
+  public unFavoriteTeamMemberURL: string = 'http://' + this.root + '/api/favorite/unFavoriteTeamMember';
+  public getFavoritesURL: string = 'http://' + this.root + '/api/favorite/getFavorites/';
+
 
   constructor(private http: HttpClient, private auth: AuthService) { }
   /* ============ Profile Functions ========= */
-  getUUID(userID: number) {
-    return this.http.get<string>(this.getIDfromNameURL + userID, httpOptions)
-      .pipe(
-        catchError(this.handleError)
-      );
+  getUUID(ID: number, isUser: boolean) {
+    if (isUser) {
+      return this.http.get<string>(this.getUserIDfromNameURL + ID, httpOptions)
+        .pipe(
+          catchError(this.handleError)
+        );
+    }
+    else { //is team
+      return this.http.get<string>(this.getTeamIDfromNameURL + ID, httpOptions)
+        .pipe(
+          catchError(this.handleError)
+        );
+    }
   }
 
   getProfileInfo(UUID: string) { //MUST USE UUID OF ANALYTICS
@@ -344,6 +358,27 @@ export class BackendService {
       .pipe(
         catchError(this.handleError)
       );
+  }
+
+  favoriteTeamMember(request: FavoriteRequest) {
+    return this.http.post<FavoriteResponse>(this.favoriteTeamMemberURL, request, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    )
+  }
+
+  unFavoriteTeamMember(request: FavoriteRequest) {
+    return this.http.post<FavoriteResponse>(this.unFavoriteTeamMemberURL, request, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    )
+  }
+
+  getFavoriteTeamMembers(id: number) {
+    return this.http.get(this.getFavoritesURL + id, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    )
   }
 
   getUserId(email: string) {
@@ -594,4 +629,13 @@ interface FinishResponse {
 export interface FileHandle {
   fileName: string,
   fileID: number
-};
+}
+
+interface FavoriteRequest {
+  user: number,
+  favorite: number
+}
+
+interface FavoriteResponse {
+  message: string
+}

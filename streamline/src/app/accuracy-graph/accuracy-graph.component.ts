@@ -29,7 +29,7 @@ export class AccuracyGraphComponent implements OnInit {
 
   
   constructor(private auth: AuthService, private backend: BackendService) { 
-    this.backend.getUUID(this.auth.getUserId()).subscribe(UUID => {
+    this.backend.getUUID(this.auth.getUserId(), true).subscribe(UUID => {
       console.log(UUID);
       this.backend.getEstimationData(UUID).subscribe(res => {
         console.log(res);

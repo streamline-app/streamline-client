@@ -20,7 +20,7 @@
   }
   .tag_box{
       margin: 10px;
-      height: 80%;
+    /*  height: 80%;*/
       border: solid;
       border-width: 2px;
       border-color: lightgrey;

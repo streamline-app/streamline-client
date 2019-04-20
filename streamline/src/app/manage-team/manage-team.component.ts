@@ -13,14 +13,16 @@ import { StateService } from '../state.service';
   templateUrl: './manage-team.component.html',
   styleUrls: ['./manage-team.component.css']
 })
-export class ManageTeamComponent {
-  public t: any = null;
+
+export class ManageTeamComponent{
+  public t : any = null;
+  public ownerId : number = -1;
   public owner: boolean = false;
-  public sentInvitations: any[] = null;
-  public teamMembers: any[] = null;
+  public sentInvitations : any[] = null;
+  public teamMembers : any[] = null;
+  public favoriteTeamMemberIds: number[] = null;
   public displayedPendingColumns = ['email', 'message', 'created_at'];
-  public displayedMembersColumns = ['name', 'email'];
-  public fileHandles: FileHandle[] = [];
+  public displayedMembersColumns = ['name', 'email', 'actions'];
 
   public team: FormGroup = new FormGroup({
     title: new FormControl(),
@@ -39,19 +41,28 @@ export class ManageTeamComponent {
     this.loadInvitationData();
     this.loadTeamMemberData(teamId);
 
-    this.getTeamFiles();
 
+    this.getTeamFiles();
+  }
+
+  loadFavoritesData() {
+    this.backend.getFavoriteTeamMembers(this.auth.getUserId()).subscribe((res) => {
+      this.favoriteTeamMemberIds = res as number[];
+      console.log(this.favoriteTeamMemberIds);
+    });
   }
 
   loadTeamMemberData(teamId) {
     this.backend.getTeamMembers(teamId).subscribe((res) => {
       this.teamMembers = res as any[];
+      this.loadFavoritesData();
     });
   }
   loadTeamData() {
     let teamId = this.route.snapshot.paramMap.get('id');
     this.backend.getTeam(teamId).subscribe((res) => {
       this.t = res;
+      this.ownerId = this.t.owner;
       this.team.patchValue({
         title: this.t.name,
         description: this.t.description,
@@ -142,6 +153,38 @@ export class ManageTeamComponent {
       this.loadTeamData();
       this.state.signalTeamDataChange();
       this.snackbar.open('Team updated!', 'Ok', { duration: 3000 });
+    })
+  }
+
+  favoriteTeamMember(id) {
+    let userid = this.auth.getUserId();
+    let favoriteId = id;
+    let request : any = {
+      user: userid,
+      favorite: favoriteId
+    }
+
+    this.backend.favoriteTeamMember(request).subscribe((res) => {
+      this.snackbar.open(res.message, 'Ok', { duration: 3000 });
+    //  this.teamMembers = [];
+      this.favoriteTeamMemberIds = [];
+      this.loadTeamMemberData(this.route.snapshot.paramMap.get('id'));
+    })
+  }
+
+  unFavoriteTeamMember(id) {
+    let userid = this.auth.getUserId();
+    let favoriteId = id;
+    let request : any = {
+      user: userid,
+      favorite: favoriteId
+    }
+
+    this.backend.unFavoriteTeamMember(request).subscribe((res) => {
+      this.snackbar.open(res.message, 'Ok', { duration: 3000 });
+    //  this.teamMembers = [];
+      this.favoriteTeamMemberIds = [];
+      this.loadTeamMemberData(this.route.snapshot.paramMap.get('id'));
     })
   }
 
