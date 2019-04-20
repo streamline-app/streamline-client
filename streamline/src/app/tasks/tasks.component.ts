@@ -209,8 +209,8 @@ export class TasksComponent {
           //reload tags
           this.getTaskTags(taskID);
 
-           //maintain sort option
-           this.checkSort();
+          //maintain sort option
+          this.checkSort();
         },
           error => {
             console.log(error.message);
@@ -269,20 +269,34 @@ export class TasksComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) { //if confirmed, delete
-        this.backend.deleteTask(task.id).subscribe(res => {
-          console.log(res);
+        const index = this.tasks.indexOf(task);
 
-          //three second snackbar pop up notification
-          let snackbarRef = this.snackbar.open('Task deleted!', 'Ok', { duration: 3000 });
+        this.tasks.splice(index, 1);
 
-          //reload tasks
-          this.getUserTasks();
-        },
-          error => {
-            console.log(error.message);
-            //three second snackbar pop up notification
-            let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
-          });
+        let snackbarRef = this.snackbar.open('Task deleted!', 'Undo', { duration: 3000 });
+        snackbarRef.afterDismissed().subscribe(res => {
+          if (res.dismissedByAction) {
+            //undo
+            console.log('delete undone!');
+            this.tasks.splice(index, 0, task);
+          }
+          else {
+            //delete
+            this.backend.deleteTask(task.id).subscribe(res => {
+              console.log('DELETE sent');
+
+              //three second snackbar pop up notification
+
+              //reload tasks
+              //          this.getUserTasks();
+            },
+              error => {
+                console.log(error.message);
+                //three second snackbar pop up notification
+                let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
+              });
+          }
+        });
       }
       else { /*do nothing */ }
     });
