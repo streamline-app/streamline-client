@@ -228,28 +228,45 @@ export class TagsComponent implements OnInit {
     }
   }
 
-  deleteTag(id: number) {
+  deleteTag(tag: Tag) {
     const dialogRef = this.create_dialog.open(DeleteConfirmDialog, {
       width: '325px',
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) { //if confirmed, delete
-        this.backend.deleteTag(id).subscribe(result => {
-          console.log(result);
+        //get index of tag
+        const index = this.tags.indexOf(tag);
 
-          //three second snackbar pop up notification
-          let snackbarRef = this.snackbar.open('Tag Deleted!', 'Ok', { duration: 3000 });
+        //splice tag out of list
+        this.tags.splice(index, 1);
 
-          //update display
-          this.loadData();
+        //close detail sidebar
+        this.opened = false;
 
-          //close sidebar showing deleted tags details
-          this.opened = false;
-        }, error => {
-          console.log(error.message);
-          //three second snackbar pop up notification
-          let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
+        //pop-up to allow user to undo action
+        let snackbarRef = this.snackbar.open('Tag Deleted!', 'Undo', { duration: 3000 });
+
+        //if action selected, splice tag back into the list
+        snackbarRef.onAction().subscribe(() => {
+          console.log('tag was not deleted (undo action)');
+          this.tags.splice(index, 0, tag);
+        });
+
+        //if action not selected before snackbar is dismissed, send DELETE request to backend
+        snackbarRef.afterDismissed().subscribe(res => {
+          if (!res.dismissedByAction) {
+            this.backend.deleteTag(tag.id).subscribe(() => {
+              console.log('tag was deleted from DB');
+            }, error => {
+              console.log(error.message);
+              //three second snackbar pop up notification
+              let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
+
+              //add tag back into list
+              this.tags.splice(index, 0, tag);
+            });
+          }
         });
       }
       else { /*do nothing */ }

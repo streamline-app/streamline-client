@@ -209,8 +209,8 @@ export class TasksComponent {
           //reload tags
           this.getTaskTags(taskID);
 
-           //maintain sort option
-           this.checkSort();
+          //maintain sort option
+          this.checkSort();
         },
           error => {
             console.log(error.message);
@@ -269,20 +269,38 @@ export class TasksComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) { //if confirmed, delete
-        this.backend.deleteTask(task.id).subscribe(res => {
-          console.log(res);
 
-          //three second snackbar pop up notification
-          let snackbarRef = this.snackbar.open('Task deleted!', 'Ok', { duration: 3000 });
+        //get index of the task
+        const index = this.tasks.indexOf(task);
 
-          //reload tasks
-          this.getUserTasks();
-        },
-          error => {
-            console.log(error.message);
-            //three second snackbar pop up notification
-            let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
-          });
+        //remove task from task list displayed
+        this.tasks.splice(index, 1);
+
+        //snackbar pop-up to give user option to undo
+        let snackbarRef = this.snackbar.open('Task deleted!', 'Undo', { duration: 3000 });
+
+        //if user chooses to undo, splice task back to where it was in the list
+        snackbarRef.onAction().subscribe(res => {
+          console.log('tasks: task was not deleted (undo action)');
+          this.tasks.splice(index, 0, task);
+        });
+
+        //after snackbar is dimissed, check to see if action was done
+        snackbarRef.afterDismissed().subscribe(res => {
+          if (!res.dismissedByAction) { //only delete if action wasn't done
+            this.backend.deleteTask(task.id).subscribe(res => {
+              console.log('delete request sent');
+            },
+              error => {
+                console.log(error.message);
+                //three second snackbar pop up notification
+                let snackbarRef = this.snackbar.open('Oh no, something went wrong!', 'Ok', { duration: 3000 });
+
+                //add task back into list
+                this.tasks.splice(index, 0, task);
+              });
+          }
+        });
       }
       else { /*do nothing */ }
     });
