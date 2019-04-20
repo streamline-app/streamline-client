@@ -23,6 +23,7 @@ export class ManageTeamComponent{
   public favoriteTeamMemberIds: number[] = null;
   public displayedPendingColumns = ['email', 'message', 'created_at'];
   public displayedMembersColumns = ['name', 'email', 'actions'];
+  public fileHandles: FileHandle[] = [];
 
   public team: FormGroup = new FormGroup({
     title: new FormControl(),
