@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>Upload PDF or Word Doc</h1>
+<div mat-dialog-content class="diag_box">
+    <div class="row" style="height: 50px;">
+        <div class="col-sm-5">
+            <button type="button" mat-stroked-button (click)="fileInput.click()">Choose a file</button>
+            <div hidden>
+                <input name="file" #fileInput type="file" (change)="uploadFile($event.target.files)"
+                    placeholder="Upload file" accept=".pdf, .doc, .docx">
+            </div>
+        </div>
+        <div class="col-sm-7">
+            <p *ngIf="fileList != null">{{fileList.item(0).name}}</p>
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions class="button_box" style="float:right;">
+    <button [disabled]="this.fileList === null" mat-stroked-button (click)="upload()"
+        style="background-color: lightgreen;">Confirm</button>
+    <button mat-stroked-button (click)="cancel()" style="background-color: lightcoral;">Cancel</button>
+</div>

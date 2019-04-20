@@ -77,6 +77,11 @@ export class BackendService {
   public getTeamTasksURL: string = 'http://' + this.root + '/api/teamtasks';
   public getTeamTagsURL: string = 'http://' + this.root + '/api/teamtags';
   public updateTeamURL: string = 'http://' + this.root + '/api/teams/update/';
+
+  public uploadFileURL: string = 'http://' + this.root + '/api/team/upload/';
+  public getTeamFilesURL: string = 'http://' + this.root + '/api/team/fetchDocs/'
+  public downloadFileURL: string = 'http://' + this.root + '/api/team/downloadDoc/'
+
  
   public getUserIdURL: string = 'http://' + this.root + '/api/user/';
 
@@ -432,6 +437,43 @@ export class BackendService {
       );
   }
 
+  uploadFile(file: File, teamID: number) {
+    let header = new HttpHeaders();
+    header.append('Authorization', 'Basic ' + btoa('user1:abc123'));
+
+    let formData = new FormData();
+    formData.append('teamID', '' + teamID);
+    formData.append('upload', file);
+
+    console.log(formData.get('teamID'));
+
+    return this.http.post(this.uploadFileURL, formData, { headers: header })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  getTeamFiles(teamID: number): Observable<FileHandle[]> {
+    return this.http.get<FileHandle[]>(this.getTeamFilesURL + teamID, httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  downloadFile(docID: number) {
+    return this.http.options(this.downloadFileURL + docID, {
+      observe: 'response',
+      responseType: 'blob',
+      headers: {
+        'Content-Type': 'application/pdf',
+        'Authorization': 'Basic ' + btoa('user1:abc123'),
+      }
+    })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   getTeamTasks(teamID: number): Observable<(Task[])> {
     return this.http.get<Task[]>(this.getTeamTasksURL, {
       params: { teamID: teamID.toString() },
@@ -582,6 +624,11 @@ interface TeamEditRequest {
 interface FinishResponse {
   expDuration: number,
   actualDuration: number
+}
+
+export interface FileHandle {
+  fileName: string,
+  fileID: number
 }
 
 interface FavoriteRequest {

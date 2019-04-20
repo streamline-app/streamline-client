@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BackendService } from '../backend.service';
+import { BackendService, FileHandle } from '../backend.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import { AuthService } from '../auth.service';
-import { ConfirmLeaveDialog, RemoveTeamMemberDialog } from '../dialogs/dialogs.module';
+import { ConfirmLeaveDialog, RemoveTeamMemberDialog, UploadDocDialog } from '../dialogs/dialogs.module';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { StateService } from '../state.service';
 
@@ -13,6 +13,7 @@ import { StateService } from '../state.service';
   templateUrl: './manage-team.component.html',
   styleUrls: ['./manage-team.component.css']
 })
+
 export class ManageTeamComponent{
   public t : any = null;
   public ownerId : number = -1;
@@ -23,13 +24,13 @@ export class ManageTeamComponent{
   public displayedPendingColumns = ['email', 'message', 'created_at'];
   public displayedMembersColumns = ['name', 'email', 'actions'];
 
-  public team : FormGroup = new FormGroup( {
-    title : new FormControl(),
-    description : new FormControl(''),
+  public team: FormGroup = new FormGroup({
+    title: new FormControl(),
+    description: new FormControl(''),
     color: new FormControl('')
   });
 
-  public invite : FormGroup = new FormGroup ( {
+  public invite: FormGroup = new FormGroup({
     email: new FormControl(''),
     message: new FormControl('')
   });
@@ -39,6 +40,9 @@ export class ManageTeamComponent{
     this.loadTeamData();
     this.loadInvitationData();
     this.loadTeamMemberData(teamId);
+
+
+    this.getTeamFiles();
   }
 
   loadFavoritesData() {
@@ -47,9 +51,9 @@ export class ManageTeamComponent{
       console.log(this.favoriteTeamMemberIds);
     });
   }
-  
+
   loadTeamMemberData(teamId) {
-    this.backend.getTeamMembers(teamId).subscribe((res) =>  {
+    this.backend.getTeamMembers(teamId).subscribe((res) => {
       this.teamMembers = res as any[];
       this.loadFavoritesData();
     });
@@ -94,10 +98,10 @@ export class ManageTeamComponent{
 
   public sendInvite(recipientId) {
     let message = this.invite.controls['message'].value as string;
-    let request : any = {
-      senderId : this.auth.getUserId(),
-      recipientId : recipientId,
-      inviteMessage : message,
+    let request: any = {
+      senderId: this.auth.getUserId(),
+      recipientId: recipientId,
+      inviteMessage: message,
       team: this.route.snapshot.paramMap.get('id')
     };
 
@@ -105,7 +109,7 @@ export class ManageTeamComponent{
       if (res.message == 'multiple invitations') {
         window.alert('Inviation already exists');
 
-      } else if (res.message == 'member exists'){
+      } else if (res.message == 'member exists') {
         window.alert('Member already on team');
 
       } else {
@@ -123,7 +127,7 @@ export class ManageTeamComponent{
       if (res) {
         let team = this.t.id;
         let user = this.auth.getUserId();
-        let request : any = {
+        let request: any = {
           team: team,
           user: user
         };
@@ -139,7 +143,7 @@ export class ManageTeamComponent{
     let description = this.team.controls['description'].value;
     let color = this.team.controls['color'].value;
 
-    let request : any = {
+    let request: any = {
       title: title,
       description: description,
       color: color
@@ -185,7 +189,7 @@ export class ManageTeamComponent{
   }
 
   onRemove(id) {
-    window.alert(id);
+    // window.alert(id);
     const dialogRef = this.dialog.open(RemoveTeamMemberDialog, {
       width: '325px',
     });
@@ -194,7 +198,7 @@ export class ManageTeamComponent{
       if (res) {
         let team = this.t.id;
         let user = id
-        let request : any = {
+        let request: any = {
           team: team,
           user: user
         };
@@ -205,4 +209,64 @@ export class ManageTeamComponent{
     });
   }
 
+  openUploadDialog() {
+    const dialogRef = this.dialog.open(UploadDocDialog, {
+      width: '325px',
+    });
+
+    dialogRef.afterClosed().subscribe(res =>{
+      if(res){
+        this.uploadFile(res);
+      }
+    })
+  }
+
+  uploadFile(files: FileList) {
+    //console.log(files.item(0).name);
+
+
+
+    this.backend.uploadFile(files.item(0), this.state.teamId).subscribe(res => {
+
+      //refresh team files list
+      this.getTeamFiles();
+
+    });
+  }
+
+  getTeamFiles() {
+    this.backend.getTeamFiles(this.state.teamId).subscribe(res => {
+      this.fileHandles = res;
+    });
+  }
+
+  downloadFile(fileID: number, fileName: string) {
+    this.backend.downloadFile(fileID).subscribe(res => {
+      var newBlob = new Blob([res.body], { type: 'application/pdf' });
+
+      // IE doesn't allow using a blob object directly as link href
+      // instead it is necessary to use msSaveOrOpenBlob
+      if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+        window.navigator.msSaveOrOpenBlob(newBlob);
+        return;
+      }
+
+      // For other browsers: 
+      // Create a link pointing to the ObjectURL containing the blob.
+      const data = window.URL.createObjectURL(newBlob);
+
+      var link = document.createElement('a');
+      link.href = data;
+      link.download = fileName;
+      // this is necessary as link.click() does not work on the latest firefox
+      link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+
+      setTimeout(function () {
+        // For Firefox it is necessary to delay revoking the ObjectURL
+        window.URL.revokeObjectURL(data);
+        link.remove();
+      }, 100);
+    });
+
+  }
 }
