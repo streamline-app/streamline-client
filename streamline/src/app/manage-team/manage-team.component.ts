@@ -16,11 +16,13 @@ import { StateService } from '../state.service';
 
 export class ManageTeamComponent{
   public t : any = null;
+  public teamId : any = 0;
   public ownerId : number = -1;
   public owner: boolean = false;
   public sentInvitations : any[] = null;
   public teamMembers : any[] = null;
   public favoriteTeamMemberIds: number[] = null;
+  public favoriteTeamMemberEmails: string[] = null;
   public displayedPendingColumns = ['email', 'message', 'created_at'];
   public displayedMembersColumns = ['name', 'email', 'actions'];
   public fileHandles: FileHandle[] = [];
@@ -37,10 +39,10 @@ export class ManageTeamComponent{
   });
 
   constructor(private route: ActivatedRoute, private state: StateService, private router: Router, private backend: BackendService, private snackbar: MatSnackBar, private dialog: MatDialog, private auth: AuthService) {
-    let teamId = this.route.snapshot.paramMap.get('id');
+    this.teamId = this.route.snapshot.paramMap.get('id');
     this.loadTeamData();
     this.loadInvitationData();
-    this.loadTeamMemberData(teamId);
+    this.loadTeamMemberData(this.teamId);
 
 
     this.getTeamFiles();
@@ -50,6 +52,11 @@ export class ManageTeamComponent{
     this.backend.getFavoriteTeamMembers(this.auth.getUserId()).subscribe((res) => {
       this.favoriteTeamMemberIds = res as number[];
       console.log(this.favoriteTeamMemberIds);
+    });
+
+    this.backend.getFavoriteTeamMemberEmails(this.auth.getUserId()).subscribe((res) => {
+      this.favoriteTeamMemberEmails = res as string[];
+      console.log(this.favoriteTeamMemberEmails);
     });
   }
 
@@ -139,6 +146,7 @@ export class ManageTeamComponent{
     });
   }
 
+
   submit() {
     let title = this.team.controls['title'].value;
     let description = this.team.controls['description'].value;
@@ -227,7 +235,7 @@ export class ManageTeamComponent{
 
 
 
-    this.backend.uploadFile(files.item(0), this.state.teamId).subscribe(res => {
+    this.backend.uploadFile(files.item(0), this.teamId).subscribe(res => {
 
       //refresh team files list
       this.getTeamFiles();
@@ -236,7 +244,7 @@ export class ManageTeamComponent{
   }
 
   getTeamFiles() {
-    this.backend.getTeamFiles(this.state.teamId).subscribe(res => {
+    this.backend.getTeamFiles(this.teamId).subscribe(res => {
       this.fileHandles = res;
     });
   }

@@ -94,6 +94,7 @@ export class BackendService {
   public favoriteTeamMemberURL: string = 'http://' + this.root + '/api/favorite/favoriteTeamMember';
   public unFavoriteTeamMemberURL: string = 'http://' + this.root + '/api/favorite/unFavoriteTeamMember';
   public getFavoritesURL: string = 'http://' + this.root + '/api/favorite/getFavorites/';
+  public getFavoriteEmailsURL: string = 'http://' + this.root + '/api/favorite/getFavoriteEmails/';
 
 
   constructor(private http: HttpClient, private auth: AuthService) { }
@@ -376,6 +377,13 @@ export class BackendService {
 
   getFavoriteTeamMembers(id: number) {
     return this.http.get(this.getFavoritesURL + id, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    )
+  }
+
+  getFavoriteTeamMemberEmails(id: number) {
+    return this.http.get(this.getFavoriteEmailsURL + id, httpOptions)
     .pipe(
       catchError(this.handleError)
     )
