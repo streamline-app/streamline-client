@@ -546,13 +546,14 @@ interface TagEdit {
   color: string
 };
 
-interface TaskEdit {
+export interface TaskEdit {
   title: string,
   body: string,
   workedDuration: number,
   estimatedMin: number,
   estimatedHour: number,
   expDuration: number,
+  completeDate: string
 }
 
 interface LoginRequest {

@@ -22,12 +22,13 @@ import {
   CalendarView
 } from 'angular-calendar';
 import { AuthService } from '../auth.service';
-import { BackendService } from '../backend.service';
+import { BackendService, TaskEdit } from '../backend.service';
 import { Task, Tag } from '../app.module';
 import { MatSnackBar } from '@angular/material';
 import { EventColor } from 'calendar-utils';
 import { Router } from '@angular/router';
 import { StateService } from '../state.service';
+import { formatDate } from '@angular/common';
 
 const colors: any = {
   red: {
@@ -90,48 +91,7 @@ export class CalendarComponent {
 
   refresh: Subject<any> = new Subject();
   events: CalendarEvent[] = [];
-/* Example Events ---- TODO remove before merge
-  events: CalendarEvent[] = [
-    {
-      start: subDays(startOfDay(new Date()), 1),
-      end: addDays(new Date(), 1),
-      title: 'A 3 day event',
-      color: colors.red,
-      actions: this.actions,
-      allDay: true,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true
-      },
-      draggable: true
-    },
-    {
-      start: startOfDay(new Date()),
-      title: 'An event with no end date',
-      color: colors.yellow,
-      actions: this.actions
-    },
-    {
-      start: subDays(endOfMonth(new Date()), 3),
-      end: addDays(endOfMonth(new Date()), 3),
-      title: 'A long event that spans 2 months',
-      color: colors.blue,
-      allDay: true
-    },
-    {
-      start: addHours(startOfDay(new Date()), 2),
-      end: new Date(),
-      title: 'A draggable and resizable event',
-      color: colors.yellow,
-      actions: this.actions,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true
-      },
-      draggable: true
-    }
-  ];
-*/
+
   activeDayIsOpen: boolean = true;
 
   private tasks: Task[] = [];
@@ -245,7 +205,37 @@ export class CalendarComponent {
     newStart,
     newEnd
   }: CalendarEventTimesChangedEvent): void {
+
     console.log(newStart);
+
+    //update Task with new start date
+    //find task object with given name
+    let task: Task = null;
+    for (var i = 0; i < this.tasks.length; i++) {
+      if (this.tasks[i].title === event.title) {
+        task = this.tasks[i];
+        break;
+      }
+    }
+
+    //construct edit object
+    let edit: TaskEdit = {
+      title: task.title,
+      body: task.body,
+      workedDuration: task.workedDuration,
+      estimatedMin: task.estimatedMin,
+      estimatedHour: task.estimatedHour,
+      expDuration: task.expDuration,
+      completeDate: formatDate(newStart, 'yyyy-MM-dd', 'en-US') //format date for backend
+    }
+
+    //send update
+    this.backend.editTask(task.id, edit).subscribe(() => {
+      console.log('task date updated');
+    }, error => {
+      console.log('error with moving task');
+    });
+
     this.events = this.events.map(iEvent => {
       if (iEvent === event) {
         return {
@@ -265,15 +255,15 @@ export class CalendarComponent {
   }
 
   addEvent(task: Task): void {
-    let color : EventColor = { primary: '#999999', secondary: '#999999'};
+    let color: EventColor = { primary: '#999999', secondary: '#999999' };
 
-    if(task.lastWorkedAt != null){ //in-progress
+    if (task.lastWorkedAt != null) { //in-progress
       color = colors.green;
     }
-    else if(task.lastWorkedAt == null && task.workedDuration === 0){ //not started yet
+    else if (task.lastWorkedAt == null && task.workedDuration === 0) { //not started yet
       color = colors.blue;
     }
-    else if(task.lastWorkedAt == null && task.workedDuration > 0){ //paused
+    else if (task.lastWorkedAt == null && task.workedDuration > 0) { //paused
       color = colors.red;
     }
     else { //default
@@ -285,9 +275,9 @@ export class CalendarComponent {
       {
         title: task.title,
         start: startOfDay(task.completeDate),
-     //   end: endOfDay(new Date()),
+        //   end: endOfDay(new Date()),
         color: color,
-        draggable: false, //false for now, setting to true would require update 
+        draggable: true, //false for now, setting to true would require update 
         resizable: {
           beforeStart: true,
           afterEnd: true
