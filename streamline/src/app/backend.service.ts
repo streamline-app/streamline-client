@@ -85,12 +85,14 @@ export class BackendService {
  
   public getUserIdURL: string = 'http://' + this.root + '/api/user/';
 
+  /* Invitation URLs */
   public sendInvitationURL: string = 'http://' + this.root + '/api/invitations/create';
   public sentInvitationsURL: string = 'http://' + this.root + '/api/sentInvitations/';
   public recievedInvitationsURL: string = 'http://' + this.root + '/api/recievedInvitations/';
   public acceptInvitationURL: string = 'http://' + this.root + '/api/invitations/accept';
   public declineInvitationURL: string = 'http://' + this.root + '/api/invitations/decline';
-
+  public revokeInvitationURL: string = 'http://' + this.root + '/api/invitations/revoke';
+ 
   public favoriteTeamMemberURL: string = 'http://' + this.root + '/api/favorite/favoriteTeamMember';
   public unFavoriteTeamMemberURL: string = 'http://' + this.root + '/api/favorite/unFavoriteTeamMember';
   public getFavoritesURL: string = 'http://' + this.root + '/api/favorite/getFavorites/';
@@ -431,6 +433,13 @@ export class BackendService {
       );
   }
 
+  revokeInvitation(request: RevokeInvRequest) {
+    return this.http.post<InvitationResponse>(this.revokeInvitationURL, request, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
   getTeamMembers(id) {
     return this.http.get(this.getTeamMembersURL + id, httpOptions)
       .pipe(
@@ -646,4 +655,8 @@ interface FavoriteRequest {
 
 interface FavoriteResponse {
   message: string
+}
+
+interface RevokeInvRequest {
+  id: number
 }
