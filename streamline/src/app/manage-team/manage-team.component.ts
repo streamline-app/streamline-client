@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BackendService, FileHandle } from '../backend.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import { AuthService } from '../auth.service';
-import { ConfirmLeaveDialog, RemoveTeamMemberDialog, UploadDocDialog } from '../dialogs/dialogs.module';
+import { ConfirmLeaveDialog, ConfirmRevokeDialog, RemoveTeamMemberDialog, UploadDocDialog } from '../dialogs/dialogs.module';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { StateService } from '../state.service';
 
@@ -23,7 +23,7 @@ export class ManageTeamComponent{
   public teamMembers : any[] = null;
   public favoriteTeamMemberIds: number[] = null;
   public favoriteTeamMemberEmails: string[] = null;
-  public displayedPendingColumns = ['email', 'message', 'created_at'];
+  public displayedPendingColumns = ['email', 'message', 'created_at', 'actions'];
   public displayedMembersColumns = ['name', 'email', 'actions'];
   public fileHandles: FileHandle[] = [];
 
@@ -121,9 +121,30 @@ export class ManageTeamComponent{
         window.alert('Member already on team');
 
       } else {
+        this.snackbar.open('Invitation sent.', 'Ok', { duration: 3000 });
         this.loadInvitationData();
       }
     });
+  }
+
+  public onRevokeInvite(id) {
+    
+    const dialogRef = this.dialog.open(ConfirmRevokeDialog, {
+      width: '325px',
+    });
+
+    dialogRef.afterClosed().subscribe((res) => {
+      let request : any = {
+        id: id
+      }
+      if (res) {
+        this.backend.revokeInvitation(request).subscribe((res) => {
+          this.snackbar.open('Invitation revoked successfully.', 'Ok', { duration: 3000 });
+          this.loadInvitationData();
+        })
+      }
+    });
+    
   }
 
   public onLeave() {

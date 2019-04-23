@@ -93,7 +93,7 @@
             <div mat-dialog-actions class="button_box">
               <button mat-button style="background-color: lightgreen;" (click)="inviteUser()">Invite</button>
             </div>
-          </form>
+        </form>
         </mat-card-content>
       </mat-card>
 
@@ -113,6 +113,14 @@
           <ng-container matColumnDef="created_at">
             <th mat-header-cell *matHeaderCellDef> Created At </th>
             <td mat-cell *matCellDef="let element"> {{element.created_at}} </td>
+          </ng-container>
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> Actions </th>
+            <td mat-cell *matCellDef="let element">
+              <button *ngIf="(this.auth.getUserId() == this.ownerId)" mat-button
+              (click)="onRevokeInvite(element.id)" id="remove"><i class="fas fa-trash"></i></button>
+            </td>
+            
           </ng-container>
           <tr mat-header-row *matHeaderRowDef="displayedPendingColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedPendingColumns;"></tr>
