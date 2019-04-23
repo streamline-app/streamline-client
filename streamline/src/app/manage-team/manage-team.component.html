@@ -68,12 +68,12 @@
                       && this.favoriteTeamMemberIds.indexOf(element.id) == -1"
                 style="color: darkgoldenrod; background-color: gainsboro; padding-bottom: 5px;"
                 (click)="favoriteTeamMember(element.id)"><i class="fas fa-star"></i></button>
-              <button *ngIf="(element.id != this.auth.getUserId() && this.auth.getUserId() == this.ownerId)" mat-button
+              <button *ngIf="(element.id != this.auth.getUserId() && !(element.id == this.ownerId) && this.isAdmin)" mat-button
                 (click)="onRemove(element.id)" id="remove"><i class="fas fa-trash"></i></button>
-                <button *ngIf="(element.id != this.auth.getUserId() && element.admin == 'false' && this.auth.getUserId() == this.ownerId)" mat-button
-                (click)="onRemove(element.id)" id="promote"><i class="fas fa-level-up-alt"></i></button>
-                <button *ngIf="(element.id != this.auth.getUserId() && element.admin == 'true' && this.auth.getUserId() == this.ownerId)" mat-button
-                (click)="onPromote(element.id)" id="promote"><i class="fas fa-level-down-alt"></i></button>
+                <button *ngIf="(element.id != this.auth.getUserId() && !(element.id == this.ownerId) && element.admin == 'false' && this.isAdmin)" mat-button
+                (click)="onPromote(element.id)" id="promote"><i class="fas fa-level-up-alt"></i></button>
+                <button *ngIf="(!(element.id == this.ownerId) && element.admin == 'true' && this.isAdmin)" mat-button
+                (click)="onDemote(element.id)" id="demote"><i class="fas fa-level-down-alt"></i></button>
             </td>
           </ng-container>
           <tr mat-header-row *matHeaderRowDef="displayedMembersColumns"></tr>

@@ -696,6 +696,6 @@ interface PromotionResponse {
 }
 
 interface CheckAdminRequest {
-  userId: number,
+  id: number,
   teamId: number
 }

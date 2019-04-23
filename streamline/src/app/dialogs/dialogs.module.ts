@@ -78,6 +78,44 @@ export class ConfirmRevokeDialog {
 }
 
 @Component({
+  selector: 'confirm-promotion/confirm-promotion-dialog',
+  templateUrl: 'confirm-promotion/confirm-promotion-dialog.html',
+  styleUrls: ['confirm-promotion/confirm-promotion-dialog.css']
+
+})
+export class ConfirmPromotionDialog {
+
+  constructor(public dialogRef: MatDialogRef<ConfirmPromotionDialog>) { }
+
+  yes() {
+    this.dialogRef.close(true); //return true to parent component
+  }
+
+  no() {
+    this.dialogRef.close(false); //return false to parent component
+  }
+}
+
+@Component({
+  selector: 'confirm-demotion/confirm-demotion-dialog',
+  templateUrl: 'confirm-demotion/confirm-demotion-dialog.html',
+  styleUrls: ['confirm-demotion/confirm-demotion-dialog.css']
+
+})
+export class ConfirmDemotionDialog {
+
+  constructor(public dialogRef: MatDialogRef<ConfirmDemotionDialog>) { }
+
+  yes() {
+    this.dialogRef.close(true); //return true to parent component
+  }
+
+  no() {
+    this.dialogRef.close(false); //return false to parent component
+  }
+}
+
+@Component({
   selector: 'remove-team-member/remove-team-member-dialog',
   templateUrl: 'remove-team-member/remove-team-member-dialog.html',
   styleUrls: ['remove-team-member/remove-team-member-dialog.css']
