@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BackendService, FileHandle } from '../backend.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import { AuthService } from '../auth.service';
-import { ConfirmLeaveDialog, ConfirmRevokeDialog, RemoveTeamMemberDialog, UploadDocDialog } from '../dialogs/dialogs.module';
+import { ConfirmLeaveDialog, ConfirmRevokeDialog, RemoveTeamMemberDialog, UploadDocDialog, ConfirmPromotionDialog, ConfirmDemotionDialog } from '../dialogs/dialogs.module';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { StateService } from '../state.service';
 
@@ -18,13 +18,14 @@ export class ManageTeamComponent{
   public t : any = null;
   public teamId : any = 0;
   public ownerId : number = -1;
+  public isAdmin: boolean = false
   public owner: boolean = false;
   public sentInvitations : any[] = null;
   public teamMembers : any[] = null;
   public favoriteTeamMemberIds: number[] = null;
   public favoriteTeamMemberEmails: string[] = null;
   public displayedPendingColumns = ['email', 'message', 'created_at', 'actions'];
-  public displayedMembersColumns = ['name', 'email', 'actions'];
+  public displayedMembersColumns = ['name', 'email', 'role', 'actions'];
   public fileHandles: FileHandle[] = [];
 
   public team: FormGroup = new FormGroup({
@@ -43,9 +44,74 @@ export class ManageTeamComponent{
     this.loadTeamData();
     this.loadInvitationData();
     this.loadTeamMemberData(this.teamId);
-
+    this.loadAdminStatus();
 
     this.getTeamFiles();
+  }
+
+  loadAdminStatus() {
+    let request : any = {
+      id: this.auth.getUserId(),
+      teamId: this.teamId
+    }
+    this.backend.checkTeamAdmin(request).subscribe((res) => {
+      let temp = res as string[];
+      if (temp.length > 0) {
+        let val = temp[0];
+        if (val == "true") {
+          this.isAdmin = true;
+        } else {
+          this.isAdmin = false;
+        }
+      }
+    })
+  }
+
+  onPromote(id: number) {
+
+    const dialogRef = this.dialog.open(ConfirmPromotionDialog, {
+      width: '325px',
+    });
+
+    dialogRef.afterClosed().subscribe((res) => {
+      let request : any = {
+        id: id,
+        teamId: this.teamId,
+        promotion: "admin"
+      }
+  
+      this.backend.promoteTeamMember(request).subscribe((res) => {
+        if (res.message == 'success') {
+          this.snackbar.open('User promoted.', 'Ok', { duration: 3000 });
+          this.favoriteTeamMemberIds = [];
+          this.loadTeamMemberData(this.teamId);
+        }
+      })
+    });
+        
+  }
+
+  onDemote(id: number) {
+    const dialogRef = this.dialog.open(ConfirmDemotionDialog, {
+      width: '325px',
+    });
+
+    dialogRef.afterClosed().subscribe((res) => {
+      let request : any = {
+        id: id,
+        teamId: this.teamId,
+        promotion: "admin"
+      }
+  
+      this.backend.demoteTeamMember(request).subscribe((res) => {
+        if (res.message == 'success') {
+          this.snackbar.open('User demoted.', 'Ok', { duration: 3000 });
+          this.favoriteTeamMemberIds = [];
+          this.loadTeamMemberData(this.teamId);
+          this.loadAdminStatus();
+        }
+      })
+    });
   }
 
   loadFavoritesData() {
@@ -63,6 +129,7 @@ export class ManageTeamComponent{
   loadTeamMemberData(teamId) {
     this.backend.getTeamMembers(teamId).subscribe((res) => {
       this.teamMembers = res as any[];
+      console.log(this.teamMembers);
       this.loadFavoritesData();
     });
   }
@@ -79,7 +146,7 @@ export class ManageTeamComponent{
 
       if (this.t.owner == this.auth.getUserId()) {
         this.owner = true;
-        this.displayedMembersColumns = ['name', 'email', 'actions'];
+        this.displayedMembersColumns = ['name', 'email', 'role', 'actions'];
       }
     });
   }

@@ -26,3 +26,13 @@
     background-color: salmon;
     padding-bottom: 5px;
 }
+
+#promote {
+    background-color: lightgreen;
+    padding-bottom: 5px;
+}
+
+#demote {
+    background-color: darkorange;
+    padding-bottom: 5px;
+}
