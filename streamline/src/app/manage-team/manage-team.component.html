@@ -78,7 +78,12 @@
           <form [formGroup]="invite">
             <mat-form-field>
               <h4>Recipient Email</h4>
-              <input matInput formControlName="email">
+              <input matInput formControlName="email" [matAutocomplete]="auto" type="text">
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let email of favoriteTeamMemberEmails" [value]="email">
+                  {{email}}
+                </mat-option>
+              </mat-autocomplete>
             </mat-form-field>
             <mat-form-field>
               <h4>Message</h4>

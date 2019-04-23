@@ -146,6 +146,7 @@ export class ManageTeamComponent{
     });
   }
 
+
   submit() {
     let title = this.team.controls['title'].value;
     let description = this.team.controls['description'].value;
