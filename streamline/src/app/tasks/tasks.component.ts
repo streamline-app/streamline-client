@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BackendService } from '../backend.service';
+import { BackendService, TaskEdit } from '../backend.service';
 import { AuthService } from '../auth.service';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
@@ -321,12 +321,13 @@ export class TasksComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result != null) {
+      let edit : TaskEdit = result as TaskEdit;
+      if (edit != null) {
         //check if task already exists under given name
         let exists: boolean = false;
-        if (result.title != task.title) { //if new task name given is different from the old one
+        if (edit.title != task.title) { //if new task name given is different from the old one
           this.tasks.forEach(element => { //check to make sure it doesn't match any other tag names
-            if (element.title === result.title) {
+            if (element.title === edit.title) {
               //notify user
               let snackbarRef = this.snackbar.open('You already have a task with that name!', 'Ok', { duration: 3000 });
 
@@ -341,9 +342,9 @@ export class TasksComponent {
         }
 
         //format Date into string for backend
-        result.completeDate = formatDate(result.completeDate, 'yyyy-MM-dd', 'en-US');
+        edit.completeDate = formatDate(edit.completeDate, 'yyyy-MM-dd', 'en-US');
 
-        this.backend.editTask(task.id, result).subscribe(res => {
+        this.backend.editTask(task.id, edit).subscribe(res => {
           console.log('task ' + task.id + ' updated');
 
           //three second snackbar pop up notification
