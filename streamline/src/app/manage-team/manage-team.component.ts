@@ -24,7 +24,7 @@ export class ManageTeamComponent{
   public favoriteTeamMemberIds: number[] = null;
   public favoriteTeamMemberEmails: string[] = null;
   public displayedPendingColumns = ['email', 'message', 'created_at', 'actions'];
-  public displayedMembersColumns = ['name', 'email', 'actions'];
+  public displayedMembersColumns = ['name', 'email', 'role', 'actions'];
   public fileHandles: FileHandle[] = [];
 
   public team: FormGroup = new FormGroup({
@@ -63,6 +63,7 @@ export class ManageTeamComponent{
   loadTeamMemberData(teamId) {
     this.backend.getTeamMembers(teamId).subscribe((res) => {
       this.teamMembers = res as any[];
+      console.log(this.teamMembers);
       this.loadFavoritesData();
     });
   }
@@ -79,7 +80,7 @@ export class ManageTeamComponent{
 
       if (this.t.owner == this.auth.getUserId()) {
         this.owner = true;
-        this.displayedMembersColumns = ['name', 'email', 'actions'];
+        this.displayedMembersColumns = ['name', 'email', 'role', 'actions'];
       }
     });
   }

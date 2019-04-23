@@ -77,6 +77,9 @@ export class BackendService {
   public getTeamTasksURL: string = 'http://' + this.root + '/api/teamtasks';
   public getTeamTagsURL: string = 'http://' + this.root + '/api/teamtags';
   public updateTeamURL: string = 'http://' + this.root + '/api/teams/update/';
+  public promoteTeamMemberURL: string = 'http://' + this.root + '/api/teams/promote';
+  public demoteTeamMemberURL: string = 'http://' + this.root + '/api/teams/demote';
+  public checkTeamAdminURL: string = 'http://' + this.root + '/api/teams/checkAdmin';
 
   public uploadFileURL: string = 'http://' + this.root + '/api/team/upload/';
   public getTeamFilesURL: string = 'http://' + this.root + '/api/team/fetchDocs/'
@@ -454,6 +457,27 @@ export class BackendService {
       );
   }
 
+  promoteTeamMember(request: PromoteTeamMemberRequest) {
+    return this.http.post<PromotionResponse>(this.promoteTeamMemberURL, request, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    )
+  }
+
+  checkTeamAdmin(request: CheckAdminRequest) {
+    return this.http.post<any[]>(this.checkTeamAdminURL, request, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    )
+  }
+
+  demoteTeamMember(request: PromoteTeamMemberRequest) {
+    return this.http.post<PromotionResponse>(this.demoteTeamMemberURL, request, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    )
+  }
+
   uploadFile(file: File, teamID: number) {
     let header = new HttpHeaders();
     header.append('Authorization', 'Basic ' + btoa('user1:abc123'));
@@ -659,4 +683,19 @@ interface FavoriteResponse {
 
 interface RevokeInvRequest {
   id: number
+}
+
+interface PromoteTeamMemberRequest {
+  id: number,
+  teamId: number,
+  promotion: string
+}
+
+interface PromotionResponse {
+  message: string
+}
+
+interface CheckAdminRequest {
+  userId: number,
+  teamId: number
 }

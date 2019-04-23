@@ -48,6 +48,14 @@
             <th mat-header-cell *matHeaderCellDef> Email </th>
             <td mat-cell *matCellDef="let element"> {{element.email}} </td>
           </ng-container>
+          <ng-container matColumnDef="role">
+            <th mat-header-cell *matHeaderCellDef> Role </th>
+            <td mat-cell *matCellDef="let element"> 
+              <p *ngIf="element.admin == 'true' && !(element.id == this.ownerId)">Admin</p>  
+              <p *ngIf="element.admin == 'false' && !(element.id == this.ownerId)">Member</p> 
+              <p *ngIf="element.id == this.ownerId">Owner</p> 
+            </td>
+          </ng-container>
 
           <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef> Actions </th>
@@ -62,6 +70,10 @@
                 (click)="favoriteTeamMember(element.id)"><i class="fas fa-star"></i></button>
               <button *ngIf="(element.id != this.auth.getUserId() && this.auth.getUserId() == this.ownerId)" mat-button
                 (click)="onRemove(element.id)" id="remove"><i class="fas fa-trash"></i></button>
+                <button *ngIf="(element.id != this.auth.getUserId() && element.admin == 'false' && this.auth.getUserId() == this.ownerId)" mat-button
+                (click)="onRemove(element.id)" id="promote"><i class="fas fa-level-up-alt"></i></button>
+                <button *ngIf="(element.id != this.auth.getUserId() && element.admin == 'true' && this.auth.getUserId() == this.ownerId)" mat-button
+                (click)="onPromote(element.id)" id="promote"><i class="fas fa-level-down-alt"></i></button>
             </td>
           </ng-container>
           <tr mat-header-row *matHeaderRowDef="displayedMembersColumns"></tr>
