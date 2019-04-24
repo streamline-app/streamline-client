@@ -52,7 +52,15 @@ export class CreateTaskComponent {
     this.currDate.setDate(this.currDate.getDate() + 1);
 
     //retrieve tags for display
-    this.getTags();
+    this.loadData();
+  }
+
+  loadData() {
+    if (this.state.teamId != 0) {
+      this.getTeamTags();
+    } else {
+      this.getUserTags();
+    }
   }
 
   public onSubmit() {
@@ -64,7 +72,6 @@ export class CreateTaskComponent {
       body: this.task.controls['body'].value,
       estimatedMin: this.task.controls['estimatedMin'].value,
       estimatedHour: this.task.controls['estimatedHour'].value,
-      //   priority: this.task.controls['priority'].value,
       completeDate: formatDate(this.task.controls['completeDate'].value, 'yyyy-MM-dd', 'en-US'), //format Date for backend
       expDuration: (this.task.controls['estimatedMin'].value * MINUTES_TO_SECONDS) + (this.task.controls['estimatedHour'].value * HOURS_TO_SECONDS), //convert sum of estimations to seconds
       tags: this.parseTagArray(this.selectedTags),//list of tagIDs
@@ -90,7 +97,7 @@ export class CreateTaskComponent {
     });
   }
 
-  public getTags() {
+  public getUserTags() {
     this.backend.getUserTags(this.auth.getUserId()).subscribe(result => {
       //result is list of all tags, need to separate out prio tags
       this.sortTagsIntoLists(result);
@@ -105,7 +112,28 @@ export class CreateTaskComponent {
     });
   }
 
+  public getTeamTags(){
+    this.backend.getTeamTags(this.state.teamId).subscribe(result => {
+      //result is list of all tags, need to separate out prio tags
+      console.log('now in create-task');
+      console.log(result);
+      this.sortTagsIntoLists(result);
+
+      //set up autofill for tags
+      this.filteredTags = this.rawTagsForm.valueChanges
+        .pipe(
+          startWith(''),
+          map(tag => tag ? this._filterTags(tag) : this.tags.slice())
+        );
+
+    });
+  }
+
   public sortTagsIntoLists(rawList: Tag[]) {
+    //empty lists first
+    this.tags = [];
+    this.prio_tags = [];
+
     rawList.forEach(tag => {
       if (tag.name.includes('priority')) {
         //add to prio list
@@ -175,7 +203,7 @@ export class CreateTaskComponent {
           let snackbarRef = this.snackbar.open('Tag Created! You can now add it to the list of tags.', 'Ok', { duration: 3000 });
 
           //update tags
-          this.getTags();
+          this.loadData();
 
         }, error => {
           console.log(error.message);
