@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { CreateTagDialog } from '../dialogs/dialogs.module'
+import { CreateTagDialog, UsePredictionDialog } from '../dialogs/dialogs.module'
 import { Tag } from '../app.module'
 import { formatDate } from '@angular/common';
 import { StateService } from '../state.service';
@@ -70,7 +70,7 @@ export class CreateTaskComponent {
 
   public onSubmit() {
     if (this.gotPrediction) {
-      this.createTask();
+      this.createTask(false, null);
     }
     else {
       this.getPrediction();
@@ -87,24 +87,30 @@ export class CreateTaskComponent {
     };
 
     //need to get UUID of user or team then send request to get prediction
-    if (this.state.teamId != 0) {
+    if (this.state.teamId != 0) { //TEAM
       this.backend.getUUID(this.state.teamId, false).subscribe(UUID => {
         this.backend.getPrediction(UUID, td).subscribe(prediction => {
           console.log('prediction from ML module: ' + prediction);
           this.prediction = prediction;
-          if (prediction != "NaN") {
+          if (prediction != 'NaN') { //if some prediction exists
             this.displayPrediction(prediction);
+          }
+          else { //create the task normally 
+            this.createTask(false, null);
           }
         });
       });
     }
-    else {
+    else {  //USER
       this.backend.getUUID(this.auth.getUserId(), true).subscribe(UUID => {
         this.backend.getPrediction(UUID, td).subscribe(prediction => {
           console.log('prediction from ML module: ' + prediction);
           this.prediction = prediction;
-          if (prediction != "NaN") {
+          if (prediction != "NaN") { // if some prediction exists
             this.displayPrediction(prediction);
+          }
+          else { //create the task normally
+            this.createTask(false, null);
           }
         });
       });
@@ -113,10 +119,52 @@ export class CreateTaskComponent {
   }
 
   public displayPrediction(prediction: string) {
+    //get float from string value
+    var num = Math.floor(parseFloat(prediction));
 
+    //format string for hours and minutes
+    let formatted: string = this.getHours(num) + ' hours and ' + this.getMinutes(num) + ' minutes';
+
+    const dialogRef = this.create_dialog.open(UsePredictionDialog, {
+      width: '325px',
+      data: { prediction: formatted }
+    });
+
+    dialogRef.afterClosed().subscribe(usePred => {
+      if (usePred) {
+        //instantiate Prediction object to inject into Task
+        let pred: Prediction = {
+          predDuration: num,
+          predHours: this.getHours(num),
+          predMinutes: this.getMinutes(num)
+        }
+
+        //create task with injected prediction values
+        this.createTask(true, pred);
+      }
+      else { //create task as specified by the user
+        this.createTask(false, null);
+      }
+    });
   }
 
-  public createTask() {
+  getMinutes(seconds: number): number {
+    var hrs = 0;
+    if (seconds > 3600)
+      hrs = Math.floor(seconds / 3600);
+
+    var min = (seconds - (hrs * 3600)) / 60;
+    return Math.floor(min);
+  }
+
+  getHours(seconds: number): number {
+    if (seconds > 3600)
+      return Math.floor(seconds / 3600);
+    else
+      return 0;
+  }
+
+  public createTask(usePred: boolean, pred: Prediction) {
     //handle priority
     this.getPrioTag(this.task.controls['priority'].value);
 
@@ -135,7 +183,13 @@ export class CreateTaskComponent {
     if (task.estimatedMin == 0 && task.estimatedHour == 0) {
       let snackbarRef = this.snackbar.open('Must have non zero time estimation.', 'Ok', { duration: 3000 });
       return;
-
+    }
+    
+    //if user wants to use prediction, replace values with prediction's values
+    if (usePred) {
+      task.estimatedHour = pred.predHours;
+      task.estimatedMin = pred.predMinutes;
+      task.expDuration = pred.predDuration;
     }
 
     this.backend.createTask(task).subscribe(res => {
@@ -314,4 +368,10 @@ export class CreateTaskComponent {
       return arr;
     }
   }
+}
+
+interface Prediction {
+  predHours: number,
+  predMinutes: number,
+  predDuration: number
 }
