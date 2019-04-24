@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { BackendService } from '../backend.service';
+import { BackendService, TaskData } from '../backend.service';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { MatSnackBar, MatDialog } from '@angular/material';
@@ -38,6 +38,11 @@ export class CreateTaskComponent {
     tags: new FormControl({ value: '', disabled: 'true' })
   });
 
+  private gotPrediction: boolean = false;
+  private prediction: string = "";
+  private taskData: TaskData = null;
+
+
   constructor(private backend: BackendService,
     private auth: AuthService,
     private router: Router,
@@ -64,6 +69,54 @@ export class CreateTaskComponent {
   }
 
   public onSubmit() {
+    if (this.gotPrediction) {
+      this.createTask();
+    }
+    else {
+      this.getPrediction();
+      this.gotPrediction = true;
+    }
+  }
+
+  public getPrediction() {
+    //initialize TaskData object
+    let td: TaskData = {
+      actualDuration: 0, //always zero to start
+      expDuration: (this.task.controls['estimatedMin'].value * MINUTES_TO_SECONDS) + (this.task.controls['estimatedHour'].value * HOURS_TO_SECONDS), //convert sum of estimations to seconds,
+      tags: this.parseTagArray(this.selectedTags, false) //list of tag NAMES (not IDs)
+    };
+
+    //need to get UUID of user or team then send request to get prediction
+    if (this.state.teamId != 0) {
+      this.backend.getUUID(this.state.teamId, false).subscribe(UUID => {
+        this.backend.getPrediction(UUID, td).subscribe(prediction => {
+          console.log('prediction from ML module: ' + prediction);
+          this.prediction = prediction;
+          if (prediction != "NaN") {
+            this.displayPrediction(prediction);
+          }
+        });
+      });
+    }
+    else {
+      this.backend.getUUID(this.auth.getUserId(), true).subscribe(UUID => {
+        this.backend.getPrediction(UUID, td).subscribe(prediction => {
+          console.log('prediction from ML module: ' + prediction);
+          this.prediction = prediction;
+          if (prediction != "NaN") {
+            this.displayPrediction(prediction);
+          }
+        });
+      });
+    }
+
+  }
+
+  public displayPrediction(prediction: string) {
+
+  }
+
+  public createTask() {
     //handle priority
     this.getPrioTag(this.task.controls['priority'].value);
 
@@ -74,7 +127,7 @@ export class CreateTaskComponent {
       estimatedHour: this.task.controls['estimatedHour'].value,
       completeDate: formatDate(this.task.controls['completeDate'].value, 'yyyy-MM-dd', 'en-US'), //format Date for backend
       expDuration: (this.task.controls['estimatedMin'].value * MINUTES_TO_SECONDS) + (this.task.controls['estimatedHour'].value * HOURS_TO_SECONDS), //convert sum of estimations to seconds
-      tags: this.parseTagArray(this.selectedTags),//list of tagIDs
+      tags: this.parseTagArray(this.selectedTags, true),//list of tagIDs
       userID: this.auth.getUserId(),
       team: this.state.teamId
     }
@@ -112,7 +165,7 @@ export class CreateTaskComponent {
     });
   }
 
-  public getTeamTags(){
+  public getTeamTags() {
     this.backend.getTeamTags(this.state.teamId).subscribe(result => {
       //result is list of all tags, need to separate out prio tags
       console.log('now in create-task');
@@ -147,11 +200,11 @@ export class CreateTaskComponent {
 
   public getPrioTag(prio_num: number) {
     //if no prio was selected, return;
-    if(prio_num === 0) return;
+    if (prio_num === 0) return;
 
     //else find prio with the given number, then add it to the list of selected tags
-    this.prio_tags.some(function(pt) {
-      if(pt.name.includes('' + prio_num)){
+    this.prio_tags.some(function (pt) {
+      if (pt.name.includes('' + prio_num)) {
         this.selectedTags.push(pt);
         return true;
       }
@@ -226,7 +279,6 @@ export class CreateTaskComponent {
 
   public onTagSelect(tag: Tag) {
     var index = this.selectedTags.indexOf(tag); //get index of tag in list (if it exists)
-    console.log('index: ' + index);
     if (index === -1) {
       this.selectedTags.push(tag);
     }
@@ -242,13 +294,24 @@ export class CreateTaskComponent {
   }
 
   //helper mehtod to get TagIDs from list of tags
-  parseTagArray(tags: Tag[]): number[] {
-    let arr: number[] = [];
+  parseTagArray(tags: Tag[], intoIDs: boolean): any[] {
+    if (intoIDs) {
+      let arr: number[] = [];
 
-    tags.forEach(tag => {
-      arr.push(tag.id);
-    });
+      tags.forEach(tag => {
+        arr.push(tag.id);
+      });
 
-    return arr;
+      return arr;
+    }
+    else { // parse into comma-separated list of names
+      let arr: string[] = [];
+
+      tags.forEach(tag => {
+        arr.push(tag.name);
+      });
+
+      return arr;
+    }
   }
 }

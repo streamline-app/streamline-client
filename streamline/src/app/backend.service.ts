@@ -41,6 +41,8 @@ export class BackendService {
   public editTaskURL: string = 'http://' + this.root + '/api/tasks/update';
   public addTagtoTaskURL: string = 'http://' + this.root + '/api/tasks/addTag';
 
+  public getPredictionURL: string = 'http://' + this.analRoot + '/api/users/'; //append user UUID and /predictions
+
   /* Task Control URLs */
   public startTaskURL: string = 'http://' + this.root + '/api/tasks/';
   public stopTaskURL: string = 'http:://' + this.root + '/api/tasks/';
@@ -85,7 +87,6 @@ export class BackendService {
   public getTeamFilesURL: string = 'http://' + this.root + '/api/team/fetchDocs/'
   public downloadFileURL: string = 'http://' + this.root + '/api/team/downloadDoc/'
 
- 
   public getUserIdURL: string = 'http://' + this.root + '/api/user/';
 
   /* Invitation URLs */
@@ -95,7 +96,7 @@ export class BackendService {
   public acceptInvitationURL: string = 'http://' + this.root + '/api/invitations/accept';
   public declineInvitationURL: string = 'http://' + this.root + '/api/invitations/decline';
   public revokeInvitationURL: string = 'http://' + this.root + '/api/invitations/revoke';
- 
+
   public favoriteTeamMemberURL: string = 'http://' + this.root + '/api/favorite/favoriteTeamMember';
   public unFavoriteTeamMemberURL: string = 'http://' + this.root + '/api/favorite/unFavoriteTeamMember';
   public getFavoritesURL: string = 'http://' + this.root + '/api/favorite/getFavorites/';
@@ -228,6 +229,13 @@ export class BackendService {
 
   finishTask(taskID: number): Observable<FinishResponse> {
     return this.http.post<FinishResponse>(this.startTaskURL + taskID + '/finish', '', httpOptions) //empty post
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  getPrediction(UUID: string, taskData: TaskData) {
+    return this.http.post<string>(this.getPredictionURL + UUID + '/predictions', taskData, httpOptions)
       .pipe(
         catchError(this.handleError)
       );
@@ -368,30 +376,30 @@ export class BackendService {
 
   favoriteTeamMember(request: FavoriteRequest) {
     return this.http.post<FavoriteResponse>(this.favoriteTeamMemberURL, request, httpOptions)
-    .pipe(
-      catchError(this.handleError)
-    )
+      .pipe(
+        catchError(this.handleError)
+      )
   }
 
   unFavoriteTeamMember(request: FavoriteRequest) {
     return this.http.post<FavoriteResponse>(this.unFavoriteTeamMemberURL, request, httpOptions)
-    .pipe(
-      catchError(this.handleError)
-    )
+      .pipe(
+        catchError(this.handleError)
+      )
   }
 
   getFavoriteTeamMembers(id: number) {
     return this.http.get(this.getFavoritesURL + id, httpOptions)
-    .pipe(
-      catchError(this.handleError)
-    )
+      .pipe(
+        catchError(this.handleError)
+      )
   }
 
   getFavoriteTeamMemberEmails(id: number) {
     return this.http.get(this.getFavoriteEmailsURL + id, httpOptions)
-    .pipe(
-      catchError(this.handleError)
-    )
+      .pipe(
+        catchError(this.handleError)
+      )
   }
 
   getUserId(email: string) {
@@ -438,9 +446,9 @@ export class BackendService {
 
   revokeInvitation(request: RevokeInvRequest) {
     return this.http.post<InvitationResponse>(this.revokeInvitationURL, request, httpOptions)
-    .pipe(
-      catchError(this.handleError)
-    );
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
   getTeamMembers(id) {
@@ -459,23 +467,23 @@ export class BackendService {
 
   promoteTeamMember(request: PromoteTeamMemberRequest) {
     return this.http.post<PromotionResponse>(this.promoteTeamMemberURL, request, httpOptions)
-    .pipe(
-      catchError(this.handleError)
-    )
+      .pipe(
+        catchError(this.handleError)
+      )
   }
 
   checkTeamAdmin(request: CheckAdminRequest) {
     return this.http.post<any[]>(this.checkTeamAdminURL, request, httpOptions)
-    .pipe(
-      catchError(this.handleError)
-    )
+      .pipe(
+        catchError(this.handleError)
+      )
   }
 
   demoteTeamMember(request: PromoteTeamMemberRequest) {
     return this.http.post<PromotionResponse>(this.demoteTeamMemberURL, request, httpOptions)
-    .pipe(
-      catchError(this.handleError)
-    )
+      .pipe(
+        catchError(this.handleError)
+      )
   }
 
   uploadFile(file: File, teamID: number) {
@@ -699,4 +707,10 @@ interface PromotionResponse {
 interface CheckAdminRequest {
   id: number,
   teamId: number
+}
+
+export interface TaskData {
+  actualDuration: number,
+  expDuration: number,
+  tags?: string[]
 }
