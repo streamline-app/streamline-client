@@ -19,7 +19,7 @@ import { AuthService } from './auth.service';
 import { TasksComponent } from './tasks/tasks.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from './jwt.interceptor';
-import { DialogsModule, DeleteConfirmDialog, ConfirmPromotionDialog, ConfirmDemotionDialog, ConfirmLeaveDialog, ConfirmRevokeDialog, EditTagDialog, CreateTagDialog, EditTaskDialog, UnregisterDialog, AddTagDialog, RemoveTeamMemberDialog, UploadDocDialog } from './dialogs/dialogs.module';
+import { DialogsModule, DeleteConfirmDialog, ConfirmTransferDialog, ConfirmPromotionDialog, ConfirmDemotionDialog, ConfirmLeaveDialog, ConfirmRevokeDialog, EditTagDialog, CreateTagDialog, EditTaskDialog, UnregisterDialog, AddTagDialog, RemoveTeamMemberDialog, UploadDocDialog } from './dialogs/dialogs.module';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { PasswordResetFormComponent } from './password-reset-form/password-reset-form.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -34,6 +34,7 @@ import { CalendarComponent } from './calendar/calendar.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { AccuracyGraphComponent } from './accuracy-graph/accuracy-graph.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { TransferTeamOwnershipComponent } from './transfer-team-ownership/transfer-team-ownership.component';
 
 
 
@@ -53,7 +54,8 @@ const appRoutes: Routes = [
   { path: 'invitations', component: InvitationsComponent, canActivate: [AuthService]},
   { path: 'calendar', component: CalendarComponent },
   { path: 'celandar', component: CalendarComponent },
-  { path: 'graph', component: AccuracyGraphComponent }
+  { path: 'graph', component: AccuracyGraphComponent },
+  { path: 'transfer/:id', component: TransferTeamOwnershipComponent}
 ];
 
 @NgModule({
@@ -79,6 +81,7 @@ const appRoutes: Routes = [
     AddTagDialog,
     RemoveTeamMemberDialog,
     UploadDocDialog,
+    ConfirmTransferDialog,
     PasswordResetComponent,
     PasswordResetFormComponent,
     SettingsComponent,
@@ -89,6 +92,7 @@ const appRoutes: Routes = [
     TeamNavigationComponent,
     CalendarComponent,
     AccuracyGraphComponent,
+    TransferTeamOwnershipComponent,
   ],
   imports: [
     BrowserModule,
@@ -113,7 +117,7 @@ const appRoutes: Routes = [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
   ],
   bootstrap: [AppComponent],
-  entryComponents: [DeleteConfirmDialog, RemoveTeamMemberDialog, ConfirmLeaveDialog, ConfirmDemotionDialog, ConfirmPromotionDialog, ConfirmRevokeDialog, EditTagDialog, CreateTagDialog, EditTaskDialog, UnregisterDialog, AddTagDialog, UploadDocDialog]
+  entryComponents: [DeleteConfirmDialog, RemoveTeamMemberDialog, ConfirmTransferDialog, ConfirmLeaveDialog, ConfirmDemotionDialog, ConfirmPromotionDialog, ConfirmRevokeDialog, EditTagDialog, CreateTagDialog, EditTaskDialog, UnregisterDialog, AddTagDialog, UploadDocDialog]
 })
 export class AppModule { }
 

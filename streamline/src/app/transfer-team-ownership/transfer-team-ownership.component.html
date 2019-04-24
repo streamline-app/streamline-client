@@ -1,0 +1,55 @@
+<mat-card>
+  <h2>Transfer Team Ownership</h2>
+  <div class="row">
+    <div class="col-md-6">
+        <h4>Transfer</h4>
+        <p><strong>Select a user from the right table on the right side that you wish to transfer this team to.</strong><br>Note that this action will demote you from 'Owner' to 'Admin' of this team and notify the new owner of the change via email.</p>
+        <hr />
+        <h4 id="details">Selected User Details</h4>
+      <div *ngIf="selectedUser">
+          <p><strong>Name: </strong>{{selectedUser.name}}</p>
+          <p><strong>Email: </strong>{{selectedUser.email}}</p>
+          <button mat-button id="transfer" (click)="transfer()">Transfer Ownership</button>
+      </div> 
+      <div *ngIf="!selectedUser">
+        <p>Select a user to transfer team ownership to in the right hand side table.</p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <mat-card id="membersContainer">
+        <mat-card-header>
+          <mat-card-title>Team Members</mat-card-title>
+        </mat-card-header>
+        <table *ngIf="teamMembers" mat-table [dataSource]="teamMembers"
+          class="mat-elevation-z0" id="members">
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+          </ng-container>
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef> Email </th>
+            <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+          </ng-container>
+          <ng-container matColumnDef="role">
+            <th mat-header-cell *matHeaderCellDef> Role </th>
+            <td mat-cell *matCellDef="let element"> 
+              <p *ngIf="element.admin == 'true'">Admin</p>  
+              <p *ngIf="element.admin == 'false'">Member</p>  
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> Select </th>
+            <td mat-cell *matCellDef="let element"> 
+              <button mat-button *ngIf="element.id != this.auth.getUserId() && (!selectedUser || (selectedUser && element.id != this.selectedUser.id))" id="select" (click)="onSelect(element.id)">Select</button>
+              <button mat-button *ngIf="selectedUser && element.id != this.auth.getUserId() && element.id == this.selectedUser.id" id="select" (click)="onSelect(element.id)">Selected</button>
+
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedMembersColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedMembersColumns;"></tr>
+        </table>
+      </mat-card>
+    </div>
+  </div>
+</mat-card>

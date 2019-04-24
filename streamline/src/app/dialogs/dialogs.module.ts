@@ -78,6 +78,25 @@ export class ConfirmRevokeDialog {
 }
 
 @Component({
+  selector: 'confirm-transfer/confirm-transfer-dialog',
+  templateUrl: 'confirm-transfer/confirm-transfer-dialog.html',
+  styleUrls: ['confirm-transfer/confirm-transfer-dialog.css']
+
+})
+export class ConfirmTransferDialog {
+
+  constructor(public dialogRef: MatDialogRef<ConfirmTransferDialog>) { }
+
+  yes() {
+    this.dialogRef.close(true); //return true to parent component
+  }
+
+  no() {
+    this.dialogRef.close(false); //return false to parent component
+  }
+}
+
+@Component({
   selector: 'confirm-promotion/confirm-promotion-dialog',
   templateUrl: 'confirm-promotion/confirm-promotion-dialog.html',
   styleUrls: ['confirm-promotion/confirm-promotion-dialog.css']

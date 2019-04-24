@@ -20,6 +20,13 @@
 
 #leave {
     float: right;
+    background-color: salmon
+}
+
+#transfer {
+    float: right;
+    background-color: salmon;
+    margin-right: 4px;
 }
 
 #remove {

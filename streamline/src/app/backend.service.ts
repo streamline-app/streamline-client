@@ -80,6 +80,7 @@ export class BackendService {
   public promoteTeamMemberURL: string = 'http://' + this.root + '/api/teams/promote';
   public demoteTeamMemberURL: string = 'http://' + this.root + '/api/teams/demote';
   public checkTeamAdminURL: string = 'http://' + this.root + '/api/teams/checkAdmin';
+  public transferTeamOwnershipURL: string = 'http://' + this.root + '/api/teams/transfer';
 
   public uploadFileURL: string = 'http://' + this.root + '/api/team/upload/';
   public getTeamFilesURL: string = 'http://' + this.root + '/api/team/fetchDocs/'
@@ -343,6 +344,13 @@ export class BackendService {
       .pipe(
         catchError(this.handleError)
       )
+  }
+
+  transferTeamOwnership(request: TransferOwnershipRequest) {
+    return this.http.post<TransferOwnershipResponse>(this.transferTeamOwnershipURL, request, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    )
   }
 
   getTeams(id) {
@@ -699,4 +707,14 @@ interface PromotionResponse {
 interface CheckAdminRequest {
   id: number,
   teamId: number
+}
+
+interface TransferOwnershipRequest {
+  previous: number,
+  newOwner: number,
+  team: number
+}
+
+interface TransferOwnershipResponse {
+  message: string
 }
