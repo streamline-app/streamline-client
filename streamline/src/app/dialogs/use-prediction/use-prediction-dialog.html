@@ -1,0 +1,11 @@
+<h1 mat-dialog-title>Time Estimation</h1>
+<div mat-dialog-content class="diag_box">
+    <p>
+        Based on your previous tasks, we think it will take you {{data.prediction}} to complete this task, would you
+        like to use this estimation instead?
+    </p>
+</div>
+<div mat-dialog-actions style="float: right;" class="button_box">
+    <button mat-button style="background-color: lightgreen;" (click)="yes()">Yes</button>
+    <button mat-button style="background-color: lightcoral;" (click)="no()">No</button>
+</div>
