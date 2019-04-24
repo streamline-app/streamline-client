@@ -67,6 +67,10 @@ export class ManageTeamComponent{
     })
   }
 
+  onTransferOwnership() {
+    this.router.navigateByUrl('transfer/' + this.teamId);
+  }
+
   onPromote(id: number) {
 
     const dialogRef = this.dialog.open(ConfirmPromotionDialog, {
