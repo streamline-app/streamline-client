@@ -1,5 +1,3 @@
-<mat-card-title>Tasks</mat-card-title>
-
 <div class="row">
   <div class="col-md-6">
     <h1 class="header">Tasks</h1>
@@ -34,8 +32,8 @@
 </div>
 <div *ngIf="!tasks"><mat-spinner></mat-spinner></div>
 <div *ngFor="let task of tasks; index as i">
-  <div>
-    <mat-card class="mat-elevation-z10" id="task-card">
+  <div *ngIf="assignedControl">
+    <mat-card class="mat-elevation-z2" id="task-card">
       <div class="row">
         <div class="col-md-6" id="left">
           <div id="large">
@@ -100,9 +98,21 @@
           </button>
         </div>
         <div class="col-md-6">
-          <button mat-stroked-button style="float: right" class="collapsible" (click)="collapse(task.id)">
-            <mat-icon>arrow_drop_down</mat-icon>
-          </button>
+          <div class="col-md-9">
+              <mat-form-field *ngIf="this.teamMembers.length > 0 && this.state.teamView" >
+                  <mat-label>Assigned User</mat-label>
+                  <mat-select style="float: right" [formControl]="assignedControl[task.id]" (selectionChange)="onAssign(task.id)">
+                    <mat-option *ngFor="let member of teamMembers" [value]="member">
+                      {{member.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+          </div>
+          <div class="col-md-3">
+              <button mat-stroked-button style="float: right" class="collapsible" (click)="collapse(task.id)">
+                  <mat-icon>arrow_drop_down</mat-icon>
+              </button>
+          </div>
         </div>
       </div>
       <div id="content_{{task.id}}" style="padding: 0 18px; display: none; overflow: hidden; height: 225px;">
