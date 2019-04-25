@@ -97,6 +97,8 @@ export class TasksComponent {
       case 2:   //creation_date
         this.sortbyCreationDate();
         break;
+      case 3: 
+        this.sortByAssigned();
       default:
         break;
     }
@@ -140,6 +142,7 @@ export class TasksComponent {
     let user = this.assignedControl[id].value as TeamMember;
     this.backend.assignUserToTask(id, +user.id).subscribe((res) => {
       let snackbarRef = this.snackbar.open('Task Assigned to User', 'Ok', { duration: 3000 });
+      this.loadTeamMemberData();
 
     })
   }
@@ -500,6 +503,23 @@ export class TasksComponent {
 
       return bprio.localeCompare(aprio);
     });
+  }
+
+  sortByAssigned() {
+    this.sort_by = 3;
+    this.tasks.sort(function (a: Task, b: Task){
+      let assignedOne = a.assigned;
+      let assignedTwo = b.assigned;
+      
+
+      if (assignedOne > assignedTwo) {
+        return 1.0;
+      } else if (assignedOne == assignedTwo) {
+        return 0.0;
+      } else {
+        return -1.0;
+      }
+    })
   }
 
   sortbyCreationDate() {
