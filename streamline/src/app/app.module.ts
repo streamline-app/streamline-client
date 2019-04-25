@@ -19,7 +19,7 @@ import { AuthService } from './auth.service';
 import { TasksComponent } from './tasks/tasks.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from './jwt.interceptor';
-import { DialogsModule, DeleteConfirmDialog, ConfirmTransferDialog, ConfirmPromotionDialog, ConfirmDemotionDialog, ConfirmLeaveDialog, ConfirmRevokeDialog, EditTagDialog, CreateTagDialog, EditTaskDialog, UnregisterDialog, AddTagDialog, RemoveTeamMemberDialog, UploadDocDialog } from './dialogs/dialogs.module';
+import { DialogsModule, DeleteConfirmDialog, ConfirmTransferDialog, ConfirmPromotionDialog, ConfirmDemotionDialog, ConfirmLeaveDialog, ConfirmRevokeDialog, EditTagDialog, CreateTagDialog, EditTaskDialog, UnregisterDialog, AddTagDialog, RemoveTeamMemberDialog, UploadDocDialog, UsePredictionDialog } from './dialogs/dialogs.module';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { PasswordResetFormComponent } from './password-reset-form/password-reset-form.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -31,7 +31,7 @@ import { TeamNavigationComponent } from './team-navigation/team-navigation.compo
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { CalendarComponent } from './calendar/calendar.component';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AccuracyGraphComponent } from './accuracy-graph/accuracy-graph.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { TransferTeamOwnershipComponent } from './transfer-team-ownership/transfer-team-ownership.component';
@@ -45,13 +45,13 @@ const appRoutes: Routes = [
   { path: 'create/task', component: CreateTaskComponent, canActivate: [AuthService] },
   { path: 'create/team', component: CreateTeamComponent, canActivate: [AuthService] },
   { path: 'login', component: LoginComponent },
-  { path: 'signup', component: SignUpComponent }, 
-  { path: 'reset/password', component: PasswordResetComponent},
-  { path: 'reset/password/form', component: PasswordResetFormComponent},
+  { path: 'signup', component: SignUpComponent },
+  { path: 'reset/password', component: PasswordResetComponent },
+  { path: 'reset/password/form', component: PasswordResetFormComponent },
   { path: 'settings', component: SettingsComponent, canActivate: [AuthService] },
   { path: 'teams', component: TeamsComponent, canActivate: [AuthService] },
-  { path: 'teams/:id', component: ManageTeamComponent, canActivate: [AuthService]},
-  { path: 'invitations', component: InvitationsComponent, canActivate: [AuthService]},
+  { path: 'teams/:id', component: ManageTeamComponent, canActivate: [AuthService] },
+  { path: 'invitations', component: InvitationsComponent, canActivate: [AuthService] },
   { path: 'calendar', component: CalendarComponent },
   { path: 'celandar', component: CalendarComponent },
   { path: 'graph', component: AccuracyGraphComponent },
@@ -81,6 +81,7 @@ const appRoutes: Routes = [
     AddTagDialog,
     RemoveTeamMemberDialog,
     UploadDocDialog,
+    UsePredictionDialog,
     ConfirmTransferDialog,
     PasswordResetComponent,
     PasswordResetFormComponent,
@@ -117,7 +118,7 @@ const appRoutes: Routes = [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
   ],
   bootstrap: [AppComponent],
-  entryComponents: [DeleteConfirmDialog, RemoveTeamMemberDialog, ConfirmTransferDialog, ConfirmLeaveDialog, ConfirmDemotionDialog, ConfirmPromotionDialog, ConfirmRevokeDialog, EditTagDialog, CreateTagDialog, EditTaskDialog, UnregisterDialog, AddTagDialog, UploadDocDialog]
+  entryComponents: [DeleteConfirmDialog, RemoveTeamMemberDialog, ConfirmTransferDialog, ConfirmLeaveDialog, ConfirmDemotionDialog, ConfirmPromotionDialog, ConfirmRevokeDialog, EditTagDialog, CreateTagDialog, EditTaskDialog, UnregisterDialog, AddTagDialog, UploadDocDialog, UsePredictionDialog]
 })
 export class AppModule { }
 
@@ -144,7 +145,6 @@ export interface Task {
   lastWorkedAt: number,
   expDuration: number,
   isFinished: number,
-//  priority: number,
   completeDate: Date,
   created_at: Date, //matches laravel column
   team: number,

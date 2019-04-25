@@ -339,6 +339,30 @@ export class UploadDocDialog {
   }
 }
 
+@Component({
+  selector: 'use-prediction-dialog',
+  templateUrl: 'use-prediction/use-prediction-dialog.html',
+  styleUrls: ['use-prediction/use-prediction-dialog.css']
+
+})
+export class UsePredictionDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<boolean>,
+    @Inject(MAT_DIALOG_DATA) public data: any) {}
+
+  yes() {
+    this.dialogRef.close(true); //return true to parent component
+  }
+
+  no() {
+    this.dialogRef.close(false); //return false to parent component
+  }
+}
+
+
+
+
 export interface CreateTagDialogData {
   name: string,
   desc: string,
