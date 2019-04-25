@@ -20,12 +20,13 @@
     </div>
   </mat-sidenav>
 
-  <mat-sidenav-content class="main_box">
+  <mat-sidenav-content class="main_box" style="background-color: white; height: 100%;">
     <button mat-button (click)="sidenav.toggle()">
       <mat-icon>swap_horiz</mat-icon>
     </button>
 
-    <mat-card id="view_box">
+    <mat-card id="view_box" style=" height: 100%; margin-right: 8px;
+    margin-top: 8px; width: 98%;" >
       <app-tags *ngIf='tags'></app-tags>
       <app-profile *ngIf='profile'></app-profile>
       <app-tasks *ngIf='tasks'></app-tasks>

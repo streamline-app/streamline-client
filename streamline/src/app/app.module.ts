@@ -148,7 +148,8 @@ export interface Task {
   completeDate: Date,
   created_at: Date, //matches laravel column
   team: number,
-  tags: Tag[]
+  tags: Tag[],
+  assigned: number
 };
 
 export interface Team {

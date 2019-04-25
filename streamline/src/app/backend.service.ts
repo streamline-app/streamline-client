@@ -40,6 +40,7 @@ export class BackendService {
   public deleteTaskURL: string = 'http://' + this.root + '/api/tasks/delete';
   public editTaskURL: string = 'http://' + this.root + '/api/tasks/update';
   public addTagtoTaskURL: string = 'http://' + this.root + '/api/tasks/addTag';
+  public assignUserToTaskURL: string = 'http://' + this.root + '/api/tasks/';
 
   /* Task Control URLs */
   public startTaskURL: string = 'http://' + this.root + '/api/tasks/';
@@ -232,6 +233,13 @@ export class BackendService {
       .pipe(
         catchError(this.handleError)
       );
+  }
+
+  assignUserToTask(taskId: number, userId: number) {
+    return this.http.get(this.assignUserToTaskURL + taskId + '/assign/' + userId )
+    .pipe(
+      catchError(this.handleError)
+    )
   }
   /* ==================================== */
 
