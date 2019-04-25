@@ -1,8 +1,11 @@
-<div class="theme-wrapper">
-    <app-navigation></app-navigation>
+<div style="background-color: #1B2A33; width: 100%; height: 100%; position: absolute; top: 0; left: 0;">
+        <div class="theme-wrapper">
+                <app-navigation></app-navigation>
+            </div>
+            <app-team-navigation></app-team-navigation>
+            <div class="body" style="width: 98%; padding-left: 10px; padding-right: 25px; background-color: #1B2A33">
+                <router-outlet></router-outlet>
+            </div>
 </div>
-<app-team-navigation></app-team-navigation>
-<div class="body">
-    <router-outlet></router-outlet>
-</div>
+
 

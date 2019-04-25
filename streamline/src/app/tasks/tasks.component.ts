@@ -24,7 +24,10 @@ export class TasksComponent {
   private rawTagsForm: FormControl = new FormControl();
   private filteredTags: Observable<Tag[]>; //used by html with ngFor
   private tags: Tag[];
+  private assignedControl: {[id: number]: FormControl} = [];
+  private teamId: number = 0;
   public displayMessage = 'Your Tasks';
+  public teamMembers: any[] = [];
 
   constructor(private backend: BackendService,
     private auth: AuthService,
@@ -39,18 +42,39 @@ export class TasksComponent {
       this.loadData();
       if (this.state.teamId != 0) {
         this.displayMessage = this.state.teamName + '\'s Tasks';
+        this.loadTeamMemberData();
       } else {
         this.displayMessage = 'Your tasks';
       }
     })
     //update tasks display
-    this.loadData();
 
     if (this.state.teamId != 0) {
       this.displayMessage = this.state.teamName + '\'s Tasks';
+      this.loadTeamMemberData();
+    } else {
+      this.loadData();
     }
 
 
+  }
+
+  loadTeamMemberData() {
+    this.teamId = this.state.teamId;
+    this.backend.getTeamMembers(this.teamId).subscribe((res) => {
+      this.teamMembers = res as any[];
+      let temp : any = {
+        id: 0, 
+        name: "None", 
+        email: "None", 
+        admin: "False"
+      }
+
+      this.teamMembers.push(temp);
+      console.log("LOOK HERE");
+      console.log(this.teamMembers);
+      this.loadData();
+    })
   }
 
   loadData() {
@@ -73,6 +97,8 @@ export class TasksComponent {
       case 2:   //creation_date
         this.sortbyCreationDate();
         break;
+      case 3: 
+        this.sortByAssigned();
       default:
         break;
     }
@@ -112,6 +138,15 @@ export class TasksComponent {
     })
   }
 
+  onAssign(id: number) {
+    let user = this.assignedControl[id].value as TeamMember;
+    this.backend.assignUserToTask(id, +user.id).subscribe((res) => {
+      let snackbarRef = this.snackbar.open('Task Assigned to User', 'Ok', { duration: 3000 });
+      this.loadTeamMemberData();
+
+    })
+  }
+
   getTeamTasks() {
     console.log('we are in team tasks');
 
@@ -119,6 +154,17 @@ export class TasksComponent {
       console.log(result);
       this.tasks = [];
       this.tasks = result as Task[];
+      for(let task of this.tasks) {
+        this.assignedControl[task.id] = new FormControl('');
+
+        if (task.assigned > 0) {
+          for (let member of this.teamMembers) {
+            if (member.id == task.assigned) {
+              this.assignedControl[task.id].setValue(member);              
+            }
+          }
+        } 
+      }
       result.forEach(e => {
         if (!e.isFinished) { //only add if not finished
           //this.tasks.push(e);
@@ -458,6 +504,23 @@ export class TasksComponent {
     });
   }
 
+  sortByAssigned() {
+    this.sort_by = 3;
+    this.tasks.sort(function (a: Task, b: Task){
+      let assignedOne = a.assigned;
+      let assignedTwo = b.assigned;
+      
+
+      if (assignedOne > assignedTwo) {
+        return 1.0;
+      } else if (assignedOne == assignedTwo) {
+        return 0.0;
+      } else {
+        return -1.0;
+      }
+    })
+  }
+
   sortbyCreationDate() {
     this.sort_by = 2;
     this.tasks.sort(function (a: Task, b: Task) {
@@ -512,5 +575,12 @@ export class TasksComponent {
   _formatDate(d: Date): string { //special function to format date for UI
     return formatDate(d, 'MMMM dd, yyyy', 'en-US');
   }
+}
+
+interface TeamMember {
+  id: number,
+  name: string,
+  email: string,
+  admin: string
 }
 

@@ -1,0 +1,15 @@
+#members {
+    width: 100%;
+}
+
+#select {
+    background-color: lightgreen;
+}
+
+#details {
+    color: darkred;
+}
+
+#transfer {
+    background-color: lightsalmon;
+}

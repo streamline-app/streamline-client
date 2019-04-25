@@ -40,6 +40,7 @@ export class BackendService {
   public deleteTaskURL: string = 'http://' + this.root + '/api/tasks/delete';
   public editTaskURL: string = 'http://' + this.root + '/api/tasks/update';
   public addTagtoTaskURL: string = 'http://' + this.root + '/api/tasks/addTag';
+  public assignUserToTaskURL: string = 'http://' + this.root + '/api/tasks/';
 
   public getPredictionURL: string = 'http://' + this.analRoot + '/api/users/'; //append user UUID and /predictions
 
@@ -82,6 +83,7 @@ export class BackendService {
   public promoteTeamMemberURL: string = 'http://' + this.root + '/api/teams/promote';
   public demoteTeamMemberURL: string = 'http://' + this.root + '/api/teams/demote';
   public checkTeamAdminURL: string = 'http://' + this.root + '/api/teams/checkAdmin';
+  public transferTeamOwnershipURL: string = 'http://' + this.root + '/api/teams/transfer';
 
   public uploadFileURL: string = 'http://' + this.root + '/api/team/upload/';
   public getTeamFilesURL: string = 'http://' + this.root + '/api/team/fetchDocs/'
@@ -240,6 +242,13 @@ export class BackendService {
         catchError(this.handleError)
       );
   }
+  
+  assignUserToTask(taskId: number, userId: number) {
+    return this.http.get(this.assignUserToTaskURL + taskId + '/assign/' + userId )
+    .pipe(
+      catchError(this.handleError)
+    )
+  }
   /* ==================================== */
 
 
@@ -351,6 +360,13 @@ export class BackendService {
       .pipe(
         catchError(this.handleError)
       )
+  }
+
+  transferTeamOwnership(request: TransferOwnershipRequest) {
+    return this.http.post<TransferOwnershipResponse>(this.transferTeamOwnershipURL, request, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    )
   }
 
   getTeams(id) {
@@ -713,4 +729,14 @@ export interface TaskData {
   actualDuration: number,
   expDuration: number,
   tags?: string[]
+}
+
+interface TransferOwnershipRequest {
+  previous: number,
+  newOwner: number,
+  team: number
+}
+
+interface TransferOwnershipResponse {
+  message: string
 }
